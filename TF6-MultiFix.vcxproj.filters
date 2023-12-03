@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="data">
+      <UniqueIdentifier>{5F91957C-4BC8-960D-F4B4-7C10E0CA120F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{ee907bdc-a95a-4dac-bc98-25221fdb234b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\TF6-MultiFix">
+      <UniqueIdentifier>{b85c3f64-e2b7-4caf-825a-1d9dcf12d02e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".\data\plugin.ini">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\TF6-MultiFix.ini">
+      <Filter>data</Filter>
+    </None>
+    <None Include=".\source\TF6-MultiFix\makefile">
+      <Filter>source\TF6-MultiFix</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include=".\source\TF6-MultiFix\main.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\multifix.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\dueleng.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\deck.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\shop.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\field.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\helpers.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\duelmgr.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\dueldraw.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\multifixconfig.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\TF6-MultiFix\multifix.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\dueleng.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\deck.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\shop.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\field.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\helpers.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\duelmgr.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\dueldraw.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\multifixconfig.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
