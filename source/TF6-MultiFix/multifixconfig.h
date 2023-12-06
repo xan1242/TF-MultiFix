@@ -12,7 +12,7 @@ typedef struct _MultiFixConfig
 	int bInstaWinCheat;
 	int CheatOpponentLP;
 	int CheatPlayerLP;
-	int bMatrixFontInDeckEdit;
+	int bMatrixFont;
 }MultiFixConfig;
 
 // accessors
@@ -26,8 +26,8 @@ int mfconfig_GetCheatOpponentLP();
 int mfconfig_SetCheatOpponentLP(int val);
 int mfconfig_GetCheatPlayerLP();
 int mfconfig_SetCheatPlayerLP(int val);
-int mfconfig_GetMatrixFontInDeckEdit();
-int mfconfig_SetMatrixFontInDeckEdit(int val);
+int mfconfig_GetMatrixFont();
+int mfconfig_SetMatrixFont(int val);
 
 void mfconfig_Init();
 

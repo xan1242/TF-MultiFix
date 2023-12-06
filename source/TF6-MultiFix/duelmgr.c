@@ -3,7 +3,6 @@
 // by xan1242 / Tenjoin
 //
 
-#include "../../includes/psp/injector.h"
 #include "multifix.h"
 #include "multifixconfig.h"
 #include "duelmgr.h"
@@ -32,44 +31,40 @@ uintptr_t duelmgr_YgFont_PrintLineFit64_Hook(int X, int Y, uintptr_t unk_a2, wch
 }
 #endif
 
-uintptr_t duelmgr_YgFont_PrintLineFit64_Hook_ButtonIcon(int X, int Y, uintptr_t unk_a2, wchar_t* string, int32_t unk_t0)
+int (*lDuelMgr_Result_CallBack)(uintptr_t ptrFile, uintptr_t filesize) = (int(*)(uintptr_t, uintptr_t))0;
+int lDuelMgr_Result_CallBack_Hook(uintptr_t ptrFolder, size_t filesize)
 {
-    // string is usually "(): Next /\: Duel Ranking"
-    // 0x25CB = circle
-    // 0xD7 = cross
+    if (!lDuelMgr_Result_CallBack)
+        return 0;
 
-    wchar_t* firstColon = tf_wcschr(string, L'\x3a');
+    int result = lDuelMgr_Result_CallBack(ptrFolder, filesize);
+    if (!result)
+        return result;
 
-    if (firstColon)
-    {
-        if (mfconfig_GetSwapConfirmButtons())
-            firstColon[-1] = L'\xD7';
-        else
-            firstColon[-1] = L'\x25CB';
-    }
+    PatchButtonStrings(ptrFolder, "strTbl.bin");
 
-#ifdef YG_PRINTLINE_DEBUG
-    helpers_SetYgFontHookBase(_base_addr_duelmgr);
-#endif
-    return YgFont_PrintLineFit64(X, Y, unk_a2, string, unk_t0);
+    return result;
 }
 
 void duelmgr_Patch(uintptr_t base_addr, uintptr_t base_size)
 {
     _base_addr_duelmgr = base_addr;
     _base_size_duelmgr = base_size;
-    uintptr_t oldaddr = injector.base_addr;
-    uintptr_t oldsize = injector.base_size;
+    uintptr_t oldaddr = minj_GetBaseAddress();
+    uintptr_t oldsize = minj_GetBaseSize();
 
-    injector.SetGameBaseAddress(base_addr, base_size);
+    minj_SetBaseAddress(base_addr, base_size);
 
-    injector.MakeJMPwNOP(0x2D500, (uintptr_t)&YgSys_GetLang_Hook);
+    //duelmgr_SwappedCount = 0;
+    //YgSys_memset(duelmgr_SwappedStrings, 0, sizeof(wchar_t*) * DUELMGR_MAX_SWAP_STR);
+
+    minj_MakeJMPwNOP(0x2D500, (uintptr_t)&YgSys_GetLang_Hook);
 
     // lang file specific exclusions
-    injector.MakeCALL(0x10A8, (uintptr_t)&YgSys_GetLang_Hook2);
-    injector.MakeCALL(0x6144, (uintptr_t)&YgSys_GetLang_Hook2);
-    injector.MakeCALL(0xAF74, (uintptr_t)&YgSys_GetLang_Hook2);
-    injector.MakeCALL(0x16DD0, (uintptr_t)&YgSys_GetLang_Hook2);
+    minj_MakeCALL(0x10A8, (uintptr_t)&YgSys_GetLang_Hook2);
+    minj_MakeCALL(0x6144, (uintptr_t)&YgSys_GetLang_Hook2);
+    minj_MakeCALL(0xAF74, (uintptr_t)&YgSys_GetLang_Hook2);
+    minj_MakeCALL(0x16DD0, (uintptr_t)&YgSys_GetLang_Hook2);
 
     //
     // POST DUEL SCREEN
@@ -88,11 +83,11 @@ void duelmgr_Patch(uintptr_t base_addr, uintptr_t base_size)
 //
 //    
     // fix DP column header Y pos
-    injector.WriteMemory16(0xB9D0, 0xAE0);
-    injector.WriteMemory16(0xB51C, 0xAE0);
+    minj_WriteMemory16(0xB9D0, 0xAE0);
+    minj_WriteMemory16(0xB51C, 0xAE0);
 //
     // fix bonus total label
-    injector.WriteMemory16(0xBFC4, 0x38F0);
+    minj_WriteMemory16(0xBFC4, 0x38F0);
 //
 //    // challenge title card text fix
 //    injector.WriteMemory16(0x12358, 3);
@@ -132,7 +127,7 @@ void duelmgr_Patch(uintptr_t base_addr, uintptr_t base_size)
     //
 
     // "Choose a card." Y pos
-    injector.WriteMemory16(0x8608, 0x3EE0);
+    minj_WriteMemory16(0x8608, 0x3EE0);
 
 //    // player name
 //    injector.MakeCALL(0x1124, (uintptr_t)&duelmgr_hkFitTxt_50);
@@ -141,13 +136,21 @@ void duelmgr_Patch(uintptr_t base_addr, uintptr_t base_size)
     // JANKEN / RPS SCREEN END
     //
 
+    if (mfconfig_GetSwapConfirmButtons())
+    {
+        // change the confirm button text (cross and square)
+        uintptr_t callback = minj_WriteLUI_ADDIU(0xAFB8, (uintptr_t)&lDuelMgr_Result_CallBack_Hook, MIPSR_t0);
+        lDuelMgr_Result_CallBack = (int(*)(uintptr_t, uintptr_t))(callback);
 
+#ifdef TFMULTIFIX_DEBUG_PRINT
+        sceKernelPrintf("lDuelMgr_Result_CallBack: 0x%X", callback);
+#endif
+    }
 
 #ifdef YG_PRINTLINE_DEBUG
-    injector.MakeJMPwNOP(0x2BCA8, (uintptr_t)&duelmgr_YgFont_PrintLine64_Hook);
-    injector.MakeJMPwNOP(0x2BCB8, (uintptr_t)&duelmgr_YgFont_PrintLineFit64_Hook);
-    injector.MakeCALL(0x1059C, (uintptr_t)&duelmgr_YgFont_PrintLineFit64_Hook_ButtonIcon);
+    minj_MakeJMPwNOP(0x2BCA8, (uintptr_t)&duelmgr_YgFont_PrintLine64_Hook);
+    minj_MakeJMPwNOP(0x2BCB8, (uintptr_t)&duelmgr_YgFont_PrintLineFit64_Hook);
 #endif
 
-    injector.SetGameBaseAddress(oldaddr, oldsize);
+    minj_SetBaseAddress(oldaddr, oldsize);
 }

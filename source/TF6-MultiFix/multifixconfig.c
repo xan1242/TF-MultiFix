@@ -14,7 +14,7 @@ MultiFixConfig mfconfig =
 	0,        // bInstaWinCheat
 	0,		  // CheatOpponentLP
 	8000,	  // CheatPlayerLP
-	0		  // bMatrixFontInDeckEdit
+	0		  // bMatrixFont
 };
 
 // accessors
@@ -74,14 +74,14 @@ int mfconfig_SetCheatPlayerLP(int val)
 	return val;
 }
 
-int mfconfig_GetMatrixFontInDeckEdit()
+int mfconfig_GetMatrixFont()
 {
-	return mfconfig.bMatrixFontInDeckEdit;
+	return mfconfig.bMatrixFont;
 }
 
-int mfconfig_SetMatrixFontInDeckEdit(int val)
+int mfconfig_SetMatrixFont(int val)
 {
-	mfconfig.bMatrixFontInDeckEdit = (val == 1);
+	mfconfig.bMatrixFont = (val == 1);
 	return val;
 }
 

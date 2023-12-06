@@ -9,10 +9,12 @@
 #include <systemctrl.h>
 #include <kubridge.h>
 #include <stdio.h>
-#include <string.h>
+//#include <string.h>
 #include "multifix.h"
+#include "helpers.h"
 
-#include "../../includes/psp/injector.h"
+//#include "../../includes/psp/injector.h"
+//#include "../../includes/psp/minjector.h"
 
 // Define the name of the game's main module here
 #define MODULE_NAME_INTERNAL "modehsys"
@@ -87,23 +89,23 @@ static void CheckModules()
             {
                 continue;
             }
-            if (strcmp(info.name, MODULE_NAME_INTERNAL) == 0)
+            if (tf_strcmp(info.name, MODULE_NAME_INTERNAL) == 0)
             {
 #ifdef LOG
                 logPrintf("Found module " MODULE_NAME_INTERNAL);
                 logPrintf("text_addr: 0x%X\ntext_size: 0x%X", info.text_addr, info.text_size);
 #endif
-                injector.SetGameBaseAddress(info.text_addr, info.text_size);
+                minj_SetBaseAddress(info.text_addr, info.text_size);
 
                 bFoundMainModule = 1;
             }
-            else if (strcmp(info.name, MODULE_NAME) == 0)
+            else if (tf_strcmp(info.name, MODULE_NAME) == 0)
             {
 #ifdef LOG
                 logPrintf("PRX module " MODULE_NAME);
                 logPrintf("text_addr: 0x%X\ntext_size: 0x%X", info.text_addr, info.text_addr);
 #endif
-                injector.SetModuleBaseAddress(info.text_addr, info.text_size);
+                minj_SetModBaseAddress(info.text_addr, info.text_size);
 
                 bFoundInternalModule = 1;
             }
@@ -141,8 +143,8 @@ void CheckModulesPSP()
     if (kuErrCode != 0)
         return;
 
-    injector.SetGameBaseAddress(mod.text_addr, mod.text_size);
-    injector.SetModuleBaseAddress(this_module.text_addr, this_module.text_addr);
+    minj_SetBaseAddress(mod.text_addr, mod.text_size);
+    minj_SetModBaseAddress(this_module.text_addr, this_module.text_addr);
 
     MainInit();
 }

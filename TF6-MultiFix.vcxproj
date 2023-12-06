@@ -163,31 +163,55 @@ if !errorlevel! neq 0 exit /b !errorlevel!
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include=".\source\TF6-MultiFix\main.c" />
+    <ClCompile Include="source\TF6-MultiFix\cardalbum.c" />
+    <ClCompile Include="source\TF6-MultiFix\charalist.c" />
     <ClCompile Include="source\TF6-MultiFix\deck.c" />
+    <ClCompile Include="source\TF6-MultiFix\decktutorial.c" />
     <ClCompile Include="source\TF6-MultiFix\dueldraw.c" />
     <ClCompile Include="source\TF6-MultiFix\dueleng.c" />
     <ClCompile Include="source\TF6-MultiFix\duelmgr.c" />
+    <ClCompile Include="source\TF6-MultiFix\duelrecord.c" />
     <ClCompile Include="source\TF6-MultiFix\field.c" />
+    <ClCompile Include="source\TF6-MultiFix\gallery.c" />
     <ClCompile Include="source\TF6-MultiFix\helpers.c" />
     <ClCompile Include="source\TF6-MultiFix\multifixconfig.c" />
+    <ClCompile Include="source\TF6-MultiFix\password.c" />
+    <ClCompile Include="source\TF6-MultiFix\selectcard.c" />
     <ClCompile Include="source\TF6-MultiFix\shop.c" />
     <ClCompile Include="source\TF6-MultiFix\multifix.c" />
+    <ClCompile Include="source\TF6-MultiFix\soundtest.c" />
+    <ClCompile Include="source\TF6-MultiFix\tutorial.c" />
+    <ClCompile Include="source\TF6-MultiFix\tutoriallist.c" />
+    <ClCompile Include="source\TF6-MultiFix\umdreplace.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".\data\plugin.ini" />
-    <None Include=".\source\TF6-MultiFix\makefile" />
+    <None Include=".\source\TF6-MultiFix\makefile">
+      <FileType>Makefile</FileType>
+    </None>
     <None Include="data\TF6-MultiFix.ini" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\TF6-MultiFix\cardalbum.h" />
+    <ClInclude Include="source\TF6-MultiFix\charalist.h" />
     <ClInclude Include="source\TF6-MultiFix\deck.h" />
+    <ClInclude Include="source\TF6-MultiFix\decktutorial.h" />
     <ClInclude Include="source\TF6-MultiFix\dueldraw.h" />
     <ClInclude Include="source\TF6-MultiFix\dueleng.h" />
     <ClInclude Include="source\TF6-MultiFix\duelmgr.h" />
+    <ClInclude Include="source\TF6-MultiFix\duelrecord.h" />
     <ClInclude Include="source\TF6-MultiFix\field.h" />
+    <ClInclude Include="source\TF6-MultiFix\gallery.h" />
     <ClInclude Include="source\TF6-MultiFix\helpers.h" />
     <ClInclude Include="source\TF6-MultiFix\multifixconfig.h" />
+    <ClInclude Include="source\TF6-MultiFix\password.h" />
+    <ClInclude Include="source\TF6-MultiFix\selectcard.h" />
     <ClInclude Include="source\TF6-MultiFix\shop.h" />
     <ClInclude Include="source\TF6-MultiFix\multifix.h" />
+    <ClInclude Include="source\TF6-MultiFix\soundtest.h" />
+    <ClInclude Include="source\TF6-MultiFix\tutorial.h" />
+    <ClInclude Include="source\TF6-MultiFix\tutoriallist.h" />
+    <ClInclude Include="source\TF6-MultiFix\umdreplace.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -53,6 +53,39 @@
     <ClCompile Include="source\TF6-MultiFix\multifixconfig.c">
       <Filter>source\TF6-MultiFix</Filter>
     </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\charalist.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\tutoriallist.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\duelrecord.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\umdreplace.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\decktutorial.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\tutorial.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\password.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\selectcard.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\cardalbum.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\soundtest.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\gallery.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -80,6 +113,39 @@
       <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\multifixconfig.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\charalist.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\tutoriallist.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\duelrecord.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\umdreplace.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\decktutorial.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\tutorial.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\password.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\selectcard.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\cardalbum.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\soundtest.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\gallery.h">
       <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
   </ItemGroup>

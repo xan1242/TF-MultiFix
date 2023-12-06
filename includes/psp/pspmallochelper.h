@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 #ifndef PSPMALLOCHELPER_H
 #define PSPMALLOCHELPER_H
 

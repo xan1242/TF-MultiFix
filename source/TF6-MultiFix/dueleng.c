@@ -3,7 +3,6 @@
 // by xan1242 / Tenjoin
 //
 
-#include "../../includes/psp/injector.h"
 #include "multifix.h"
 #include "dueleng.h"
 
@@ -35,14 +34,14 @@ void dueleng_Patch(uintptr_t base_addr, uintptr_t base_size)
 {
     _base_addr_dueleng = base_addr;
     _base_size_dueleng = base_size;
-    uintptr_t oldaddr = injector.base_addr;
-    uintptr_t oldsize = injector.base_size;
+    uintptr_t oldaddr = minj_GetBaseAddress();
+    uintptr_t oldsize = minj_GetBaseSize();
 
-    injector.SetGameBaseAddress(base_addr, base_size);
+    minj_SetBaseAddress(base_addr, base_size);
 
     // don't hook if there's nothing to set
     //if ((_CheatOpponentLP >= 0) || (_CheatPlayerLP >= 0))
-    //    injector.MakeCALL(0x1EE374, (uintptr_t)&dueleng_UpdatePlayerStatusHook);
+    //    minj_MakeCALL(0x1EE374, (uintptr_t)&dueleng_UpdatePlayerStatusHook);
 
-    injector.SetGameBaseAddress(oldaddr, oldsize);
+    minj_SetBaseAddress(oldaddr, oldsize);
 }
