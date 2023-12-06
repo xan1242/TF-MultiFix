@@ -462,6 +462,13 @@ __attribute__((naked)) void hkPrintBoxFontYOffset()
 // swap cross and circle for accept
 int YgSys_GetAssignButton_Hook(int isDeclineButton)
 {
+    if (YgSys_GetLang())
+    {
+        if (isDeclineButton)
+            return PSP_CTRL_CROSS;
+        return PSP_CTRL_CIRCLE;
+    }
+
     if (isDeclineButton)
         return PSP_CTRL_CIRCLE;
     return PSP_CTRL_CROSS;

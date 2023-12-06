@@ -133,12 +133,12 @@ static void CheckModules()
 //
 void CheckModulesPSP()
 {
-    SceModule2 mod = { 0 };
+    SceModule2 mod;
     int kuErrCode = kuKernelFindModuleByName(MODULE_NAME_INTERNAL, &mod);
     if (kuErrCode != 0)
         return;
 
-    SceModule2 this_module = { 0 };
+    SceModule2 this_module;
     kuErrCode = kuKernelFindModuleByName(MODULE_NAME, &this_module);
     if (kuErrCode != 0)
         return;
