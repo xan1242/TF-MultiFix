@@ -176,10 +176,13 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\helpers.c" />
     <ClCompile Include="source\TF6-MultiFix\multifixconfig.c" />
     <ClCompile Include="source\TF6-MultiFix\password.c" />
+    <ClCompile Include="source\TF6-MultiFix\recipeviewer.c" />
     <ClCompile Include="source\TF6-MultiFix\selectcard.c" />
     <ClCompile Include="source\TF6-MultiFix\shop.c" />
     <ClCompile Include="source\TF6-MultiFix\multifix.c" />
     <ClCompile Include="source\TF6-MultiFix\soundtest.c" />
+    <ClCompile Include="source\TF6-MultiFix\story.c" />
+    <ClCompile Include="source\TF6-MultiFix\title.c" />
     <ClCompile Include="source\TF6-MultiFix\tutorial.c" />
     <ClCompile Include="source\TF6-MultiFix\tutoriallist.c" />
     <ClCompile Include="source\TF6-MultiFix\umdreplace.c" />
@@ -205,10 +208,13 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClInclude Include="source\TF6-MultiFix\helpers.h" />
     <ClInclude Include="source\TF6-MultiFix\multifixconfig.h" />
     <ClInclude Include="source\TF6-MultiFix\password.h" />
+    <ClInclude Include="source\TF6-MultiFix\recipeviewer.h" />
     <ClInclude Include="source\TF6-MultiFix\selectcard.h" />
     <ClInclude Include="source\TF6-MultiFix\shop.h" />
     <ClInclude Include="source\TF6-MultiFix\multifix.h" />
     <ClInclude Include="source\TF6-MultiFix\soundtest.h" />
+    <ClInclude Include="source\TF6-MultiFix\story.h" />
+    <ClInclude Include="source\TF6-MultiFix\title.h" />
     <ClInclude Include="source\TF6-MultiFix\tutorial.h" />
     <ClInclude Include="source\TF6-MultiFix\tutoriallist.h" />
     <ClInclude Include="source\TF6-MultiFix\umdreplace.h" />

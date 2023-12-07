@@ -1,6 +1,6 @@
 TARGET = ../../build/TF6-MultiFix
 # include more objs here depending on what you use (e.g. "../../includes/psp/mips.o")
-OBJS = main.o helpers.o multifix.o multifixconfig.o dueleng.o duelmgr.o dueldraw.o deck.o shop.o field.o charalist.o tutoriallist.o duelrecord.o umdreplace.o decktutorial.o tutorial.o password.o selectcard.o cardalbum.o soundtest.o gallery.o exports.o ../../includes/psp/pspmallochelper.o ../../includes/psp/minjector.o
+OBJS = main.o helpers.o multifix.o multifixconfig.o dueleng.o duelmgr.o dueldraw.o deck.o shop.o field.o charalist.o tutoriallist.o duelrecord.o umdreplace.o decktutorial.o tutorial.o password.o selectcard.o cardalbum.o soundtest.o gallery.o recipeviewer.o story.o title.o exports.o ../../includes/psp/pspmallochelper.o ../../includes/psp/minjector.o
 
 DEFINES = -DMINJECTOR_MINIMAL
 

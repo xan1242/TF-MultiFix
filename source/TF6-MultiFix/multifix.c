@@ -30,6 +30,9 @@
 #include "cardalbum.h"
 #include "soundtest.h"
 #include "gallery.h"
+#include "recipeviewer.h"
+#include "story.h"
+#include "title.h"
 #include <pspctrl.h>
 #include "multifixconfig.h"
 
@@ -89,7 +92,6 @@ int (*ptr_lEhScript_ModuleRead_FinishCB)(uintptr_t unk1, uintptr_t unk2) = (int(
 int (*lEhModule_Load_EndCallback)(uintptr_t unk1, uintptr_t unk2) = (int(*)(uintptr_t, uintptr_t))0;
 void (*lSoftReset)() = (void(*)())0;
 
-
 int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
 {
     char* modName = (char*)(unk1 + 4);
@@ -116,9 +118,17 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
     {
         SetGameState(EHSTATE_TITLE);
 
-        if (ptr_lEhScript_ModuleRead_FinishCB)
-            return ptr_lEhScript_ModuleRead_FinishCB(unk1, unk2);
-        return 0;
+        uintptr_t bs = 0;
+        uintptr_t sz = 0;
+
+        if (tfFindModuleByName("modtitle", &bs, &sz))
+        {
+            title_Patch(bs, sz);
+
+            if (ptr_lEhScript_ModuleRead_FinishCB)
+                return ptr_lEhScript_ModuleRead_FinishCB(unk1, unk2);
+            return 0;
+        }
     }
 
     if (tf_strstr(modNameLower, "deck.p"))
@@ -179,6 +189,21 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         if (tfFindModuleByName("modgallery", &bs, &sz))
         {
             gallery_Patch(bs, sz);
+
+            if (ptr_lEhScript_ModuleRead_FinishCB)
+                return ptr_lEhScript_ModuleRead_FinishCB(unk1, unk2);
+            return 0;
+        }
+    }
+
+    if (tf_strstr(modNameLower, "story"))
+    {
+        uintptr_t bs = 0;
+        uintptr_t sz = 0;
+
+        if (tfFindModuleByName("modstory", &bs, &sz))
+        {
+            story_Patch(bs, sz);
 
             if (ptr_lEhScript_ModuleRead_FinishCB)
                 return ptr_lEhScript_ModuleRead_FinishCB(unk1, unk2);
@@ -426,6 +451,21 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
+    if (tf_strstr(modNameLower, "recipe"))
+    {
+        uintptr_t bs = 0;
+        uintptr_t sz = 0;
+
+        if (tfFindModuleByName("modrecipe_viewer", &bs, &sz))
+        {
+            recipeviewer_Patch(bs, sz);
+
+            if (lEhModule_Load_EndCallback)
+                return lEhModule_Load_EndCallback(unk1, unk2);
+            return 0;
+        }
+    }
+
     if (lEhModule_Load_EndCallback)
         return lEhModule_Load_EndCallback(unk1, unk2);
     return 0;
@@ -494,24 +534,48 @@ int YgSys_GetAssignButton_Hook(int isDeclineButton)
 
 void HandleButtonCheats()
 {
-    if (mfconfig_GetInstaWinCheat())
+    uint32_t buttons = GetPadButtons(0);
+
+    if (buttons & (PSP_CTRL_WLAN_UP | PSP_CTRL_RTRIGGER)) // wlan on & R = cheat input mode
     {
+        // duel cheats
         if (GetGameState() == EHSTATE_DUEL)
         {
-            if (GetPadButtons(0) == (PSP_CTRL_WLAN_UP | PSP_CTRL_SELECT))
+            if (mfconfig_GetInstaWinCheat())
             {
+                if (buttons & PSP_CTRL_SQUARE)
+                {
 #ifdef TFMULTIFIX_DEBUG_PRINT
-                sceKernelPrintf("Player Cheat on !!!");
+                    sceKernelPrintf("Player Cheat on !!!");
 #endif
-                dueleng_chtSetPlayerLP(mfconfig_GetCheatPlayerLP());
+                    dueleng_chtSetPlayerLP(mfconfig_GetCheatPlayerLP());
+                }
+
+                if (buttons & PSP_CTRL_SELECT)
+                {
+#ifdef TFMULTIFIX_DEBUG_PRINT
+                    sceKernelPrintf("Opponent LP Cheat on !!!");
+#endif
+                    dueleng_chtSetOpponentLP(mfconfig_GetCheatOpponentLP());
+                }
             }
 
-            if (GetPadButtons(0) == (PSP_CTRL_WLAN_UP))
+            if (mfconfig_GetCheatControlPartner() == 1)
             {
+                if (buttons & PSP_CTRL_LEFT)
+                {
 #ifdef TFMULTIFIX_DEBUG_PRINT
-                sceKernelPrintf("Opponent LP Cheat on !!!");
+                    sceKernelPrintf("Player control cheat: AI off !!!");
 #endif
-                dueleng_chtSetOpponentLP(mfconfig_GetCheatOpponentLP());
+                    dueleng_chtSetPlayerControl(0, 0);
+                }
+                else if (buttons & PSP_CTRL_RIGHT)
+                {
+#ifdef TFMULTIFIX_DEBUG_PRINT
+                    sceKernelPrintf("Player control cheat: AI on !!!");
+#endif
+                    dueleng_chtSetPlayerControl(0, 1);
+                }
             }
         }
     }
@@ -521,9 +585,29 @@ void HandleButtonCheats()
 void lSoftReset_Hook()
 {
     HandleButtonCheats();
-
-
     return lSoftReset();
+}
+
+//
+// YgSys_CardDetail_Raw_DrawSmallText text fix
+//
+int YgFont_GetShadowFlg_Hook()
+{
+    int oldflg = YgFont_GetWordSeparateFlg();
+
+    return (YgFont_GetShadowFlg() & 1) | (oldflg << 1); // store old state on the second bit
+}
+
+void YgFont_SetShadowFlg_Hook1(int val)
+{
+    YgFont_SetWordSeparateFlg(1);
+    return YgFont_SetShadowFlg(val);
+}
+
+void YgFont_SetShadowFlg_Hook2(int val)
+{
+    YgFont_SetWordSeparateFlg((val & 2) >> 1);
+    return YgFont_SetShadowFlg(val & 1);
 }
 
 void TFFixesInject()
@@ -539,6 +623,7 @@ void TFFixesInject()
     helpers_Init(base_addr);
     mfconfig_Init();
 
+    // main loop hook
     lSoftReset = (void(*)())(0x5954 + base_addr);
     minj_MakeCALL(0x5BF0, (uintptr_t)&lSoftReset_Hook);
 
@@ -609,6 +694,14 @@ void TFFixesInject()
 #ifdef YG_GETLANG_DEBUG
     minj_MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang);
 #endif
+
+    // YgSys_CardDetail_Raw_DrawSmallText fix
+    minj_MakeCALL(0xCF38, (uintptr_t)&YgFont_GetShadowFlg_Hook);
+    minj_MakeCALL(0xCF44, (uintptr_t)&YgFont_SetShadowFlg_Hook1);
+    minj_MakeCALL(0xCF6C, (uintptr_t)&YgFont_SetShadowFlg_Hook2);
+
+    // get partner name from regular chr names
+    //minj_MakeNOP(0x23A10);
 
     //injector.WriteMemory16(0x2848, 0x40);
 

@@ -232,6 +232,23 @@ void field_Patch(uintptr_t base_addr, uintptr_t base_size)
 #endif
     }
 
+    // lang fix the help topics
+    minj_MakeCALL(0x8A9C, (uintptr_t)&YgSys_GetLang_Hook);
+
+    // fix help topic text positions
+    minj_WriteMemory16(0x807C, (uint16_t)(9 << 6));
+
+    // button text
+    minj_WriteMemory16(0x8CD0, (uint16_t)(0xF8 << 6));
+    minj_WriteMemory16(0x8CF4, (uint16_t)(0xF8 << 6));
+    minj_WriteMemory16(0x8D2C, (uint16_t)(0xF8 << 6));
+    minj_WriteMemory16(0x8D54, (uint16_t)(0xF8 << 6));
+
+    // current topic title
+    minj_WriteMemory16(0x9224, (uint16_t)(9 << 6));
+    // fix starchip infront of the category menu
+    minj_WriteMemory32(0x9444, 0x02403021); // move a2, s2
+
 
 #ifdef YG_PRINTLINE_DEBUG
     minj_MakeJMPwNOP(0x0005ACF0, (uintptr_t)&field_YgFont_PrintLine64_Hook);

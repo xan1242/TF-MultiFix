@@ -30,6 +30,20 @@ void deck_Patch(uintptr_t base_addr, uintptr_t base_size)
     minj_MakeCALL(0x1E174, (uintptr_t)&YgSys_GetLang_Hook2);
     minj_MakeCALL(0x5568, (uintptr_t)&YgSys_GetLang_Hook2);
 
+    // fix help topic text positions
+    minj_WriteMemory16(0x5144, (uint16_t)(9 << 6));
+
+    // button text
+    minj_WriteMemory16(0x6120, (uint16_t)(0xF8 << 6));
+    minj_WriteMemory16(0x6144, (uint16_t)(0xF8 << 6));
+    minj_WriteMemory16(0x617C, (uint16_t)(0xF8 << 6));
+    minj_WriteMemory16(0x61A4, (uint16_t)(0xF8 << 6));
+
+    // current topic title
+    minj_WriteMemory16(0x6674, (uint16_t)(9 << 6));
+    // fix starchip infront of the category menu
+    minj_WriteMemory32(0x6894, 0x02403021); // move a2, s2
+
     //injector.MakeCALL(0x24F4, (uintptr_t)&YgSys_GetLang_Hook2);
     //injector.MakeCALL(0x2548, (uintptr_t)&YgSys_GetLang_Hook2); // matrix font
 

@@ -46,6 +46,17 @@ int lDuelMgr_Result_CallBack_Hook(uintptr_t ptrFolder, size_t filesize)
     return result;
 }
 
+wchar_t* duelmgr_YgSys_wcscat_Hook(wchar_t* dest, const wchar_t* src)
+{
+    // copy the name back to remove the space
+    if (dest[0] == L' ')
+        YgSys_wcscpy(dest, &dest[1]);
+
+    if (tf_wcschr(dest, L' '))
+        return YgSys_wcscat(dest, src);
+    return YgSys_wcscat(dest, L" &");
+}
+
 void duelmgr_Patch(uintptr_t base_addr, uintptr_t base_size)
 {
     _base_addr_duelmgr = base_addr;
@@ -146,6 +157,14 @@ void duelmgr_Patch(uintptr_t base_addr, uintptr_t base_size)
         sceKernelPrintf("lDuelMgr_Result_CallBack: 0x%X", callback);
 #endif
     }
+
+    // fix free duel team name formatting
+    minj_MakeCALL(0x3F54, (uintptr_t)&duelmgr_YgSys_wcscat_Hook);
+
+    // if (mfconfig_GetCheatControlPartner() == 2)
+    // {
+    //     minj_WriteMemory16(0x18030, 0);
+    // }
 
 #ifdef YG_PRINTLINE_DEBUG
     minj_MakeJMPwNOP(0x2BCA8, (uintptr_t)&duelmgr_YgFont_PrintLine64_Hook);

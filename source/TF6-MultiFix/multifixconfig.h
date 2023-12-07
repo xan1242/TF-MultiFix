@@ -13,6 +13,8 @@ typedef struct _MultiFixConfig
 	int CheatOpponentLP;
 	int CheatPlayerLP;
 	int bMatrixFont;
+	int bSeePartnerCards;
+	int CheatControlPartner;
 }MultiFixConfig;
 
 // accessors
@@ -28,6 +30,10 @@ int mfconfig_GetCheatPlayerLP();
 int mfconfig_SetCheatPlayerLP(int val);
 int mfconfig_GetMatrixFont();
 int mfconfig_SetMatrixFont(int val);
+int mfconfig_GetSeePartnerCards();
+int mfconfig_SetSeePartnerCards(int val);
+int mfconfig_GetCheatControlPartner();
+int mfconfig_SetCheatControlPartner(int val);
 
 void mfconfig_Init();
 

@@ -14,7 +14,9 @@ MultiFixConfig mfconfig =
 	0,        // bInstaWinCheat
 	0,		  // CheatOpponentLP
 	8000,	  // CheatPlayerLP
-	0		  // bMatrixFont
+	0,		  // bMatrixFont
+	1,		  // bSeePartnerCards
+	0		  // CheatControlPartner
 };
 
 // accessors
@@ -85,11 +87,35 @@ int mfconfig_SetMatrixFont(int val)
 	return val;
 }
 
+int mfconfig_GetSeePartnerCards()
+{
+	return mfconfig.bSeePartnerCards;
+}
+
+int mfconfig_SetSeePartnerCards(int val)
+{
+	mfconfig.bSeePartnerCards = val;
+	return mfconfig.bSeePartnerCards;
+}
+
+int mfconfig_GetCheatControlPartner()
+{
+	return mfconfig.CheatControlPartner;
+}
+
+int mfconfig_SetCheatControlPartner(int val)
+{
+	mfconfig.CheatControlPartner = val;
+	return mfconfig.CheatControlPartner;
+}
+
 void mfconfig_Init()
 {
 	// TODO: add config reading here
 
 	// TEST
 	mfconfig_SetInstaWinCheat(1);
+	mfconfig_SetCheatControlPartner(1);
+
 	//mfconfig_SetSwapConfirmButtons(0);
 }

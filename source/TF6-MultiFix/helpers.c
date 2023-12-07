@@ -20,6 +20,10 @@ EhGameState helper_GameState = EHSTATE_UNKNOWN;
 
 uintptr_t (*_YgFont_PrintLine64)(int, int, uintptr_t, wchar_t*) = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0);
 uintptr_t (*_YgFont_PrintLineFit64)(int, int, uintptr_t, wchar_t*, int32_t) = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0);
+void (*_YgFont_SetWordSeparateFlg)(int) = (void (*)(int))(0);
+int (*_YgFont_GetWordSeparateFlg)() = (int (*)())(0);
+void (*_YgFont_SetShadowFlg)(int) = (void (*)(int))(0);
+int (*_YgFont_GetShadowFlg)() = (int (*)())(0);
 wchar_t* (*_YgSys_wcscat)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 wchar_t* (*_YgSys_wcscpy)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 size_t(*_YgSys_wcslen)(const wchar_t* str) = (size_t(*)(const wchar_t*))(0);
@@ -435,6 +439,36 @@ uintptr_t YgFont_PrintLineFit64(int X, int Y, uintptr_t unk_a2, wchar_t* string,
     return _YgFont_PrintLineFit64(X, Y, unk_a2, string, unk_t0);
 }
 
+void YgFont_SetWordSeparateFlg(int val)
+{
+    if (!_YgFont_SetWordSeparateFlg)
+        return;
+
+    _YgFont_SetWordSeparateFlg(val);
+}
+
+int YgFont_GetWordSeparateFlg()
+{
+    if (!_YgFont_GetWordSeparateFlg)
+        return 0;
+    return _YgFont_GetWordSeparateFlg();
+}
+
+void YgFont_SetShadowFlg(int val)
+{
+    if (!_YgFont_SetShadowFlg)
+        return;
+
+    _YgFont_SetShadowFlg(val);
+}
+
+int YgFont_GetShadowFlg()
+{
+    if (!_YgFont_GetShadowFlg)
+        return 0;
+    return _YgFont_GetShadowFlg();
+}
+
 // void tf_ReplaceFirstChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr)
 // {
 //     wchar_t* firstChar = tf_wcschr(str, target_chr);
@@ -771,6 +805,10 @@ void helpers_Init(uintptr_t base_addr)
     _EhPad_Get = (uintptr_t(*)())(0x3A428 + base_addr);
     _YgFont_PrintLine64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0x17F0 + base_addr);
     _YgFont_PrintLineFit64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0x4410 + base_addr);
+    _YgFont_SetWordSeparateFlg = (void (*)(int))(0x21AC + base_addr);
+    _YgFont_GetWordSeparateFlg = (int (*)())(0x21E8 + base_addr);
+    _YgFont_SetShadowFlg = (void (*)(int))(0x2140 + base_addr);
+    _YgFont_GetShadowFlg = (int (*)())(0x217C + base_addr);
     _YgSys_wcscat = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BFA0 + base_addr);
     _YgSys_wcscpy = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BF10 + base_addr);
     _YgSys_wcslen = (size_t(*)(const wchar_t*))(0x0002BEB0 + base_addr);
