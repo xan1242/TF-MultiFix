@@ -40,8 +40,8 @@ uintptr_t field_YgFont_PrintLineFit64_QuizHook(int X, int Y, uintptr_t unk_a2, w
     size_t bufferSize1 = (YgSys_wcslen(string)) * sizeof(wchar_t);
     size_t bufferSize2 = (YgSys_wcslen(string2)) * sizeof(wchar_t);
 
-    wchar_t* catstr = (wchar_t*)psp_malloc(bufferSize1 + bufferSize2 + 1);
-    YgSys_memset(catstr, 0, bufferSize1 + bufferSize2 + 1);
+    wchar_t* catstr = (wchar_t*)psp_malloc(bufferSize1 + bufferSize2 + 2);
+    YgSys_memset(catstr, 0, bufferSize1 + bufferSize2 + 2);
     YgSys_wcscpy(catstr, string);
     YgSys_wcscat(catstr, string2);
 
@@ -52,12 +52,68 @@ uintptr_t field_YgFont_PrintLineFit64_QuizHook(int X, int Y, uintptr_t unk_a2, w
     return retval;
 }
 
+uintptr_t field_YgFont_PrintLineFit64_StatusHook_PlayerName(int X, int Y, uintptr_t unk_a2, wchar_t* string, int32_t unk_t0)
+{
+    size_t bufferSize1 = (YgSys_wcslen(string)) * sizeof(wchar_t);
+    size_t bufferSize2 = (YgSys_wcslen(YgSys_GetUserName())) * sizeof(wchar_t);
+
+    wchar_t* catstr = (wchar_t*)psp_malloc(bufferSize1 + bufferSize2 + 2);
+    YgSys_memset(catstr, 0, bufferSize1 + bufferSize2 + 2);
+    YgSys_wcscpy(catstr, string);
+    YgSys_wcscat(catstr, L" ");
+    YgSys_wcscat(catstr, YgSys_GetUserName());
+
+    uintptr_t retval = YgFont_PrintLine64(X, Y, 480 << 6, catstr);
+
+    psp_free(catstr);
+
+    return retval;
+}
+
+uintptr_t field_YgFont_PrintLineFit64_StatusHook_PartnerName(int X, int Y, uintptr_t unk_a2, wchar_t* string, int32_t unk_t0, int partnerId)
+{
+    uintptr_t retval = 0;
+    wchar_t* string2 = YgSys_uGetPartnerName(partnerId, 0, 0);
+
+
+    if (string2)
+    {
+        size_t bufferSize1 = (YgSys_wcslen(string)) * sizeof(wchar_t);
+        size_t bufferSize2 = (YgSys_wcslen(string2)) * sizeof(wchar_t);
+
+        wchar_t* catstr = (wchar_t*)psp_malloc(bufferSize1 + bufferSize2 + 2);
+        YgSys_memset(catstr, 0, bufferSize1 + bufferSize2 + 2);
+        YgSys_wcscpy(catstr, string);
+        YgSys_wcscat(catstr, L" ");
+        YgSys_wcscat(catstr, string2);
+
+        retval = YgFont_PrintLine64(X, Y, 480 << 6, catstr);
+
+        psp_free(catstr);
+    }
+    else
+    {
+        retval = YgFont_PrintLine64(X, Y, 480 << 6, string);
+    }
+
+    return retval;
+}
+
 #ifndef __INTELLISENSE__
 __attribute__((naked)) void field_hkYgFont_PrintLineFit64()
 {
     asm volatile (
         "move $t1, $s7\n"
         "b field_YgFont_PrintLineFit64_QuizHook\n"
+        "nop"
+        );
+}
+
+__attribute__((naked)) void field_hkYgFont_PrintLineFit64_PartnerName()
+{
+    asm volatile (
+        "move $t1, $s1\n"
+        "b field_YgFont_PrintLineFit64_StatusHook_PartnerName\n"
         "nop"
         );
 }
@@ -96,6 +152,39 @@ void field_Patch(uintptr_t base_addr, uintptr_t base_size)
     minj_MakeCALL(0x237C, (uintptr_t)&YgSys_GetLang_Hook);
     minj_MakeCALL(0x2494, (uintptr_t)&YgSys_GetLang_Hook);
     minj_MakeCALL(0x2924, (uintptr_t)&YgSys_GetLang_Hook);
+
+    // fix PDA time Y pos and text formatting
+#define PDA_TIME_Y_POS 16
+#define PDA_TIME_X_POS_SHIFT 2
+#define PDA_TIME_COLON_X_POS_SHIFT 4
+
+    minj_WriteMemory16(0x194C, PDA_TIME_Y_POS);
+    minj_WriteMemory16(0x19F8, PDA_TIME_Y_POS);
+    minj_WriteMemory16(0x1AC8, PDA_TIME_Y_POS);
+    minj_WriteMemory16(0x1B8C, PDA_TIME_Y_POS);
+    minj_WriteMemory16(0x1BB4, PDA_TIME_Y_POS << 6);
+    minj_WriteMemory16(0x1C88, PDA_TIME_Y_POS << 6);
+    minj_WriteMemory16(0x1C30, PDA_TIME_Y_POS);
+    minj_WriteMemory16(0x1C60, PDA_TIME_Y_POS);
+    minj_WriteMemory16(0x1CD4, PDA_TIME_Y_POS);
+    minj_WriteMemory16(0x1D04, PDA_TIME_Y_POS);
+
+    minj_WriteMemory16(0x1BB0, (240 + PDA_TIME_COLON_X_POS_SHIFT) << 6);
+    minj_WriteMemory16(0x1C84, (267 + PDA_TIME_COLON_X_POS_SHIFT) << 6);
+
+    minj_WriteMemory16(0x1948, 241 + PDA_TIME_X_POS_SHIFT);
+    minj_WriteMemory16(0x19F4, 232 + PDA_TIME_X_POS_SHIFT);
+    minj_WriteMemory16(0x1AC4, 223 + PDA_TIME_X_POS_SHIFT);
+
+    // fix PDA status "name:" by concating it together with the name
+    minj_MakeCALL(0x1D3C, (uintptr_t)&field_YgFont_PrintLineFit64_StatusHook_PlayerName);
+    minj_MakeJMPwNOP(0x1D44, 0x1D6C);
+    // partner name
+    minj_MakeNOP(0x2450);
+    minj_MakeNOP(0x2460);
+    minj_MakeNOP(0x2464);
+    minj_MakeCALL(0x245C, (uintptr_t)&field_hkYgFont_PrintLineFit64_PartnerName);
+    minj_MakeJMP(0x2470, 0x2494);
 
     // scrolling bug fix for PDA
  //   minj_WriteMemory32(0x359C, 0x2631FF00); // addiu s1, s1, -0x100

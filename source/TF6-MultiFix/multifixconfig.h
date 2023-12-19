@@ -15,6 +15,7 @@ typedef struct _MultiFixConfig
 	int bMatrixFont;
 	int bSeePartnerCards;
 	int CheatControlPartner;
+	int bDisableInstall;
 }MultiFixConfig;
 
 // accessors
@@ -34,6 +35,8 @@ int mfconfig_GetSeePartnerCards();
 int mfconfig_SetSeePartnerCards(int val);
 int mfconfig_GetCheatControlPartner();
 int mfconfig_SetCheatControlPartner(int val);
+int mfconfig_GetDisableInstall();
+int mfconfig_SetDisableInstall(int val);
 
 void mfconfig_Init();
 

@@ -36,6 +36,9 @@
 #include <pspctrl.h>
 #include "multifixconfig.h"
 
+#include <psputility.h>
+#include <psputility_msgdialog.h>
+
 uintptr_t base_addr = 0;
 
 // uintptr_t base_addr_field = 0;
@@ -610,6 +613,15 @@ void YgFont_SetShadowFlg_Hook2(int val)
     return YgFont_SetShadowFlg(val & 1);
 }
 
+int InstallDialogHook(pspUtilityMsgDialogParams* params)
+{
+    YgSys_strcpy(params->message, "The installation feature has been disabled.\nTo re-enable, please reconfigure the plugin.");
+    YgSys_strcpy((char*)((uintptr_t)params + 0x284), "Back");
+    params->options = 0;
+
+    return sceUtilityMsgDialogInitStart(params);
+}
+
 void TFFixesInject()
 {
 	base_addr = minj_GetBaseAddress();
@@ -699,6 +711,12 @@ void TFFixesInject()
     minj_MakeCALL(0xCF38, (uintptr_t)&YgFont_GetShadowFlg_Hook);
     minj_MakeCALL(0xCF44, (uintptr_t)&YgFont_SetShadowFlg_Hook1);
     minj_MakeCALL(0xCF6C, (uintptr_t)&YgFont_SetShadowFlg_Hook2);
+
+    if (mfconfig_GetDisableInstall())
+    {
+        minj_MakeCALL(0x12650, (uintptr_t)&InstallDialogHook);
+        minj_MakeNOP(0x12744);
+    }
 
     // get partner name from regular chr names
     //minj_MakeNOP(0x23A10);

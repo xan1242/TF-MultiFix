@@ -59,6 +59,8 @@ int YgSys_strcmp(const char* str1, const char* str2);
 size_t YgSys_strlen(const char* str);
 wchar_t* YgSys_GetStrFromResource(uintptr_t ptrRes, int index);
 uintptr_t YgSys_GetOption();
+wchar_t* YgSys_GetUserName();
+wchar_t* YgSys_uGetPartnerName(int unk1, int unk2, int unk3);
 int YgSys_GetLang();
 int YgSys_GetLang_Hook();
 int YgSys_GetLang_Hook2();

@@ -16,7 +16,8 @@ MultiFixConfig mfconfig =
 	8000,	  // CheatPlayerLP
 	0,		  // bMatrixFont
 	1,		  // bSeePartnerCards
-	0		  // CheatControlPartner
+	0,		  // CheatControlPartner
+	1		  // bDisableInstall
 };
 
 // accessors
@@ -107,6 +108,17 @@ int mfconfig_SetCheatControlPartner(int val)
 {
 	mfconfig.CheatControlPartner = val;
 	return mfconfig.CheatControlPartner;
+}
+
+int mfconfig_GetDisableInstall()
+{
+	return mfconfig.bDisableInstall;
+}
+
+int mfconfig_SetDisableInstall(int val)
+{
+	mfconfig.bDisableInstall = (val == 1);
+	return val;
 }
 
 void mfconfig_Init()

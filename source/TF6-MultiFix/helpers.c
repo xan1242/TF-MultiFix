@@ -34,6 +34,8 @@ char* (*_YgSys_strcat)(char* dst, const char* src) = (char* (*)(char*, const cha
 int (*_YgSys_strcmp)(const char*, const char*) = (int (*)(const char*, const char*))(0);
 size_t(*_YgSys_strlen)(const char* str) = (size_t(*)(const char*))(0);
 uintptr_t (*_YgSys_GetOption)() = (uintptr_t(*)())(0);
+wchar_t* (*_YgSys_GetUserName)() = (wchar_t* (*)())(0);
+wchar_t* (*_YgSys_uGetPartnerName)(int, int, int) = (wchar_t* (*)(int, int, int))(0);
 wchar_t* (*_YgSys_GetStrFromResource)(uintptr_t, int) = (wchar_t* (*)(uintptr_t, int))(0);
 uintptr_t (*_EhFolder_SearchFile)(uintptr_t, const char*, uintptr_t) = (uintptr_t (*)(uintptr_t, const char*, uintptr_t))(0);
 
@@ -95,6 +97,16 @@ int YgSys_GetLang_Hook2()
 uintptr_t YgSys_GetOption()
 {
     return _YgSys_GetOption();
+}
+
+wchar_t* YgSys_GetUserName()
+{
+    return _YgSys_GetUserName();
+}
+
+wchar_t* YgSys_uGetPartnerName(int unk1, int unk2, int unk3)
+{
+    return _YgSys_uGetPartnerName(unk1, unk2, unk3);
 }
 
 void* YgSys_memset(void* ptr, int value, size_t num)
@@ -815,6 +827,8 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_memset = (void* (*)(void*, int, size_t))(0x4A4E0 + base_addr);
     _YgSys_memcpy = (void* (*)(void*, const void*, size_t))(0x4A1DC + base_addr);
     _YgSys_GetOption = (uintptr_t(*)())(0x292B8 + base_addr);
+    _YgSys_GetUserName = (wchar_t*(*)())(0x25BF8 + base_addr);
+    _YgSys_uGetPartnerName = (wchar_t* (*)(int, int, int))(0x22FE4 + base_addr);
     _YgSys_GetStrFromResource = (wchar_t* (*)(uintptr_t, int))(0x9094 + base_addr);
     _EhFolder_SearchFile = (uintptr_t(*)(uintptr_t, const char*, uintptr_t))(0x33EB0 + base_addr);
     _YgSys_strcmp = (int (*)(const char*, const char*))(0x4A628 + base_addr);
