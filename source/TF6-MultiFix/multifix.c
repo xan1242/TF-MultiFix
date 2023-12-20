@@ -10,7 +10,6 @@
 #include <kubridge.h>
 #include <ctype.h>
 #include "../../includes/psp/stringhash.h"
-//#include "../../includes/psp/injector.h"
 
 #include "multifix.h"
 #include "helpers.h"
@@ -116,9 +115,11 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         return 0;
     }
 
+    int nameHash = bStringHash(modNameUpper);
+
     SetGameState(EHSTATE_UNKNOWN);
 
-    if (bStringHash(modNameUpper) == REL_TITLE_PRX_STRHASH)
+    if (nameHash == REL_TITLE_PRX_STRHASH)
     {
         SetGameState(EHSTATE_TITLE);
 
@@ -135,7 +136,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_DECK_PRX_STRHASH)
+    if (nameHash == REL_DECK_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -153,7 +154,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_DUELMGR_PRX_STRHASH)
+    if (nameHash == REL_DUELMGR_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -170,7 +171,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_UMDREPLACE_PRX_STRHASH)
+    if (nameHash == REL_UMDREPLACE_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -185,7 +186,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_GALLERY_PRX_STRHASH)
+    if (nameHash == REL_GALLERY_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -200,7 +201,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_STORY_PRX_STRHASH)
+    if (nameHash == REL_STORY_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -240,10 +241,12 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         return 0;
     }
 
+    int nameHash = bStringHash(modNameUpper);
+
     SetGameState(EHSTATE_UNKNOWN);
 
 
-    if (bStringHash(modNameUpper) == REL_FIELD_PRX_STRHASH)
+    if (nameHash == REL_FIELD_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -261,7 +264,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_SHOP_PRX_STRHASH)
+    if (nameHash == REL_SHOP_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -279,7 +282,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_DUELDRAW_PRX_STRHASH)
+    if (nameHash == REL_DUELDRAW_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -296,7 +299,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_DUELENG_PRX_STRHASH)
+    if (nameHash == REL_DUELENG_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -314,7 +317,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_CHARALIST_PRX_STRHASH)
+    if (nameHash == REL_CHARALIST_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -331,7 +334,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_TUTORIALLIST_PRX_STRHASH)
+    if (nameHash == REL_TUTORIALLIST_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -348,7 +351,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_DUELRECORD_PRX_STRHASH)
+    if (nameHash == REL_DUELRECORD_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -365,7 +368,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_DECKTUTORIAL_PRX_STRHASH)
+    if (nameHash == REL_DECKTUTORIAL_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -380,7 +383,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_TUTORIAL_PRX_STRHASH)
+    if (nameHash == REL_TUTORIAL_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -395,7 +398,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_PASSWORD_PRX_STRHASH)
+    if (nameHash == REL_PASSWORD_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -410,7 +413,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_SELECTCARD_PRX_STRHASH)
+    if (nameHash == REL_SELECTCARD_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -425,7 +428,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_CARDALBUM_PRX_STRHASH)
+    if (nameHash == REL_CARDALBUM_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -440,7 +443,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_SOUNDTEST_PRX_STRHASH)
+    if (nameHash == REL_SOUNDTEST_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -455,7 +458,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (bStringHash(modNameUpper) == REL_RECIPEVIEWER_PRX_STRHASH)
+    if (nameHash == REL_RECIPEVIEWER_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -536,12 +539,128 @@ int YgSys_GetAssignButton_Hook(int isDeclineButton)
 //     return cbptr;
 // }
 
+YgSelWnd testWindow;
+wchar_t testWindowTitle[] = L"Test Window Yay!";
+wchar_t* testWindowItems[] =
+{
+    L"Item 1",
+    L"Item 2",
+    L"Item 3",
+    L"Item 4",
+    L"Item 5"
+};
+
+int bTestWindowInited = 0;
+
+uintptr_t TestWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
+{
+//#ifdef TFMULTIFIX_DEBUG_PRINT
+//    sceKernelPrintf("TestWindowCallback !!!");
+//#endif
+
+    YgFont_SetEhPckt(ehpacket);
+
+    YgFont_SetSize(15, 15);
+    YgFont_SetRubyCharFlg(0);
+    YgFont_SetShadowFlg(1);
+    YgFont_SetChColorFlg(1);
+    YgFont_SetDefaultColor(0xFFFFFFFF);
+    YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, testWindowItems[item_index]);
+
+    return YgFont_GetEhPckt();
+}
+
+void CreateTestWindow()
+{
+#ifdef TFMULTIFIX_DEBUG_PRINT
+    sceKernelPrintf("Creating test YgSelWnd...");
+#endif
+    YgSys_memset(&testWindow, 0, sizeof(YgSelWnd));
+    testWindow.heapptr = helpers_GetMainEhHeap();
+    testWindow.title = testWindowTitle;
+    testWindow.itemcount = (sizeof(testWindowItems) / sizeof(wchar_t*));
+    testWindow.unk49 = 2 | 4 | 8;
+    testWindow.unk49_2 = 16;
+    //testWindow.unk50 = 2;
+
+    testWindow.Xsize = 100;
+    testWindow.Ysize = (27 * testWindow.itemcount);
+
+    testWindow.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)testWindow.Xsize * 0.5f));
+    testWindow.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)testWindow.Ysize * 0.5f));
+
+    testWindow.color = 0xFFFFFFFF;
+    testWindow.ItemDrawCallback = (uintptr_t)&TestWindowCallback;
+
+    int SelDrawWidth = testWindow.Xsize;
+
+    //testWindow.unk2 = 1;
+    testWindow.unk3 = 1;
+    testWindow.BGColor = 0;
+    testWindow.unk6 = 2;
+    testWindow.unk12 = 0;
+    //testWindow.unk13 = 400;
+    //testWindow.unk14 = 0;
+    //testWindow.unk15 = 100;
+    
+    testWindow.unk22 = 1;
+    testWindow.unk25 = 1;
+    testWindow.unk28 = 1;
+    testWindow.unk29 = 1;
+    testWindow.unk30 = 1;
+    testWindow.unk31 = 1;
+    testWindow.unk32 = 0;
+    testWindow.unk36 = 0;
+    //testWindow.unk42 = -1;
+    testWindow.unk43 = 2;
+    testWindow.unk44 = 2;
+    testWindow.unk50 = 0;
+    testWindow.unk57 = 0;
+
+
+
+    testWindow.unk38 = 0xC;
+    testWindow.unk42 = -1;
+    testWindow.unk60 = 0x184;
+    testWindow.SelDrawWidth1 = SelDrawWidth - 12;
+    testWindow.SelDrawHeight1 = 25;
+    testWindow.SelDrawWidth2 = SelDrawWidth - 12;
+    testWindow.SelDrawHeight1 = 25;
+
+    YgSelWnd_Init(&testWindow);
+#ifdef TFMULTIFIX_DEBUG_PRINT
+    sceKernelPrintf("YgSelWnd created at 0x%X", &testWindow);
+#endif
+    bTestWindowInited = 1;
+}
+
+void DrawTestWindow()
+{
+    if (!bTestWindowInited)
+        return;
+
+    uintptr_t packet = EhPckt_Open(4, 0);
+// #ifdef TFMULTIFIX_DEBUG_PRINT
+//     sceKernelPrintf("TestWindow EhPacket: 0x%X", packet);
+// #endif
+
+    //YgSelWnd_Cont(&testWindow);
+    YgSelWnd_Draw((uintptr_t)&packet, &testWindow);
+
+    EhPckt_Close(packet);
+}
+
 void HandleButtonCheats()
 {
     uint32_t buttons = GetPadButtons(0);
 
     if (buttons & (PSP_CTRL_WLAN_UP | PSP_CTRL_RTRIGGER)) // wlan on & R = cheat input mode
     {
+        //if (buttons & PSP_CTRL_TRIANGLE)
+        //{
+        //    DrawTestWindow();
+        //}
+
         // duel cheats
         if (GetGameState() == EHSTATE_DUEL)
         {
@@ -588,6 +707,7 @@ void HandleButtonCheats()
 // do stuff at the end of main loop
 void lSoftReset_Hook()
 {
+    DrawTestWindow();
     HandleButtonCheats();
     return lSoftReset();
 }
@@ -623,6 +743,27 @@ int InstallDialogHook(pspUtilityMsgDialogParams* params)
     return sceUtilityMsgDialogInitStart(params);
 }
 
+// void HandlePreInit()
+// {
+// 
+// }
+
+void HandlePostInit()
+{
+#ifdef TFMULTIFIX_DEBUG_PRINT
+    sceKernelPrintf("After YgSys_InitApplication(), heap addr: 0x%X", helpers_GetMainEhHeap());
+#endif
+    CreateTestWindow();
+
+
+}
+
+void YgSys_InitApplication_Hook()
+{
+    YgSys_InitApplication();
+    HandlePostInit();
+}
+
 void TFFixesInject()
 {
 	base_addr = minj_GetBaseAddress();
@@ -635,6 +776,9 @@ void TFFixesInject()
 
     helpers_Init(base_addr);
     mfconfig_Init();
+
+    // init hook
+    minj_MakeCALL(0x5AD0, (uintptr_t)&YgSys_InitApplication_Hook);
 
     // main loop hook
     lSoftReset = (void(*)())(0x5954 + base_addr);

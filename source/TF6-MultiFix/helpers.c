@@ -23,7 +23,9 @@ uintptr_t (*_YgFont_PrintLineFit64)(int, int, uintptr_t, wchar_t*, int32_t) = (u
 void (*_YgFont_SetWordSeparateFlg)(int) = (void (*)(int))(0);
 int (*_YgFont_GetWordSeparateFlg)() = (int (*)())(0);
 void (*_YgFont_SetShadowFlg)(int) = (void (*)(int))(0);
+void (*_YgFont_SetRubyCharFlg)(int) = (void (*)(int))(0);
 int (*_YgFont_GetShadowFlg)() = (int (*)())(0);
+int (*_YgFont_GetRubyCharFlg)() = (int (*)())(0);
 wchar_t* (*_YgSys_wcscat)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 wchar_t* (*_YgSys_wcscpy)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 size_t(*_YgSys_wcslen)(const wchar_t* str) = (size_t(*)(const wchar_t*))(0);
@@ -38,10 +40,26 @@ wchar_t* (*_YgSys_GetUserName)() = (wchar_t* (*)())(0);
 wchar_t* (*_YgSys_uGetPartnerName)(int, int, int) = (wchar_t* (*)(int, int, int))(0);
 wchar_t* (*_YgSys_GetStrFromResource)(uintptr_t, int) = (wchar_t* (*)(uintptr_t, int))(0);
 uintptr_t (*_EhFolder_SearchFile)(uintptr_t, const char*, uintptr_t) = (uintptr_t (*)(uintptr_t, const char*, uintptr_t))(0);
+void (*_YgSys_InitApplication)() = (void (*)())(0);
+
+// WINDOW DRAW STUFF
+uintptr_t(*_EhPckt_Open)(int unk1, int unk2) = (uintptr_t(*)(int, int))(0);
+int(*_EhPckt_Close)(uintptr_t packet) = (int(*)(uintptr_t))(0);
+uintptr_t(*_YgSelWnd_Init)(YgSelWnd* window) = (uintptr_t(*)(YgSelWnd*))(0);
+uintptr_t(*_YgSelWnd_Cont)(YgSelWnd* window) = (uintptr_t(*)(YgSelWnd*))(0);
+uintptr_t(*_YgSelWnd_Draw)(uintptr_t ehpacket, YgSelWnd* window) = (uintptr_t(*)(uintptr_t, YgSelWnd*))(0);
+uintptr_t(*_YgFont_SetEhPckt)(uintptr_t ehpacket) = (uintptr_t(*)(uintptr_t))(0);
+uintptr_t(*_YgFont_GetEhPckt)() = (uintptr_t(*)())(0);
+void(*_YgFont_SetSize)(int size1, int size2) = (void(*)(int, int))(0);
+void(*_YgFont_SetChColorFlg)(int val) = (void(*)(int))(0);
+void(*_YgFont_SetDefaultColor)(uint32_t color_argb) = (void(*)(uint32_t))(0);
+
+
 
 char theJegfis[] = "jegfis";
 char strTblDefaultFilename[] = "strTbl_j.bin";
 
+uintptr_t helper_base = 0;
 uintptr_t ygfont_base = 0;
 uintptr_t yglang_base = 0;
 
@@ -73,6 +91,11 @@ uint32_t GetPadButtons(int bGiveOneShot)
         return *(uint32_t*)(ptrPad + 0x24);
 
     return *(uint32_t*)(ptrPad + 0x18);
+}
+
+void YgSys_InitApplication()
+{
+    return _YgSys_InitApplication();
 }
 
 int YgSys_GetLang()
@@ -496,6 +519,21 @@ int YgFont_GetShadowFlg()
     return _YgFont_GetShadowFlg();
 }
 
+void YgFont_SetRubyCharFlg(int val)
+{
+    if (!_YgFont_SetRubyCharFlg)
+        return;
+
+    _YgFont_SetRubyCharFlg(val);
+}
+
+int YgFont_GetRubyCharFlg()
+{
+    if (!_YgFont_GetRubyCharFlg)
+        return 0;
+    return _YgFont_GetRubyCharFlg();
+}
+
 // void tf_ReplaceFirstChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr)
 // {
 //     wchar_t* firstChar = tf_wcschr(str, target_chr);
@@ -803,6 +841,57 @@ int tf_strcmp(const char* s1, const char* s2)
     return *(const unsigned char*)s1 - *(const unsigned char*)s2;
 }
 
+// window draw stuff -- not checking func pointers for performance reasons
+uintptr_t EhPckt_Open(int unk1, int unk2)
+{
+    return _EhPckt_Open(unk1, unk2);
+}
+
+int EhPckt_Close(uintptr_t packet)
+{
+    return _EhPckt_Close(packet);
+}
+
+uintptr_t YgSelWnd_Init(YgSelWnd* window)
+{
+    return _YgSelWnd_Init(window);
+}
+
+uintptr_t YgSelWnd_Cont(YgSelWnd* window)
+{
+    return _YgSelWnd_Cont(window);
+}
+
+uintptr_t YgSelWnd_Draw(uintptr_t ehpacket, YgSelWnd* window)
+{
+    return _YgSelWnd_Draw(ehpacket, window);
+}
+
+uintptr_t YgFont_SetEhPckt(uintptr_t ehpacket)
+{
+    return _YgFont_SetEhPckt(ehpacket);
+}
+
+uintptr_t YgFont_GetEhPckt()
+{
+    return _YgFont_GetEhPckt();
+}
+
+void YgFont_SetSize(int size1, int size2)
+{
+    return _YgFont_SetSize(size1, size2);
+}
+
+void YgFont_SetChColorFlg(int val)
+{
+    return _YgFont_SetChColorFlg(val);
+}
+
+void YgFont_SetDefaultColor(uint32_t color_argb)
+{
+    return _YgFont_SetDefaultColor(color_argb);
+}
+
 uint32_t ReturnZeroFunc()
 {
     return 0;
@@ -822,6 +911,11 @@ void helpers_SetYgLangHookBase(uintptr_t base_addr)
 }
 #endif
 
+uintptr_t helpers_GetMainEhHeap()
+{
+    return *(uintptr_t*)(MAIN_EHHEAP_ADDR + helper_base);
+}
+
 void helpers_SetPPSSPP(int val)
 {
     _bIsOnPPSSPP = val;
@@ -829,13 +923,16 @@ void helpers_SetPPSSPP(int val)
 
 void helpers_Init(uintptr_t base_addr)
 {
+    _YgSys_InitApplication = (void (*)())(0x84F8 + base_addr);
     _EhPad_Get = (uintptr_t(*)())(0x3A428 + base_addr);
     _YgFont_PrintLine64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0x17F0 + base_addr);
     _YgFont_PrintLineFit64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0x4410 + base_addr);
     _YgFont_SetWordSeparateFlg = (void (*)(int))(0x21AC + base_addr);
     _YgFont_GetWordSeparateFlg = (int (*)())(0x21E8 + base_addr);
     _YgFont_SetShadowFlg = (void (*)(int))(0x2140 + base_addr);
+    _YgFont_SetRubyCharFlg = (void (*)(int))(0x2284 + base_addr);
     _YgFont_GetShadowFlg = (int (*)())(0x217C + base_addr);
+    _YgFont_GetRubyCharFlg = (int (*)())(0x22C4 + base_addr);
     _YgSys_wcscat = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BFA0 + base_addr);
     _YgSys_wcscpy = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BF10 + base_addr);
     _YgSys_wcslen = (size_t(*)(const wchar_t*))(0x0002BEB0 + base_addr);
@@ -851,6 +948,19 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_strcat = (char* (*)(char*, const char*))(0x4A5CC + base_addr);
     _YgSys_strlen = (size_t(*)(const char*))(0x4A6A0 + base_addr);
 
+    // window draw stuff
+    _EhPckt_Open = (uintptr_t(*)(int, int))(0x0003A954 + base_addr);
+    _EhPckt_Close = (int(*)(uintptr_t))(0x3AA40 + base_addr);
+    _YgSelWnd_Init = (uintptr_t(*)(YgSelWnd*))(0x67A0 + base_addr);
+    _YgSelWnd_Cont = (uintptr_t(*)(YgSelWnd*))(0x7534 + base_addr);
+    _YgSelWnd_Draw = (uintptr_t(*)(uintptr_t, YgSelWnd*))(0x6A84 + base_addr);
+    _YgFont_SetEhPckt = (uintptr_t(*)(uintptr_t))(0x2324 + base_addr);
+    _YgFont_GetEhPckt = (uintptr_t(*)())(0x2368 + base_addr);
+    _YgFont_SetSize = (void(*)(int, int))(0x12A0 + base_addr);
+    _YgFont_SetChColorFlg = (void(*)(int))(0x20D4 + base_addr);
+    _YgFont_SetDefaultColor = (void(*)(uint32_t))(0x12F4 + base_addr);
+
     ygfont_base = base_addr;
     yglang_base = base_addr;
+    helper_base = base_addr;
 }
