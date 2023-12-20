@@ -233,17 +233,32 @@ int PPSSPP_FindModuleByName(const char* name, SceKernelModuleInfo* outInfo)
     return -1;
 }
 
-void str_tolower(char* str)
+// void str_tolower(char* str)
+// {
+//     if (!str)
+//         return;
+// 
+//     // Iterate through each character in the string
+//     while (*str)
+//     {
+//         // Convert uppercase characters to lowercase
+//         *str = tolower(*str);
+//         // Move to the next character
+//         str++;
+//     }
+// }
+
+void str_tocase(char* str, int bToUpper)
 {
     if (!str)
         return;
 
-    // Iterate through each character in the string
     while (*str)
     {
-        // Convert uppercase characters to lowercase
-        *str = tolower(*str);
-        // Move to the next character
+        if (bToUpper != 0)
+            *str = toupper(*str);
+        else
+            *str = tolower(*str);
         str++;
     }
 }

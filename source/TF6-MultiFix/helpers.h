@@ -24,7 +24,7 @@ typedef enum _EhGameState
 }EhGameState;
 
 int PPSSPP_FindModuleByName(const char* name, SceKernelModuleInfo* outInfo);
-void str_tolower(char* str);
+void str_tocase(char* str, int bToUpper);
 //uintptr_t MIPS_DiscoverPtr(uintptr_t start, uintptr_t* outptrLUI, uintptr_t* outptrADDIU, RegisterID register_num);
 //uintptr_t MIPS_DiscoverPtr_a2(uintptr_t start, uintptr_t* outptrLUI, uintptr_t* outptrADDIU);
 //void MIPS_CalcNewRegValue(uint32_t val, uint32_t* outLUI, uint32_t* outADDIU, RegisterID register_num);

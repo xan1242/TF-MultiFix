@@ -9,6 +9,7 @@
 #include <systemctrl.h>
 #include <kubridge.h>
 #include <ctype.h>
+#include "../../includes/psp/stringhash.h"
 //#include "../../includes/psp/injector.h"
 
 #include "multifix.h"
@@ -104,11 +105,11 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
     sceKernelPrintf("LOADED MODULE: %s", modName);
 #endif
 
-    char modNameLower[16];
-    YgSys_strcpy(modNameLower, modName);
-    str_tolower(modNameLower);
+    char modNameUpper[16];
+    YgSys_strcpy(modNameUpper, modName);
+    str_tocase(modNameUpper, 1);
 
-    if (tf_strstr(modNameLower, "psmf"))
+    if (tf_strstr(modNameUpper, "PSMF"))
     {
         if (lEhModule_Load_EndCallback)
             return lEhModule_Load_EndCallback(unk1, unk2);
@@ -117,7 +118,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
 
     SetGameState(EHSTATE_UNKNOWN);
 
-    if (tf_strstr(modNameLower, "title.p"))
+    if (bStringHash(modNameUpper) == REL_TITLE_PRX_STRHASH)
     {
         SetGameState(EHSTATE_TITLE);
 
@@ -134,7 +135,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "deck.p"))
+    if (bStringHash(modNameUpper) == REL_DECK_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -152,7 +153,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "duelmgr.p"))
+    if (bStringHash(modNameUpper) == REL_DUELMGR_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -169,7 +170,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "umdreplace"))
+    if (bStringHash(modNameUpper) == REL_UMDREPLACE_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -184,7 +185,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "gallery"))
+    if (bStringHash(modNameUpper) == REL_GALLERY_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -199,7 +200,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "story"))
+    if (bStringHash(modNameUpper) == REL_STORY_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -228,11 +229,11 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
     sceKernelPrintf("LOADED MODULE: %s", modName);
 #endif
 
-    char modNameLower[16];
-    YgSys_strcpy(modNameLower, modName);
-    str_tolower(modNameLower);
+    char modNameUpper[16];
+    YgSys_strcpy(modNameUpper, modName);
+    str_tocase(modNameUpper, 1);
 
-    if (tf_strstr(modNameLower, "psmf"))
+    if (tf_strstr(modNameUpper, "psmf"))
     {
         if (lEhModule_Load_EndCallback)
             return lEhModule_Load_EndCallback(unk1, unk2);
@@ -242,7 +243,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
     SetGameState(EHSTATE_UNKNOWN);
 
 
-    if (tf_strstr(modNameLower, "field"))
+    if (bStringHash(modNameUpper) == REL_FIELD_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -260,7 +261,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "shop"))
+    if (bStringHash(modNameUpper) == REL_SHOP_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -278,7 +279,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "dueldraw.p"))
+    if (bStringHash(modNameUpper) == REL_DUELDRAW_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -295,7 +296,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "dueleng.p"))
+    if (bStringHash(modNameUpper) == REL_DUELENG_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -313,7 +314,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "charalist"))
+    if (bStringHash(modNameUpper) == REL_CHARALIST_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -330,7 +331,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "tutoriallist"))
+    if (bStringHash(modNameUpper) == REL_TUTORIALLIST_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -347,7 +348,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "duelrec"))
+    if (bStringHash(modNameUpper) == REL_DUELRECORD_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -364,7 +365,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "decktut"))
+    if (bStringHash(modNameUpper) == REL_DECKTUTORIAL_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -379,7 +380,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "_tutori")) // for tf1 it's libtutorial.prx, for tf6 it's rel_Tutorial.prx
+    if (bStringHash(modNameUpper) == REL_TUTORIAL_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -394,7 +395,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "password"))
+    if (bStringHash(modNameUpper) == REL_PASSWORD_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -409,7 +410,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "selectca"))
+    if (bStringHash(modNameUpper) == REL_SELECTCARD_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -424,7 +425,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "cardalbum"))
+    if (bStringHash(modNameUpper) == REL_CARDALBUM_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -439,7 +440,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "soundtest"))
+    if (bStringHash(modNameUpper) == REL_SOUNDTEST_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
@@ -454,7 +455,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
         }
     }
 
-    if (tf_strstr(modNameLower, "recipe"))
+    if (bStringHash(modNameUpper) == REL_RECIPEVIEWER_PRX_STRHASH)
     {
         uintptr_t bs = 0;
         uintptr_t sz = 0;
