@@ -45,9 +45,6 @@ void (*_YgSys_InitApplication)() = (void (*)())(0);
 // WINDOW DRAW STUFF
 uintptr_t(*_EhPckt_Open)(int unk1, int unk2) = (uintptr_t(*)(int, int))(0);
 int(*_EhPckt_Close)(uintptr_t packet) = (int(*)(uintptr_t))(0);
-// uintptr_t(*_YgSelWnd_Init)(YgSelWnd* window) = (uintptr_t(*)(YgSelWnd*))(0);
-// uintptr_t(*_YgSelWnd_Cont)(YgSelWnd* window) = (uintptr_t(*)(YgSelWnd*))(0);
-// uintptr_t(*_YgSelWnd_Draw)(uintptr_t ehpacket, YgSelWnd* window) = (uintptr_t(*)(uintptr_t, YgSelWnd*))(0);
 uintptr_t(*_YgFont_SetEhPckt)(uintptr_t ehpacket) = (uintptr_t(*)(uintptr_t))(0);
 uintptr_t(*_YgFont_GetEhPckt)() = (uintptr_t(*)())(0);
 void(*_YgFont_SetSize)(int size1, int size2) = (void(*)(int, int))(0);
@@ -255,21 +252,6 @@ int PPSSPP_FindModuleByName(const char* name, SceKernelModuleInfo* outInfo)
 
     return -1;
 }
-
-// void str_tolower(char* str)
-// {
-//     if (!str)
-//         return;
-// 
-//     // Iterate through each character in the string
-//     while (*str)
-//     {
-//         // Convert uppercase characters to lowercase
-//         *str = tolower(*str);
-//         // Move to the next character
-//         str++;
-//     }
-// }
 
 void str_tocase(char* str, int bToUpper)
 {
@@ -951,9 +933,6 @@ void helpers_Init(uintptr_t base_addr)
     // window draw stuff
     _EhPckt_Open = (uintptr_t(*)(int, int))(0x0003A954 + base_addr);
     _EhPckt_Close = (int(*)(uintptr_t))(0x3AA40 + base_addr);
-    // _YgSelWnd_Init = (uintptr_t(*)(YgSelWnd*))(0x67A0 + base_addr);
-    // _YgSelWnd_Cont = (uintptr_t(*)(YgSelWnd*))(0x7534 + base_addr);
-    // _YgSelWnd_Draw = (uintptr_t(*)(uintptr_t, YgSelWnd*))(0x6A84 + base_addr);
     _YgFont_SetEhPckt = (uintptr_t(*)(uintptr_t))(0x2324 + base_addr);
     _YgFont_GetEhPckt = (uintptr_t(*)())(0x2368 + base_addr);
     _YgFont_SetSize = (void(*)(int, int))(0x12A0 + base_addr);
