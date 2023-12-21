@@ -186,6 +186,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\tutorial.c" />
     <ClCompile Include="source\TF6-MultiFix\tutoriallist.c" />
     <ClCompile Include="source\TF6-MultiFix\umdreplace.c" />
+    <ClCompile Include="source\TF6-MultiFix\YgWindow.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".\data\plugin.ini" />
@@ -218,6 +219,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClInclude Include="source\TF6-MultiFix\tutorial.h" />
     <ClInclude Include="source\TF6-MultiFix\tutoriallist.h" />
     <ClInclude Include="source\TF6-MultiFix\umdreplace.h" />
+    <ClInclude Include="source\TF6-MultiFix\YgWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

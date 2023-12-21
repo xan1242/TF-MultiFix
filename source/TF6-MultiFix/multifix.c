@@ -33,6 +33,7 @@
 #include "recipeviewer.h"
 #include "story.h"
 #include "title.h"
+#include "YgWindow.h"
 #include <pspctrl.h>
 #include "multifixconfig.h"
 
@@ -550,6 +551,8 @@ wchar_t* testWindowItems[] =
     L"Item 5"
 };
 
+int bTestWindowDarkMode = 0;
+
 int bTestWindowInited = 0;
 
 uintptr_t TestWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
@@ -564,7 +567,10 @@ uintptr_t TestWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
     YgFont_SetRubyCharFlg(0);
     YgFont_SetShadowFlg(1);
     YgFont_SetChColorFlg(1);
-    YgFont_SetDefaultColor(0xFFFFFFFF);
+    if (bTestWindowDarkMode)
+        YgFont_SetDefaultColor(0xFFFFFFFF);
+    else
+        YgFont_SetDefaultColor(0xFF000000);
     YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, testWindowItems[item_index]);
 
     return YgFont_GetEhPckt();
@@ -576,51 +582,68 @@ void CreateTestWindow()
     sceKernelPrintf("Creating test YgSelWnd...");
 #endif
     YgSys_memset(&testWindow, 0, sizeof(YgSelWnd));
-    testWindow.heapptr = helpers_GetMainEhHeap();
-    testWindow.title = testWindowTitle;
+    testWindow.window.heapptr = helpers_GetMainEhHeap();
+    testWindow.window.caption = testWindowTitle;
     testWindow.itemcount = (sizeof(testWindowItems) / sizeof(wchar_t*));
-    testWindow.unk49 = 2 | 4 | 8;
-    testWindow.unk49_2 = 16;
+    //testWindow.window.maxitems = 2;
+    testWindow.unk57 = 4;
+    testWindow.selFlags = YGSEL_HIGHLIGHT | YGSEL_VERTICAL;
     //testWindow.unk50 = 2;
 
-    testWindow.Xsize = 100;
-    testWindow.Ysize = (27 * testWindow.itemcount);
+    testWindow.window.Xsize = 200;
+    testWindow.window.Ysize = (32 * testWindow.itemcount) - (4 * testWindow.itemcount);
+    //testWindow.window.Ysize = 32 * 2;
 
-    testWindow.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)testWindow.Xsize * 0.5f));
-    testWindow.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)testWindow.Ysize * 0.5f));
+    testWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)testWindow.window.Xsize * 0.5f));
+    testWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)testWindow.window.Ysize * 0.5f));
 
-    testWindow.color = 0xFFFFFFFF;
+    testWindow.window.color = 0xFFFFFFFF;
     testWindow.ItemDrawCallback = (uintptr_t)&TestWindowCallback;
 
-    int SelDrawWidth = testWindow.Xsize;
+    int SelDrawWidth = testWindow.window.Xsize;
 
     //testWindow.unk2 = 1;
-    testWindow.unk3 = 1;
-    testWindow.BGColor = 0;
-    testWindow.unk6 = 2;
-    testWindow.unk12 = 0;
+    testWindow.window.unk3 = 1;
+    if (bTestWindowDarkMode)
+    {
+        testWindow.window.windowBGColor = YGWINDOW_BG_DARK;
+    }
+    else
+    {
+        testWindow.window.windowBGColor = YGWINDOW_BG_LIGHT;
+    }
+    testWindow.window.captionBGColor = YGWINDOW_BG_DARK;
+
+
+    testWindow.window.unk12 = 0;
     //testWindow.unk13 = 400;
     //testWindow.unk14 = 0;
     //testWindow.unk15 = 100;
     
-    testWindow.unk22 = 1;
-    testWindow.unk25 = 1;
-    testWindow.unk28 = 1;
-    testWindow.unk29 = 1;
-    testWindow.unk30 = 1;
-    testWindow.unk31 = 1;
-    testWindow.unk32 = 0;
-    testWindow.unk36 = 0;
+    testWindow.window.bWindowCaption = 1;
+    testWindow.window.bAutoSizeCaption = 0; // this is broken until the font is initialized
+    testWindow.window.captionWidth = (int)((float)testWindow.window.Xsize * 0.65f);
+    testWindow.window.captionHeight = 16;
+    //testWindow.unk23_1 = 117;
+    //testWindow.unk23_2 = 16;
+    //testWindow.unk24 = testWindowTitle;
+    testWindow.window.bCaptionFontShadow = 1;
+    testWindow.window.unk28 = 2;
+    testWindow.window.unk29 = 2;
+    testWindow.window.unk30 = 2;
+    testWindow.window.unk31 = 2;
+    testWindow.window.unk32 = 0;
+    testWindow.window.unk36 = 0;
     //testWindow.unk42 = -1;
-    testWindow.unk43 = 2;
-    testWindow.unk44 = 2;
-    testWindow.unk50 = 0;
+    testWindow.window.unk43 = 2;
+    testWindow.window.unk44 = 2;
+    //testWindow.window.unk50 = 0;
     testWindow.unk57 = 0;
 
 
 
-    testWindow.unk38 = 0xC;
-    testWindow.unk42 = -1;
+    testWindow.window.captionFontSize = 12;
+    testWindow.window.captionFontColor = 0xFFFFFFFF;
     testWindow.unk60 = 0x184;
     testWindow.SelDrawWidth1 = SelDrawWidth - 12;
     testWindow.SelDrawHeight1 = 25;
@@ -630,6 +653,7 @@ void CreateTestWindow()
     YgSelWnd_Init(&testWindow);
 #ifdef TFMULTIFIX_DEBUG_PRINT
     sceKernelPrintf("YgSelWnd created at 0x%X", &testWindow);
+    sceKernelPrintf("captionWidth at 0x%X", &testWindow.window.captionWidth);
 #endif
     bTestWindowInited = 1;
 }
@@ -638,13 +662,19 @@ void DrawTestWindow()
 {
     if (!bTestWindowInited)
         return;
+    
+    // if ((testWindow.captionWidth <= 21) || (testWindow.captionHeight <= 4))
+    // {
+    //     testWindow.captionWidth = 0;
+    //     testWindow.captionHeight = 0;
+    // }
 
     uintptr_t packet = EhPckt_Open(4, 0);
 // #ifdef TFMULTIFIX_DEBUG_PRINT
 //     sceKernelPrintf("TestWindow EhPacket: 0x%X", packet);
 // #endif
 
-    //YgSelWnd_Cont(&testWindow);
+    YgSelWnd_Cont(&testWindow);
     YgSelWnd_Draw((uintptr_t)&packet, &testWindow);
 
     EhPckt_Close(packet);
@@ -775,6 +805,7 @@ void TFFixesInject()
 #endif
 
     helpers_Init(base_addr);
+    YgWindow_Init(base_addr);
     mfconfig_Init();
 
     // init hook

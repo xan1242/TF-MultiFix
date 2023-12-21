@@ -95,6 +95,9 @@
     <ClCompile Include="source\TF6-MultiFix\title.c">
       <Filter>source\TF6-MultiFix</Filter>
     </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\YgWindow.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -164,6 +167,9 @@
       <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\title.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\YgWindow.h">
       <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
   </ItemGroup>
