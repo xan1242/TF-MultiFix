@@ -31,7 +31,7 @@ typedef struct _ygWindowResource
 	uintptr_t unkptr1;
 	char unk1[0x3C];
 	int unk2; // 0x40 -- 1
-	uintptr_t unkptr2; // pointer to some GIM texture
+	uintptr_t selCsrTexture; // pointer to some GIM texture
 	uintptr_t unkptr3; // the heap allocated by EhHeap
 }ygWindowResource;
 
@@ -106,8 +106,11 @@ typedef struct _YgSelWnd
 	/* 0x090 */ int unk59;
 	/* 0x094 */ int unk60; // 0xE0
 	/* 0x098 */ int unk61;
-	/* 0x09C */ uintptr_t unkptr5; // 0xE8 -- pointer to some GIM texture
-	/* 0x0A0 */ int unk62; // 0xEC
+	/* 0x09C */ uintptr_t buttonTexture; // 0xE8 -- pointer to some GIM texture
+	/* 0x0A0 */ unsigned char unk62_1; // 0xEC // some flags again, decide button related
+	/* 0x0A0 */ unsigned char unk62_2; // 0xED
+	/* 0x0A0 */ unsigned char unk62_3; // 0xEE
+	/* 0x0A0 */ unsigned char unk62_4; // 0xEF
 	/* 0x0A4 */ int unk63; // 0xF0
 	/* 0x0A8 */ short SelDrawWidth1; // 0xF4
 	/* 0x0AA */ short SelDrawHeight1; // 0xF6
@@ -121,7 +124,36 @@ typedef struct _YgSelWnd
 
 uintptr_t YgSelWnd_Init(YgSelWnd* window);
 uintptr_t YgSelWnd_Cont(YgSelWnd* window);
+uintptr_t YgSelWnd_Term(YgSelWnd* window);
 uintptr_t YgSelWnd_Draw(uintptr_t ehpacket, YgSelWnd* window);
+
+// reduce functions on compile time to optimize size
+// these aren't critical to basic functionality of a YgSelWnd
+#ifndef YGWINDOW_ESSENTIALS_ONLY
+uintptr_t YgSelWnd_DecideButton(YgSelWnd* window, unsigned char unk);
+uintptr_t YgSelWnd_DecideSelect(YgSelWnd* window, int unk);
+uintptr_t YgSelWnd_ReqestCloseAnim(YgSelWnd* window);
+uintptr_t YgSelWnd_DrawButton(uintptr_t ehpacket, YgSelWnd* window, int X, int Y);
+uintptr_t YgSelWnd_DrawSelectCsr(uintptr_t ehpacket, YgSelWnd* window, int X, int Y);
+uintptr_t YgSelWnd_DrawSelectItemBG(uintptr_t ehpacket, YgSelWnd* window, int X, int Y);
+uintptr_t YgSelWnd_SelCsrDec(YgSelWnd* window);
+uintptr_t YgSelWnd_SelCsrInc(YgSelWnd* window);
+#endif
+
+uintptr_t ygBasicWindow_Init(ygWindowResource* res, uintptr_t heap);
+uintptr_t ygBasicWindow_Create(ygWindowResource* res, ygBasicWindow* window);
+uintptr_t ygBasicWindow_Term(ygBasicWindow* window);
+uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygBasicWindow* window);
+
+#ifndef YGWINDOW_ESSENTIALS_ONLY
+uintptr_t ygBasicWindow_DeleteWindow(ygWindowResource* res, ygBasicWindow* window);
+uintptr_t ygBasicWindow_ReqestOpenAnim(ygWindowResource* res, ygBasicWindow* window);
+uintptr_t ygBasicWindow_ReqestCloseAnim(ygWindowResource* res, ygBasicWindow* window);
+uintptr_t ygBasicWindow_IsFinishAnim(ygWindowResource* res, ygBasicWindow* window);
+int ygBasicWindow_GetWndStringBottom(ygWindowResource* res, ygBasicWindow* window);
+uintptr_t ygBasicWindow_GetWndStringRect(ygWindowResource* res, ygBasicWindow* window, int* outWidth, int* outHeight);
+int ygBasicWindow_GetWndState(ygWindowResource* res, ygBasicWindow* window);
+#endif
 
 void YgWindow_Init(uintptr_t base_addr);
 
