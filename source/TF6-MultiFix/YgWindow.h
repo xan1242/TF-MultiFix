@@ -37,89 +37,92 @@ typedef struct _ygWindowResource
 
 typedef struct _ygBasicWindow
 {
-	/* 0x000 */ int unk3;
-	/* 0x004 */ int unk4;
-	/* 0x008 */ unsigned char windowBGColor; // 0x54 -- 2 -- background color type?
-	/* 0x009 */ unsigned char captionBGColor; // 0x55 -- 2
-	/* 0x00A */ unsigned char unk7; // padding?
-	/* 0x00B */ unsigned char unk8; // padding?
-	/* 0x00C */ short Xpos; // 0x58 -- (int)(float)(240.0 - (float)((float)word_4CF9F0 * 0.5));
-	/* 0x00E */ short Ypos; // 0x5A -- (int)(float)(136.0 - (float)((float)word_4CF9F2 * 0.5));
-	/* 0x010 */ int unk11;
-	/* 0x014 */ int unk12; // 0x60 -- 1
-	/* 0x018 */ short unk13; // 0x64 -- 400
-	/* 0x01A */ short unk14;
-	/* 0x01C */ short unk15; // 0x68 -- 100
-	/* 0x01E */ short unk16;
-	/* 0x020 */ short Xsize; // 0x6C -- word_4CF9F0
-	/* 0x022 */ short Ysize; // 0x6E -- word_4CF9F2
-	/* 0x024 */ uint32_t color; // color in ARGB
-	/* 0x028 */ int unk20;
-	/* 0x02C */ int bWindowCaption; // 0x78
-	/* 0x030 */ int bAutoSizeCaption; // 0x7C
-	/* 0x034 */ short captionWidth; // 0x80
-	/* 0x036 */ short captionHeight; // 0x82
-	/* 0x038 */ wchar_t* unk24; // 0x84 -- arg2 of lYgSys_SysMsg_CreateSelWindow, can be 0
-	/* 0x03C */ int bCaptionFontShadow; // 0x88 -- 1
-	/* 0x040 */ int unk26;
-	/* 0x044 */ int bCaptionFontRuby; // 0x90
-	/* 0x048 */ short unk28; // 0x94 -- 10
-	/* 0x04A */ short unk29; // 0x96 -- 10
-	/* 0x04C */ short unk30; // 0x98 -- 8
-	/* 0x04E */ short unk31; // 0x9A
-	/* 0x050 */ unsigned char unk32; // 0x9C -- 13
-	/* 0x051 */ unsigned char unk33; // padding
-	/* 0x052 */ unsigned char unk34; // padding
-	/* 0x053 */ unsigned char unk35; // padding
-	/* 0x054 */ int unk36; // 0xA0 -- -1
-	/* 0x058 */ wchar_t* caption; // 0xA4 -- WINDOW TITLE STRING
-	/* 0x05C */ unsigned char captionFontSize; // 0xA8
-	/* 0x05D */ unsigned char unk39; // padding
-	/* 0x05E */ unsigned char unk40; // padding
-	/* 0x05F */ unsigned char unk41; // padding
-	/* 0x060 */ uint32_t captionFontColor; // 0xAC
-	/* 0x064 */ int unk43; // 0xB0 -- 1
-	/* 0x068 */ int unk44; // 0xB4 -- 1
-	/* 0x06C */ float unk45; // 0xB8 -- 1.0
-	/* 0x07C */ float unk46; // 0xBC -- 1.0
-	/* 0x074 */ int unk47;
-	/* 0x078 */ int unk48;
-	/* 0x07C */ uintptr_t heapptr; // 0xC8
+	/* off   / seloff*/
+
+	/* 0x000 / 0x04C */ int unk3;
+	/* 0x004 / 0x050 */ int unk4;
+	/* 0x008 / 0x054 */ unsigned char windowBGColor;
+	/* 0x009 / 0x055 */ unsigned char captionBGColor; // 2
+	/* 0x00A / 0x056 */ unsigned char unk7; // padding?
+	/* 0x00B / 0x057 */ unsigned char unk8; // padding?
+	/* 0x00C / 0x058 */ short Xpos;
+	/* 0x00E / 0x05A */ short Ypos;
+	/* 0x010 / 0x05C */ int unk11;
+	/* 0x014 / 0x060 */ int bAutoSizeWindow; // 1
+	/* 0x018 / 0x064 */ short maxWidth; // 400
+	/* 0x01A / 0x066 */ short maxHeight;
+	/* 0x01C / 0x068 */ short minWidth; // 100
+	/* 0x01E / 0x06A */ short minHeight;
+	/* 0x020 / 0x06C */ short width;
+	/* 0x022 / 0x06E */ short height;
+	/* 0x024 / 0x070 */ uint32_t color; // color in ARGB
+	/* 0x028 / 0x074 */ int unk20;
+	/* 0x02C / 0x078 */ int bWindowCaption;
+	/* 0x030 / 0x07C */ int bAutoSizeCaption;
+	/* 0x034 / 0x080 */ short captionWidth;
+	/* 0x036 / 0x082 */ short captionHeight;
+	/* 0x038 / 0x084 */ wchar_t* windowText; // arg2 of lYgSys_SysMsg_CreateSelWindow, can be 0
+	/* 0x03C / 0x088 */ int bCaptionFontShadow; // 1
+	/* 0x040 / 0x08C */ int unk26;
+	/* 0x044 / 0x090 */ int bCaptionFontRuby;
+	/* 0x048 / 0x094 */ short leftPadding; // 10
+	/* 0x04A / 0x096 */ short rightPadding; // 10
+	/* 0x04C / 0x098 */ short topPadding; // 8
+	/* 0x04E / 0x09A */ short bottomPadding;
+	/* 0x050 / 0x09C */ unsigned char windowFontSize; // 13
+	/* 0x051 / 0x09D */ unsigned char unk33; // padding
+	/* 0x052 / 0x09E */ unsigned char unk34; // padding
+	/* 0x053 / 0x09F */ unsigned char unk35; // padding
+	/* 0x054 / 0x0A0 */ uint32_t windowFontColor; // -1
+	/* 0x058 / 0x0A4 */ wchar_t* caption;
+	/* 0x05C / 0x0A8 */ unsigned char captionFontSize;
+	/* 0x05D / 0x0A9 */ unsigned char unk39; // padding
+	/* 0x05E / 0x0AA */ unsigned char unk40; // padding
+	/* 0x05F / 0x0AB */ unsigned char unk41; // padding
+	/* 0x060 / 0x0AC */ uint32_t captionFontColor;
+	/* 0x064 / 0x0B0 */ int unk43; // 1
+	/* 0x068 / 0x0B4 */ int unk44; // 1
+	/* 0x06C / 0x0B8 */ float unk45; // 1.0
+	/* 0x07C / 0x0BC */ float unk46; // 1.0
+	/* 0x074 / 0x0C0 */ int unk47;
+	/* 0x078 / 0x0C4 */ int unk48;
 }ygBasicWindow;
 
-typedef struct _YgSelWnd
+typedef struct _ygBasicWindowPack
 {
 	ygWindowResource res;
 	ygBasicWindow window;
-	/* 0x080 */ unsigned int selFlags; // 0xCC
-	/* 0x080 */ //unsigned char selFlags; // 0xCC -- OR'd by 2 and 4 -- flags?? item flags
-	/* 0x081 */ //unsigned char unk49_2; // 0xCD -- flags
-	/* 0x082 */ //unsigned char unk50; // 0xCE -- & 0xF0 | a3 & 0xF -- flags again?? -- 0, can be 1, 3
-	/* 0x083 */ //unsigned char unk51; // padding
-	/* 0x084 */ short itemcount; // 0xD0
-	/* 0x086 */ short maxitems; // 0xD2
-	/* 0x088 */ short unk54; // 0xD4
-	/* 0x089 */ //unsigned char unk55;
-	/* 0x08A */ unsigned char unk56;
-	/* 0x08B */ unsigned char unk57; // 0xD7 -- flags?? byte_4CFA5B & 0xF0 | a4 & 0xF -- 0, can be 3, 4
-	/* 0x08C */ int unk58;
-	/* 0x090 */ int unk59;
-	/* 0x094 */ int unk60; // 0xE0
-	/* 0x098 */ int unk61;
-	/* 0x09C */ uintptr_t buttonTexture; // 0xE8 -- pointer to some GIM texture
-	/* 0x0A0 */ unsigned char unk62_1; // 0xEC // some flags again, decide button related
-	/* 0x0A0 */ unsigned char unk62_2; // 0xED
-	/* 0x0A0 */ unsigned char unk62_3; // 0xEE
-	/* 0x0A0 */ unsigned char unk62_4; // 0xEF
-	/* 0x0A4 */ int unk63; // 0xF0
-	/* 0x0A8 */ short SelDrawWidth1; // 0xF4
-	/* 0x0AA */ short SelDrawHeight1; // 0xF6
-	/* 0x0AC */ int unk66;
-	/* 0x0B0 */ short SelDrawWidth2; // 0xFC
-	/* 0x0B2 */ short SelDrawHeight2; // 0xFE
-	/* 0x0B4 */ uintptr_t ItemDrawCallback; // 0x100 -- some callback again? optional, takes 4 args - void* callback(void* ehpacket, int item_index, int X, int Y)
-	/* 0x0B8 */ uintptr_t CustomDrawCallback; // 0x104 -- item draw callback function, optional, takes 5 args
-	/* 0x0BC */ char unk70[0x1C];
+}ygBasicWindowPack;
+
+typedef struct _YgSelWnd
+{
+	/* 0x000 */ ygWindowResource res;
+	/* 0x04C */ ygBasicWindow window;
+	/* 0x0C8 */ uintptr_t heapptr;
+	/* 0x0CC */ unsigned int selFlags;
+	/* 0x0D0 */ short itemcount;
+	/* 0x0D2 */ short maxitems;
+	/* 0x0D4 */ short unk54;
+	/* 0x0D6 */ unsigned char unk56;
+	/* 0x0D7 */ unsigned char unk57; // flags?? byte_4CFA5B & 0xF0 | a4 & 0xF -- 0, can be 3, 4
+	/* 0x0D8 */ int unk58;
+	/* 0x0DC */ int unk59;
+	/* 0x0E0 */ int unk60;
+	/* 0x0E4 */ int unk61;
+	/* 0x0E8 */ uintptr_t buttonTexture;
+	/* 0x0EC */ unsigned char unk62_1; // some flags again, decide button related
+	/* 0x0ED */ unsigned char unk62_2;
+	/* 0x0EE */ unsigned char unk62_3;
+	/* 0x0EF */ unsigned char unk62_4;
+	/* 0x0F0 */ int unk63;
+	/* 0x0F4 */ short SelDrawWidth1;
+	/* 0x0F6 */ short SelDrawHeight1;
+	/* 0x0F8 */ int unk66;
+	/* 0x0FC */ short SelDrawWidth2;
+	/* 0x0FE */ short SelDrawHeight2;
+	/* 0x100 */ uintptr_t ItemDrawCallback; // optional, takes 4 args - void* callback(void* ehpacket, int item_index, int X, int Y)
+	/* 0x104 */ uintptr_t CustomDrawCallback; // item draw callback function, optional, takes 5 args
+	/* 0x108 */ char unk70[0x1C];
 }YgSelWnd;
 
 uintptr_t YgSelWnd_Init(YgSelWnd* window);
@@ -143,7 +146,7 @@ uintptr_t YgSelWnd_SelCsrInc(YgSelWnd* window);
 uintptr_t ygBasicWindow_Init(ygWindowResource* res, uintptr_t heap);
 uintptr_t ygBasicWindow_Create(ygWindowResource* res, ygBasicWindow* window);
 uintptr_t ygBasicWindow_Term(ygBasicWindow* window);
-uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygBasicWindow* window);
+uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygWindowResource* window);
 
 #ifndef YGWINDOW_ESSENTIALS_ONLY
 uintptr_t ygBasicWindow_DeleteWindow(ygWindowResource* res, ygBasicWindow* window);

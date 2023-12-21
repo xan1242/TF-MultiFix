@@ -540,6 +540,71 @@ int YgSys_GetAssignButton_Hook(int isDeclineButton)
 //     return cbptr;
 // }
 
+//ygWindowResource basicTestWindowRes;
+//ygBasicWindow basicTestWindow;
+
+ygBasicWindowPack basicTestWindow;
+
+int bBasicTestWindowInited = 0;
+
+wchar_t basicTestWindowText[] = L"Hello, I am a ygBasicWindow! This is a lot of text for a little window that I've jumbled together in the source code of this plugin. A lot. What does Pot of Greed do anyway? Everyone says it's broken but it just says you draw two cards, right?";
+
+void CreateBasicTestWindow()
+{
+    ygBasicWindow_Init(&basicTestWindow.res, helpers_GetMainEhHeap());
+    YgSys_memset(&basicTestWindow.window, 0, sizeof(ygBasicWindow));
+
+    basicTestWindow.window.color = 0xFFFFFFFF;
+    basicTestWindow.window.unk3 = 1;
+
+    basicTestWindow.window.width = 200;
+    basicTestWindow.window.height = 100;
+    //basicTestWindow.window.unk14 = 400;
+    //basicTestWindow.window.unk16 = 400;
+    basicTestWindow.window.bAutoSizeWindow = 0;
+    basicTestWindow.window.bWindowCaption = 2;
+
+    basicTestWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)basicTestWindow.window.width * 0.5f));
+    basicTestWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)basicTestWindow.window.height * 0.5f));
+
+    basicTestWindow.window.windowBGColor = YGWINDOW_BG_DARK;
+
+    basicTestWindow.window.windowText = basicTestWindowText;
+    basicTestWindow.window.captionFontColor = 0xFFFFFFFF;
+
+    basicTestWindow.window.topPadding = 0;
+    basicTestWindow.window.bottomPadding = 0;
+    basicTestWindow.window.leftPadding = 0;
+    basicTestWindow.window.rightPadding = 0;
+    basicTestWindow.window.windowFontSize = 12;
+    basicTestWindow.window.windowFontColor = 0xFFFFFFFF;
+    basicTestWindow.window.unk43 = 1;
+    basicTestWindow.window.unk44 = 1;
+    //basicTestWindow.window.bAutoSizeWindow = 0;
+    //basicTestWindow.window.unk13 = 400;
+    //basicTestWindow.window.unk15 = 100;
+
+#ifdef TFMULTIFIX_DEBUG_PRINT
+    sceKernelPrintf("unk43 addr: 0x%X", &basicTestWindow.window.unk43);
+#endif
+
+    ygBasicWindow_Create(&basicTestWindow.res, &basicTestWindow.window);
+    ygBasicWindow_ReqestOpenAnim(&basicTestWindow.res, &basicTestWindow.window);
+    bBasicTestWindowInited = 1;
+}
+
+void DrawBasicTestWindow()
+{
+    if (!bBasicTestWindowInited)
+        return;
+
+    uintptr_t packet = EhPckt_Open(4, 0);
+
+    ygBasicWindow_Draw((uintptr_t)&packet, &basicTestWindow.res);
+
+    EhPckt_Close(packet);
+}
+
 YgSelWnd testWindow;
 wchar_t testWindowTitle[] = L"Test Window Yay!";
 wchar_t* testWindowItems[] =
@@ -552,7 +617,6 @@ wchar_t* testWindowItems[] =
 };
 
 int bTestWindowDarkMode = 0;
-
 int bTestWindowInited = 0;
 
 uintptr_t TestWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
@@ -582,7 +646,7 @@ void CreateTestWindow()
     sceKernelPrintf("Creating test YgSelWnd...");
 #endif
     YgSys_memset(&testWindow, 0, sizeof(YgSelWnd));
-    testWindow.window.heapptr = helpers_GetMainEhHeap();
+    testWindow.heapptr = helpers_GetMainEhHeap();
     testWindow.window.caption = testWindowTitle;
     testWindow.itemcount = (sizeof(testWindowItems) / sizeof(wchar_t*));
     //testWindow.window.maxitems = 2;
@@ -590,17 +654,17 @@ void CreateTestWindow()
     testWindow.selFlags = YGSEL_HIGHLIGHT | YGSEL_VERTICAL;
     //testWindow.unk50 = 2;
 
-    testWindow.window.Xsize = 200;
-    testWindow.window.Ysize = (32 * testWindow.itemcount) - (4 * testWindow.itemcount);
+    testWindow.window.width = 200;
+    testWindow.window.height = (32 * testWindow.itemcount) - (4 * testWindow.itemcount);
     //testWindow.window.Ysize = 32 * 2;
 
-    testWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)testWindow.window.Xsize * 0.5f));
-    testWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)testWindow.window.Ysize * 0.5f));
+    testWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)testWindow.window.width * 0.5f));
+    testWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)testWindow.window.height * 0.5f));
 
     testWindow.window.color = 0xFFFFFFFF;
     testWindow.ItemDrawCallback = (uintptr_t)&TestWindowCallback;
 
-    int SelDrawWidth = testWindow.window.Xsize;
+    int SelDrawWidth = testWindow.window.width;
 
     //testWindow.unk2 = 1;
     testWindow.window.unk3 = 1;
@@ -615,25 +679,25 @@ void CreateTestWindow()
     testWindow.window.captionBGColor = YGWINDOW_BG_DARK;
 
 
-    testWindow.window.unk12 = 0;
+    testWindow.window.bAutoSizeWindow = 0;
     //testWindow.unk13 = 400;
     //testWindow.unk14 = 0;
     //testWindow.unk15 = 100;
     
     testWindow.window.bWindowCaption = 1;
     testWindow.window.bAutoSizeCaption = 0; // this is broken until the font is initialized
-    testWindow.window.captionWidth = (int)((float)testWindow.window.Xsize * 0.65f);
+    testWindow.window.captionWidth = (int)((float)testWindow.window.width * 0.65f);
     testWindow.window.captionHeight = 16;
     //testWindow.unk23_1 = 117;
     //testWindow.unk23_2 = 16;
     //testWindow.unk24 = testWindowTitle;
     testWindow.window.bCaptionFontShadow = 1;
-    testWindow.window.unk28 = 2;
-    testWindow.window.unk29 = 2;
-    testWindow.window.unk30 = 2;
-    testWindow.window.unk31 = 2;
-    testWindow.window.unk32 = 0;
-    testWindow.window.unk36 = 0;
+    testWindow.window.leftPadding = 2;
+    testWindow.window.rightPadding = 2;
+    testWindow.window.topPadding = 2;
+    testWindow.window.bottomPadding = 2;
+    testWindow.window.windowFontSize = 0;
+    testWindow.window.windowFontColor = 0;
     //testWindow.unk42 = -1;
     testWindow.window.unk43 = 2;
     testWindow.window.unk44 = 2;
@@ -738,6 +802,7 @@ void HandleButtonCheats()
 void lSoftReset_Hook()
 {
     DrawTestWindow();
+    //DrawBasicTestWindow();
     HandleButtonCheats();
     return lSoftReset();
 }
@@ -784,6 +849,7 @@ void HandlePostInit()
     sceKernelPrintf("After YgSys_InitApplication(), heap addr: 0x%X", helpers_GetMainEhHeap());
 #endif
     CreateTestWindow();
+    //CreateBasicTestWindow();
 
 
 }

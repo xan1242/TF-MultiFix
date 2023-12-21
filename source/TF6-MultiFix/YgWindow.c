@@ -24,7 +24,7 @@ uintptr_t(*_YgSelWnd_SelCsrInc)(YgSelWnd* window) = (uintptr_t(*)(YgSelWnd*))(0)
 uintptr_t(*_ygBasicWindow_Init)(ygWindowResource* res, uintptr_t heap) = (uintptr_t(*)(ygWindowResource*, uintptr_t))(0);
 uintptr_t(*_ygBasicWindow_Create)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
 uintptr_t(*_ygBasicWindow_Term)(ygBasicWindow* window) = (uintptr_t(*)(ygBasicWindow*))(0);
-uintptr_t(*_ygBasicWindow_Draw)(uintptr_t ehpacket, ygBasicWindow* window) = (uintptr_t(*)(uintptr_t, ygBasicWindow*))(0);
+uintptr_t(*_ygBasicWindow_Draw)(uintptr_t ehpacket, ygWindowResource* window) = (uintptr_t(*)(uintptr_t, ygWindowResource*))(0);
 
 #ifndef YGWINDOW_ESSENTIALS_ONLY
 uintptr_t(*_ygBasicWindow_DeleteWindow)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
@@ -113,7 +113,7 @@ uintptr_t ygBasicWindow_Term(ygBasicWindow* window)
     return _ygBasicWindow_Term(window);
 }
 
-uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygBasicWindow* window)
+uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygWindowResource* window)
 {
     return _ygBasicWindow_Draw(ehpacket, window);
 }
@@ -175,7 +175,7 @@ void YgWindow_Init(uintptr_t base_addr)
     _ygBasicWindow_Init = (uintptr_t(*)(ygWindowResource*, uintptr_t))(0x00043D68 + base_addr);
     _ygBasicWindow_Create = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0x00043DC4 + base_addr);
     _ygBasicWindow_Term = (uintptr_t(*)(ygBasicWindow*))(0x00043F14 + base_addr);
-    _ygBasicWindow_Draw = (uintptr_t(*)(uintptr_t, ygBasicWindow*))(0x00043F7C + base_addr);
+    _ygBasicWindow_Draw = (uintptr_t(*)(uintptr_t, ygWindowResource*))(0x00043F7C + base_addr);
 
 #ifndef YGWINDOW_ESSENTIALS_ONLY
     _ygBasicWindow_DeleteWindow = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0x44130 + base_addr);
