@@ -23,7 +23,7 @@ uintptr_t(*_YgSelWnd_SelCsrInc)(YgSelWnd* window) = (uintptr_t(*)(YgSelWnd*))(0)
 
 uintptr_t(*_ygBasicWindow_Init)(ygWindowResource* res, uintptr_t heap) = (uintptr_t(*)(ygWindowResource*, uintptr_t))(0);
 uintptr_t(*_ygBasicWindow_Create)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
-uintptr_t(*_ygBasicWindow_Term)(ygBasicWindow* window) = (uintptr_t(*)(ygBasicWindow*))(0);
+uintptr_t(*_ygBasicWindow_Term)(ygWindowResource* res) = (uintptr_t(*)(ygWindowResource*))(0);
 uintptr_t(*_ygBasicWindow_Draw)(uintptr_t ehpacket, ygWindowResource* window) = (uintptr_t(*)(uintptr_t, ygWindowResource*))(0);
 
 #ifndef YGWINDOW_ESSENTIALS_ONLY
@@ -108,9 +108,9 @@ uintptr_t ygBasicWindow_Create(ygWindowResource* res, ygBasicWindow* window)
     return _ygBasicWindow_Create(res, window);
 }
 
-uintptr_t ygBasicWindow_Term(ygBasicWindow* window)
+uintptr_t ygBasicWindow_Term(ygWindowResource* res)
 {
-    return _ygBasicWindow_Term(window);
+    return _ygBasicWindow_Term(res);
 }
 
 uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygWindowResource* window)

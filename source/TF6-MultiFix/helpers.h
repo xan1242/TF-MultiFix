@@ -25,6 +25,7 @@
 #define WCHAR_CROSS L'\xD7'
 
 #define MAIN_EHHEAP_ADDR 0x314BD4
+#define EHPAD_ADDR 0x59D4BC
 
 typedef enum _EhGameState
 {
@@ -47,6 +48,7 @@ char* tf_strstr(register char* string, char* substring);
 int tf_strcmp(const char* s1, const char* s2);
 //wchar_t* tf_wcsrchr(wchar_t* ws, wchar_t wc);
 uintptr_t EhPad_Get();
+uintptr_t EhPad_GetAlways();
 uint32_t GetPadButtons(int bGiveOneShot);
 EhGameState GetGameState();
 EhGameState SetGameState(EhGameState newState);
@@ -58,6 +60,8 @@ void YgFont_SetShadowFlg(int val);
 int YgFont_GetShadowFlg();
 void YgFont_SetRubyCharFlg(int val);
 int YgFont_GetRubyCharFlg();
+int YgFont_GetStrWidth(wchar_t* str);
+//void YgFont_SetMatrixFontFlg(int val);
 void* YgSys_memset(void* ptr, int value, size_t num);
 void* YgSys_memcpy(void* dst, const void* src, size_t num);
 size_t YgSys_wcslen(const wchar_t* str);
@@ -75,6 +79,9 @@ int YgSys_GetLang();
 int YgSys_GetLang_Hook();
 int YgSys_GetLang_Hook2();
 void YgSys_InitApplication();
+void YgAdh_Update();
+int YgSys_sprintf(char* str, const char* format, ...);
+int sceCccUTF8toUTF16(wchar_t* dest, size_t size, char* src);
 uintptr_t EhFolder_SearchFile(uintptr_t ptrMemEhFolder, const char* filename, uintptr_t unk);
 void tf_SwapButtonIcons(wchar_t* str);
 void tf_SwapButtonIcons_SJIS(char* str);
@@ -93,10 +100,15 @@ int PatchButtonStrings_Text_SJIS(uintptr_t ptrFolder, const char* filename);
 //void tf_ReplaceFirstChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
 //void tf_ReplaceLastChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
 uint32_t ReturnZeroFunc();
+int loopAround(int value, int min, int max);
 void helpers_SetPPSSPP(int val);
 void helpers_Init(uintptr_t base_addr);
 void helpers_SetYgFontHookBase(uintptr_t base_addr);
 void helpers_SetYgLangHookBase(uintptr_t base_addr);
+void helpers_SetBlockNextInputPoll(int val);
+int helpers_GetBlockNextInputPoll();
+void helpers_SetDialogBoxWantsIO(int val);
+int helpers_GetDialogBoxWantsIO();
 uintptr_t helpers_GetMainEhHeap();
 
 // WINDOW DRAW STUFF

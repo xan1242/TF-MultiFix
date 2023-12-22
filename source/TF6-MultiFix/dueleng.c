@@ -52,6 +52,25 @@ int dueleng_SetPartnerCardVisibility()
     return 1;
 }
 
+int dueleng_SetPartnerCardVisibility_Hook(int retval)
+{
+    if (mfconfig_GetSeePartnerCards())
+        return 1;
+    return retval;
+}
+
+int dueleng_hkSetPartnerCardVisibility();
+#ifndef __INTELLISENSE__
+asm
+(
+    ".global dueleng_hkSetPartnerCardVisibility\n"
+    "dueleng_hkSetPartnerCardVisibility:\n"
+    "move $a0, $v0\n"
+    "j dueleng_SetPartnerCardVisibility_Hook\n"
+    "nop\n"
+);
+#endif
+
 // void dueleng_UpdatePlayerStatusHook(int playerNum)
 // {
 //     if (_CheatOpponentLP >= 0)
@@ -87,10 +106,13 @@ void dueleng_Patch(uintptr_t base_addr, uintptr_t base_size)
 
     minj_SetBaseAddress(base_addr, base_size);
 
-    if (mfconfig_GetSeePartnerCards())
-    {
-        minj_MakeJMPwNOP(0x5738, (uintptr_t)&dueleng_SetPartnerCardVisibility);
-    }
+    minj_MakeJMP(0x5770, (uintptr_t)&dueleng_hkSetPartnerCardVisibility);
+    minj_MakeJMP(0x5790, (uintptr_t)&dueleng_hkSetPartnerCardVisibility);
+
+    //if (mfconfig_GetSeePartnerCards())
+    //{
+    //    minj_MakeJMPwNOP(0x5738, (uintptr_t)&dueleng_SetPartnerCardVisibility);
+    //}
 
     //dueleng_sub_A28C = (void (*)(uintptr_t, int))(0xA28C + base_addr);
     dueleng_sub_5228 = (void (*)())(0x5228 + base_addr);

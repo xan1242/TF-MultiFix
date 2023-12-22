@@ -174,7 +174,9 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\field.c" />
     <ClCompile Include="source\TF6-MultiFix\gallery.c" />
     <ClCompile Include="source\TF6-MultiFix\helpers.c" />
+    <ClCompile Include="source\TF6-MultiFix\installdisabledialog.c" />
     <ClCompile Include="source\TF6-MultiFix\multifixconfig.c" />
+    <ClCompile Include="source\TF6-MultiFix\multifixwindow.c" />
     <ClCompile Include="source\TF6-MultiFix\password.c" />
     <ClCompile Include="source\TF6-MultiFix\recipeviewer.c" />
     <ClCompile Include="source\TF6-MultiFix\selectcard.c" />
@@ -207,7 +209,9 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClInclude Include="source\TF6-MultiFix\field.h" />
     <ClInclude Include="source\TF6-MultiFix\gallery.h" />
     <ClInclude Include="source\TF6-MultiFix\helpers.h" />
+    <ClInclude Include="source\TF6-MultiFix\installdisabledialog.h" />
     <ClInclude Include="source\TF6-MultiFix\multifixconfig.h" />
+    <ClInclude Include="source\TF6-MultiFix\multifixwindow.h" />
     <ClInclude Include="source\TF6-MultiFix\password.h" />
     <ClInclude Include="source\TF6-MultiFix\recipeviewer.h" />
     <ClInclude Include="source\TF6-MultiFix\selectcard.h" />

@@ -36,6 +36,7 @@
 #include "YgWindow.h"
 #include <pspctrl.h>
 #include "multifixconfig.h"
+#include "multifixwindow.h"
 
 #include <psputility.h>
 #include <psputility_msgdialog.h>
@@ -64,33 +65,17 @@ uintptr_t base_addr = 0;
 // uintptr_t base_size_tutoriallist = 0;
 
 
-int bIsOnPPSSPP = 0;
+int bShowTestDialog = 0;
+int bShowTestSelWindow = 0;
 
+int bShowMfWindow = 0;
+
+int bIsOnPPSSPP = 0;
 void SetPPSSPP(int val)
 {
     bIsOnPPSSPP = val;
     helpers_SetPPSSPP(val);
 }
-
-// int YgSys_GetLang_Hook()
-// {
-//     return 1;
-// }
-// 
-// int YgSys_GetLang_Hook_Loud()
-// {
-// #ifdef TFMULTIFIX_DEBUG_PRINT
-//     void* addr = __builtin_extract_return_addr(__builtin_return_address(0));
-//     uintptr_t baseaddr = base_addr_deck;
-//     sceKernelPrintf("RA: 0x%X (0x%X) (0x%X)", addr, (uintptr_t)addr - baseaddr, (uintptr_t)addr - baseaddr - 8);
-// #endif
-//     return 1;
-// }
-// 
-// int YgSys_GetLang_Hook2()
-// {
-//     return 0;
-// }
 
 int (*ptr_lEhScript_ModuleRead_FinishCB)(uintptr_t unk1, uintptr_t unk2) = (int(*)(uintptr_t, uintptr_t))0;
 int (*lEhModule_Load_EndCallback)(uintptr_t unk1, uintptr_t unk2) = (int(*)(uintptr_t, uintptr_t))0;
@@ -510,17 +495,48 @@ __attribute__((naked)) void hkPrintBoxFontYOffset()
 // swap cross and circle for accept
 int YgSys_GetAssignButton_Hook(int isDeclineButton)
 {
-    if (YgSys_GetLang())
+    uint32_t confirm = PSP_CTRL_CIRCLE;
+    uint32_t decline = PSP_CTRL_CROSS;
+
+    if (mfconfig_GetSwapConfirmButtons())
     {
-        if (isDeclineButton)
-            return PSP_CTRL_CROSS;
-        return PSP_CTRL_CIRCLE;
+        confirm = PSP_CTRL_CROSS;
+        decline = PSP_CTRL_CIRCLE;
+
+        //if (!YgSys_GetLang()) // JP language swap
+        //{
+        //    confirm = PSP_CTRL_CROSS;
+        //    decline = PSP_CTRL_CIRCLE;
+        //}
     }
+    //else
+    //{
+    //    if (YgSys_GetLang()) // non JP language swap
+    //    {
+    //        confirm = PSP_CTRL_CROSS;
+    //        decline = PSP_CTRL_CIRCLE;
+    //    }
+    //}
 
     if (isDeclineButton)
-        return PSP_CTRL_CIRCLE;
-    return PSP_CTRL_CROSS;
+        return decline;
+    return confirm;
+
 }
+
+void YgFont_SetMatrixFontFlg_Hook(int val)
+{
+    if (val && mfconfig_GetMatrixFont())
+    {
+        *(uint32_t*)(YGFONT_FLAGS_ADDR + base_addr) |= 0x4000;
+    }
+    else
+    {
+        *(uint32_t*)(YGFONT_FLAGS_ADDR + base_addr) &= ~0x4000;
+    }
+}
+
+
 
 // uintptr_t HookCallback(uintptr_t addr, uintptr_t dest)
 // {
@@ -641,6 +657,8 @@ void CreateDialogTestWindow()
     dialogTestWindow.window.unk43 = 1;
     dialogTestWindow.window.unk44 = 1;
 
+    dialogTestWindow.customPadBuffer = EhPad_GetAlways();
+
     YgSelWnd_Init(&dialogTestWindow);
     bDialogTestWindowInited = 1;
 }
@@ -648,7 +666,12 @@ void CreateDialogTestWindow()
 void DrawDialogTestWindow()
 {
     if (!bDialogTestWindowInited)
+    {
+        CreateDialogTestWindow();
         return;
+    }
+
+    helpers_SetDialogBoxWantsIO(1);
 
     uintptr_t packet = EhPckt_Open(4, 0);
     int retval = YgSelWnd_Cont(&dialogTestWindow);
@@ -659,6 +682,12 @@ void DrawDialogTestWindow()
 #endif
 
     EhPckt_Close(packet);
+
+    if (dialogTestWindow.decideStatus)
+    {
+        bShowTestDialog = 0;
+        bDialogTestWindowInited = 0;
+    }
 }
 
 YgSelWnd testWindow;
@@ -672,8 +701,19 @@ wchar_t* testWindowItems[] =
     L"Item 5"
 };
 
+char* testWindowItemsChar[] =
+{
+    "Item 1",
+    "Item 2",
+    "Item 3",
+    "Item 4",
+    "Item 5"
+};
+
 int bTestWindowDarkMode = 0;
 int bTestWindowInited = 0;
+
+int TestWindowValues[5];
 
 uintptr_t TestWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
 {
@@ -697,7 +737,19 @@ uintptr_t TestWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
         YgFont_SetDefaultColor(0xFF7F7F7F);
     }
 
-    YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, testWindowItems[item_index]);
+    char sprintfbuf[32];
+    YgSys_sprintf(sprintfbuf, "%s %d\t<%d>", "Item", item_index, TestWindowValues[item_index]);
+
+    wchar_t testConv[32];
+    sceCccUTF8toUTF16(testConv, 32 - 1, sprintfbuf);
+
+    //YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, testWindowItems[item_index]);
+    //_YgFont_Printf(X << 6, (Y + 4) << 6, testWindowItemsChar[item_index]);
+    YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, testConv);
+
+    //wchar_t testValueStr[] = L"<0>";
+
+    //YgFont_PrintLine64((testWindow.window.width) << 6, (Y + 4) << 6, (480 - testWindow.window.width) << 6, testValueStr);
 
     return YgFont_GetEhPckt();
 }
@@ -787,7 +839,12 @@ void CreateTestWindow()
 void DrawTestWindow()
 {
     if (!bTestWindowInited)
+    {
+        CreateTestWindow();
         return;
+    }
+
+    helpers_SetDialogBoxWantsIO(1);
     
     // if ((testWindow.captionWidth <= 21) || (testWindow.captionHeight <= 4))
     // {
@@ -800,14 +857,32 @@ void DrawTestWindow()
 //     sceKernelPrintf("TestWindow EhPacket: 0x%X", packet);
 // #endif
 
+    uint32_t buttons = GetPadButtons(1);
+    if (buttons & PSP_CTRL_LEFT)
+    {
+        TestWindowValues[testWindow.currentItem]--;
+    }
+    if (buttons & PSP_CTRL_RIGHT)
+    {
+        TestWindowValues[testWindow.currentItem]++;
+    }
+
     int retval = YgSelWnd_Cont(&testWindow);
     YgSelWnd_Draw((uintptr_t)&packet, &testWindow);
+
+
 
 #ifdef TFMULTIFIX_DEBUG_PRINT
         sceKernelPrintf("flags: 0x%X | contret: 0x%08X", testWindow.currentItem, retval);
 #endif
 
     EhPckt_Close(packet);
+
+    if (testWindow.decideStatus)
+    {
+        bShowTestSelWindow = 0;
+        bTestWindowInited = 0;
+    }
 }
 
 void HandleButtonCheats()
@@ -816,10 +891,12 @@ void HandleButtonCheats()
 
     if (buttons & (PSP_CTRL_WLAN_UP | PSP_CTRL_RTRIGGER)) // wlan on & R = cheat input mode
     {
-        //if (buttons & PSP_CTRL_TRIANGLE)
-        //{
-        //    DrawTestWindow();
-        //}
+        if (buttons & PSP_CTRL_TRIANGLE)
+        {
+            //bShowTestDialog = 1;
+            //bShowTestSelWindow = 1;
+            bShowMfWindow = 1;
+        }
 
         // duel cheats
         if (GetGameState() == EHSTATE_DUEL)
@@ -864,14 +941,42 @@ void HandleButtonCheats()
     }
 }
 
+void HandleDialogs()
+{
+    helpers_SetDialogBoxWantsIO(0);
+
+    if (bShowTestDialog)
+        DrawDialogTestWindow();
+    if (bShowTestSelWindow)
+        DrawTestWindow();
+    if (bShowMfWindow)
+    {
+        if (mfwindow_Draw() < 0)
+            bShowMfWindow = 0;
+    }
+}
+
 // do stuff at the end of main loop
 void lSoftReset_Hook()
 {
     //DrawTestWindow();
     //DrawBasicTestWindow();
-    DrawDialogTestWindow();
-    HandleButtonCheats();
+    //DrawDialogTestWindow();
+    //HandleButtonCheats();
     return lSoftReset();
+}
+
+// do stuff before VSync
+void YgAdh_Update_Hook()
+{
+    helpers_SetBlockNextInputPoll(0);
+    HandleDialogs();
+    HandleButtonCheats();
+
+    if (helpers_GetDialogBoxWantsIO())
+        helpers_SetBlockNextInputPoll(1);
+
+    return YgAdh_Update();
 }
 
 //
@@ -896,14 +1001,14 @@ void YgFont_SetShadowFlg_Hook2(int val)
     return YgFont_SetShadowFlg(val & 1);
 }
 
-int InstallDialogHook(pspUtilityMsgDialogParams* params)
-{
-    YgSys_strcpy(params->message, "The installation feature has been disabled.\nTo re-enable, please reconfigure the plugin.");
-    YgSys_strcpy((char*)((uintptr_t)params + 0x284), "Back");
-    params->options = 0;
-
-    return sceUtilityMsgDialogInitStart(params);
-}
+//int InstallDialogHook(pspUtilityMsgDialogParams* params)
+//{
+//    YgSys_strcpy(params->message, "The installation feature has been disabled.\nTo re-enable, please reconfigure the plugin.");
+//    YgSys_strcpy((char*)((uintptr_t)params + 0x284), "Back");
+//    params->options = 0;
+//
+//    return sceUtilityMsgDialogInitStart(params);
+//}
 
 // void HandlePreInit()
 // {
@@ -917,7 +1022,7 @@ void HandlePostInit()
 #endif
     //CreateTestWindow();
     //CreateBasicTestWindow();
-    CreateDialogTestWindow();
+    //CreateDialogTestWindow();
 
 }
 
@@ -947,6 +1052,12 @@ void TFFixesInject()
     // main loop hook
     lSoftReset = (void(*)())(0x5954 + base_addr);
     minj_MakeCALL(0x5BF0, (uintptr_t)&lSoftReset_Hook);
+    minj_MakeCALL(0x5BE0, (uintptr_t)&YgAdh_Update_Hook);
+    // EhPad_Get with input blocking
+    minj_MakeJMPwNOP(0x3A428, (uintptr_t)&EhPad_Get);
+
+    //minj_MakeCALL(0x934, 0x640DC);
+    //_YgFont_Printf = (uintptr_t(*)(int, int, const char*, ...))(0xB70 + base_addr);
 
     //uintptr_t modreadcb = MIPS_WriteLUI_ADDIU(0x3D5B0 + base_addr, (uintptr_t)&lEhScript_ModuleRead_FinishCB_Hook, a2);
     uintptr_t modreadcb = minj_WriteLUI_ADDIU(0x3D5B0, (uintptr_t)&lEhScript_ModuleRead_FinishCB_Hook, MIPSR_a2);
@@ -987,6 +1098,7 @@ void TFFixesInject()
     minj_MakeCALL(0x16344, (uintptr_t)&YgSys_GetLang_Hook);
     minj_MakeCALL(0x16DF0, (uintptr_t)&YgSys_GetLang_Hook);
     minj_MakeCALL(0x16E3C, (uintptr_t)&YgSys_GetLang_Hook);
+    minj_MakeCALL(0x17E48, (uintptr_t)&YgSys_GetLang_Hook);
     minj_MakeCALL(0x17DF4, (uintptr_t)&YgSys_GetLang_Hook);
     minj_MakeCALL(0xC3B0, (uintptr_t)&YgSys_GetLang_Hook);
     minj_WriteMemory16(0x17E64, 0x480);
@@ -1000,17 +1112,17 @@ void TFFixesInject()
     minj_MakeCALL(0x34D8, (uintptr_t)&hkPrintBoxFontYOffset);
 #endif
 
-    if (mfconfig_GetSwapConfirmButtons())
-    {
-        // swap cross and circle
-        minj_MakeJMPwNOP(0x8DA0, (uintptr_t)&YgSys_GetAssignButton_Hook);
-    }
+    minj_MakeJMPwNOP(0x8DA0, (uintptr_t)&YgSys_GetAssignButton_Hook);
+    // matrix font stuff
+    minj_MakeJMPwNOP(0x2218, (uintptr_t)&YgFont_SetMatrixFontFlg_Hook);
+    minj_MakeNOP(0xE698);
+    minj_MakeNOP(0x18520);
 
-    if (!mfconfig_GetMatrixFont())
-    {
-        // kill YgFont_SetMatrixFontFlg
-        minj_MakeJMPwNOP(0x2218, 0x224C + base_addr);
-    }
+    //if (!mfconfig_GetMatrixFont())
+    //{
+    //    // kill YgFont_SetMatrixFontFlg
+    //    minj_MakeJMPwNOP(0x2218, 0x224C + base_addr);
+    //}
 
 #ifdef YG_GETLANG_DEBUG
     minj_MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang);
@@ -1021,11 +1133,11 @@ void TFFixesInject()
     minj_MakeCALL(0xCF44, (uintptr_t)&YgFont_SetShadowFlg_Hook1);
     minj_MakeCALL(0xCF6C, (uintptr_t)&YgFont_SetShadowFlg_Hook2);
 
-    if (mfconfig_GetDisableInstall())
-    {
-        minj_MakeCALL(0x12650, (uintptr_t)&InstallDialogHook);
-        minj_MakeNOP(0x12744);
-    }
+    //if (mfconfig_GetDisableInstall())
+    //{
+    //    minj_MakeCALL(0x12650, (uintptr_t)&InstallDialogHook);
+    //    minj_MakeNOP(0x12744);
+    //}
 
     // get partner name from regular chr names
     //minj_MakeNOP(0x23A10);

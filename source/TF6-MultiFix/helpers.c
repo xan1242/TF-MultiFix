@@ -15,8 +15,10 @@
 #include "../../includes/psp/pspmallochelper.h"
 
 int _bIsOnPPSSPP = 0;
-uintptr_t (*_EhPad_Get)() = (uintptr_t(*)())(0);
+//uintptr_t (*_EhPad_Get)() = (uintptr_t(*)())(0);
 EhGameState helper_GameState = EHSTATE_UNKNOWN;
+
+char dummyPadBuf[0x40];
 
 uintptr_t (*_YgFont_PrintLine64)(int, int, uintptr_t, wchar_t*) = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0);
 uintptr_t (*_YgFont_PrintLineFit64)(int, int, uintptr_t, wchar_t*, int32_t) = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0);
@@ -26,6 +28,7 @@ void (*_YgFont_SetShadowFlg)(int) = (void (*)(int))(0);
 void (*_YgFont_SetRubyCharFlg)(int) = (void (*)(int))(0);
 int (*_YgFont_GetShadowFlg)() = (int (*)())(0);
 int (*_YgFont_GetRubyCharFlg)() = (int (*)())(0);
+int (*_YgFont_GetStrWidth)(wchar_t* str) = (int (*)(wchar_t*))(0);
 wchar_t* (*_YgSys_wcscat)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 wchar_t* (*_YgSys_wcscpy)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 size_t(*_YgSys_wcslen)(const wchar_t* str) = (size_t(*)(const wchar_t*))(0);
@@ -41,6 +44,9 @@ wchar_t* (*_YgSys_uGetPartnerName)(int, int, int) = (wchar_t* (*)(int, int, int)
 wchar_t* (*_YgSys_GetStrFromResource)(uintptr_t, int) = (wchar_t* (*)(uintptr_t, int))(0);
 uintptr_t (*_EhFolder_SearchFile)(uintptr_t, const char*, uintptr_t) = (uintptr_t (*)(uintptr_t, const char*, uintptr_t))(0);
 void (*_YgSys_InitApplication)() = (void (*)())(0);
+void (*_YgAdh_Update)() = (void (*)())(0);
+int (*_sceCccUTF8toUTF16)(wchar_t* dest, size_t size, char* src) = (int (*)(wchar_t*, size_t, char*))(0);
+int (*_YgSys_sprintf)(char* str, const char* format, ...) = (int (*)(char*, const char*, ...))(0);
 
 // WINDOW DRAW STUFF
 uintptr_t(*_EhPckt_Open)(int unk1, int unk2) = (uintptr_t(*)(int, int))(0);
@@ -51,7 +57,8 @@ void(*_YgFont_SetSize)(int size1, int size2) = (void(*)(int, int))(0);
 void(*_YgFont_SetChColorFlg)(int val) = (void(*)(int))(0);
 void(*_YgFont_SetDefaultColor)(uint32_t color_argb) = (void(*)(uint32_t))(0);
 
-
+int _bBlockNextPoll = 0;
+int _bDialogBoxWantsIO = 0;
 
 char theJegfis[] = "jegfis";
 char strTblDefaultFilename[] = "strTbl_j.bin";
@@ -71,18 +78,28 @@ EhGameState SetGameState(EhGameState newState)
     return newState;
 }
 
+// uintptr_t EhPad_Get()
+// {
+//     if (_EhPad_Get)
+//         return _EhPad_Get();
+//     return 0;
+// }
+
 uintptr_t EhPad_Get()
 {
-    if (_EhPad_Get)
-        return _EhPad_Get();
-    return 0;
+    if (_bBlockNextPoll)
+        return (uintptr_t)dummyPadBuf;
+    return (EHPAD_ADDR + helper_base);
+}
+
+uintptr_t EhPad_GetAlways()
+{
+    return EHPAD_ADDR + helper_base;
 }
 
 uint32_t GetPadButtons(int bGiveOneShot)
 {
-    if (!_EhPad_Get)
-        return 0;
-    uintptr_t ptrPad = EhPad_Get();
+    uintptr_t ptrPad = EhPad_GetAlways();
 
     if (bGiveOneShot)
         return *(uint32_t*)(ptrPad + 0x24);
@@ -93,6 +110,13 @@ uint32_t GetPadButtons(int bGiveOneShot)
 void YgSys_InitApplication()
 {
     return _YgSys_InitApplication();
+}
+
+
+
+void YgAdh_Update()
+{
+    return _YgAdh_Update();
 }
 
 int YgSys_GetLang()
@@ -206,6 +230,11 @@ uintptr_t EhFolder_SearchFile(uintptr_t ptrMemEhFolder, const char* filename, ui
     if (!_EhFolder_SearchFile)
         return NULL;
     return _EhFolder_SearchFile(ptrMemEhFolder, filename, unk);
+}
+
+int sceCccUTF8toUTF16(wchar_t* dest, size_t size, char* src)
+{
+    return _sceCccUTF8toUTF16(dest, size, src);
 }
 
 uint32_t GetStrResourceCount(uintptr_t ptrStrTbl)
@@ -471,6 +500,19 @@ uintptr_t YgFont_PrintLineFit64(int X, int Y, uintptr_t unk_a2, wchar_t* string,
     return _YgFont_PrintLineFit64(X, Y, unk_a2, string, unk_t0);
 }
 
+#ifndef __INTELLISENSE__
+asm
+(
+    ".global YgSys_sprintf\n"
+    "YgSys_sprintf:\n"
+    "lui $v0, %hi(_YgSys_sprintf)\n"
+    "addiu $v0, $v0, %lo(_YgSys_sprintf)\n"
+    "lw $v0, 0($v0)\n"
+    "jr $v0\n"
+    "nop\n"
+);
+#endif
+
 void YgFont_SetWordSeparateFlg(int val)
 {
     if (!_YgFont_SetWordSeparateFlg)
@@ -514,6 +556,11 @@ int YgFont_GetRubyCharFlg()
     if (!_YgFont_GetRubyCharFlg)
         return 0;
     return _YgFont_GetRubyCharFlg();
+}
+
+int YgFont_GetStrWidth(wchar_t* str)
+{
+    return _YgFont_GetStrWidth(str);
 }
 
 // void tf_ReplaceFirstChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr)
@@ -823,6 +870,15 @@ int tf_strcmp(const char* s1, const char* s2)
     return *(const unsigned char*)s1 - *(const unsigned char*)s2;
 }
 
+int loopAround(int value, int min, int max) 
+{
+    int range = max - min + 1;
+
+    value = (value - min + range) % range + min;
+
+    return value;
+}
+
 // window draw stuff -- not checking func pointers for performance reasons
 uintptr_t EhPckt_Open(int unk1, int unk2)
 {
@@ -898,6 +954,26 @@ uintptr_t helpers_GetMainEhHeap()
     return *(uintptr_t*)(MAIN_EHHEAP_ADDR + helper_base);
 }
 
+void helpers_SetBlockNextInputPoll(int val)
+{
+    _bBlockNextPoll = val;
+}
+
+int helpers_GetBlockNextInputPoll()
+{
+    return _bBlockNextPoll;
+}
+
+void helpers_SetDialogBoxWantsIO(int val)
+{
+    _bDialogBoxWantsIO = val;
+}
+
+int helpers_GetDialogBoxWantsIO()
+{
+    return _bDialogBoxWantsIO;
+}
+
 void helpers_SetPPSSPP(int val)
 {
     _bIsOnPPSSPP = val;
@@ -906,7 +982,8 @@ void helpers_SetPPSSPP(int val)
 void helpers_Init(uintptr_t base_addr)
 {
     _YgSys_InitApplication = (void (*)())(0x84F8 + base_addr);
-    _EhPad_Get = (uintptr_t(*)())(0x3A428 + base_addr);
+    _YgAdh_Update = (void (*)())(0x1D75C + base_addr);
+    //_EhPad_Get = (uintptr_t(*)())(0x3A428 + base_addr);
     _YgFont_PrintLine64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0x17F0 + base_addr);
     _YgFont_PrintLineFit64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0x4410 + base_addr);
     _YgFont_SetWordSeparateFlg = (void (*)(int))(0x21AC + base_addr);
@@ -915,6 +992,7 @@ void helpers_Init(uintptr_t base_addr)
     _YgFont_SetRubyCharFlg = (void (*)(int))(0x2284 + base_addr);
     _YgFont_GetShadowFlg = (int (*)())(0x217C + base_addr);
     _YgFont_GetRubyCharFlg = (int (*)())(0x22C4 + base_addr);
+    _YgFont_GetStrWidth = (int (*)(wchar_t*))(0x1360 + base_addr);
     _YgSys_wcscat = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BFA0 + base_addr);
     _YgSys_wcscpy = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BF10 + base_addr);
     _YgSys_wcslen = (size_t(*)(const wchar_t*))(0x0002BEB0 + base_addr);
@@ -929,6 +1007,8 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_strcpy = (char* (*)(char*, const char*))(0x4A65C + base_addr);
     _YgSys_strcat = (char* (*)(char*, const char*))(0x4A5CC + base_addr);
     _YgSys_strlen = (size_t(*)(const char*))(0x4A6A0 + base_addr);
+    _sceCccUTF8toUTF16 = (int (*)(wchar_t*, size_t, char*))(0x640DC + base_addr);
+    _YgSys_sprintf = (int (*)(char*, const char*, ...))(0x48FB4 + base_addr);
 
     // window draw stuff
     _EhPckt_Open = (uintptr_t(*)(int, int))(0x0003A954 + base_addr);

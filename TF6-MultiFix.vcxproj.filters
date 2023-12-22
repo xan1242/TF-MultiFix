@@ -98,6 +98,12 @@
     <ClCompile Include="source\TF6-MultiFix\YgWindow.c">
       <Filter>source\TF6-MultiFix</Filter>
     </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\multifixwindow.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\installdisabledialog.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -170,6 +176,12 @@
       <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\YgWindow.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\multifixwindow.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\installdisabledialog.h">
       <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
   </ItemGroup>

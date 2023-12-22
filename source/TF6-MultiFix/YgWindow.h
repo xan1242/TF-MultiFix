@@ -139,7 +139,7 @@ typedef struct _YgSelWnd
 	/* 0x114 */ uintptr_t unkCallback4;
 	/* 0x118 */ uintptr_t selItemBGDrawCallback;
 	/* 0x11C */ uintptr_t unkCallback6;
-	/* 0x120 */ int unk71;
+	/* 0x120 */ uintptr_t customPadBuffer;
 }YgSelWnd;
 
 uintptr_t YgSelWnd_Init(YgSelWnd* window);
@@ -162,7 +162,7 @@ uintptr_t YgSelWnd_SelCsrInc(YgSelWnd* window);
 
 uintptr_t ygBasicWindow_Init(ygWindowResource* res, uintptr_t heap);
 uintptr_t ygBasicWindow_Create(ygWindowResource* res, ygBasicWindow* window);
-uintptr_t ygBasicWindow_Term(ygBasicWindow* window);
+uintptr_t ygBasicWindow_Term(ygWindowResource* res);
 uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygWindowResource* window);
 
 #ifndef YGWINDOW_ESSENTIALS_ONLY
