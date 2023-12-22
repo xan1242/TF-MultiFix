@@ -22,6 +22,8 @@
 #define YGSEL_DIALOGBUTTONS_YESNO 3 << 16
 #define YGSEL_DIALOGBUTTONS_YESNOCANCEL 4 << 16
 
+#define YGSEL_LOCKITEM(index) 1 << (index)
+
 #define YGWINDOW_BG_LIGHT 0
 #define YGWINDOW_BG_BLUE 1
 #define YGWINDOW_BG_DARK 2
@@ -102,27 +104,34 @@ typedef struct _YgSelWnd
 	/* 0x0CC */ unsigned int selFlags;
 	/* 0x0D0 */ short itemcount;
 	/* 0x0D2 */ short maxitems;
-	/* 0x0D4 */ short unk54;
-	/* 0x0D6 */ unsigned char unk56;
+	/* 0x0D4 */ short unk54; // seems important
+	/* 0x0D6 */ unsigned char unk56; // seems important, can't tell what this is
 	/* 0x0D7 */ unsigned char unk57; // flags?? byte_4CFA5B & 0xF0 | a4 & 0xF -- 0, can be 3, 4
-	/* 0x0D8 */ int unk58;
-	/* 0x0DC */ int unk59;
-	/* 0x0E0 */ int unk60;
-	/* 0x0E4 */ int unk61;
+	/* 0x0D8 */ int unk58; // padding?
+	/* 0x0DC */ int unk59; // has something to do with unk56 and selFlags & 0x7800
+	/* 0x0E0 */ uint32_t itemLockBitfield; // locks items
+	/* 0x0E4 */ int unk61; // has something to do with scroll triangle
 	/* 0x0E8 */ uintptr_t buttonTexture;
 	/* 0x0EC */ unsigned char unk62_1; // some flags again, decide button related
-	/* 0x0ED */ unsigned char unk62_2;
-	/* 0x0EE */ unsigned char unk62_3;
-	/* 0x0EF */ unsigned char unk62_4;
-	/* 0x0F0 */ int unk63;
+	/* 0x0ED */ unsigned char unk62_2; // seems important - WndAnimCount related?
+	/* 0x0EE */ unsigned char unk62_3; // padding?
+	/* 0x0EF */ unsigned char unk62_4; // padding?
+	/* 0x0F0 */ int unk63; // padding?
 	/* 0x0F4 */ short SelDrawWidth1;
 	/* 0x0F6 */ short SelDrawHeight1;
-	/* 0x0F8 */ int unk66;
+	/* 0x0F8 */ short SelDrawOffsetX;
+	/* 0x0F6 */ short SelDrawOffsetY;
 	/* 0x0FC */ short SelDrawWidth2;
 	/* 0x0FE */ short SelDrawHeight2;
 	/* 0x100 */ uintptr_t ItemDrawCallback; // optional, takes 4 args - void* callback(void* ehpacket, int item_index, int X, int Y)
-	/* 0x104 */ uintptr_t CustomDrawCallback; // item draw callback function, optional, takes 5 args
-	/* 0x108 */ char unk70[0x1C];
+	/* 0x104 */ uintptr_t CustomDrawCallback; // window draw callback function, optional, takes 5 args
+	/* 0x108 */ uintptr_t unkCallback1;
+	/* 0x10C */ uintptr_t unkCallback2;
+	/* 0x110 */ uintptr_t selCsrDrawCallback;
+	/* 0x114 */ uintptr_t unkCallback4;
+	/* 0x118 */ uintptr_t selItemBGDrawCallback;
+	/* 0x11C */ uintptr_t unkCallback6;
+	/* 0x120 */ int unk71;
 }YgSelWnd;
 
 uintptr_t YgSelWnd_Init(YgSelWnd* window);

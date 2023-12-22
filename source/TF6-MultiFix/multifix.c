@@ -635,6 +635,12 @@ uintptr_t TestWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
         YgFont_SetDefaultColor(0xFFFFFFFF);
     else
         YgFont_SetDefaultColor(0xFF000000);
+
+    if (testWindow.itemLockBitfield & YGSEL_LOCKITEM(item_index))
+    {
+        YgFont_SetDefaultColor(0xFF7F7F7F);
+    }
+
     YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, testWindowItems[item_index]);
 
     return YgFont_GetEhPckt();
@@ -650,7 +656,6 @@ void CreateTestWindow()
     testWindow.window.caption = testWindowTitle;
     testWindow.itemcount = (sizeof(testWindowItems) / sizeof(wchar_t*));
     //testWindow.window.maxitems = 2;
-    testWindow.unk57 = 4;
     testWindow.selFlags = YGSEL_HIGHLIGHT | YGSEL_VERTICAL;
     //testWindow.unk50 = 2;
 
@@ -708,7 +713,8 @@ void CreateTestWindow()
 
     testWindow.window.captionFontSize = 12;
     testWindow.window.captionFontColor = 0xFFFFFFFF;
-    testWindow.unk60 = 0x184;
+    //testWindow.unk60 = 0x184;
+    testWindow.itemLockBitfield = YGSEL_LOCKITEM(1) | YGSEL_LOCKITEM(2);
     testWindow.SelDrawWidth1 = SelDrawWidth - 12;
     testWindow.SelDrawHeight1 = 25;
     testWindow.SelDrawWidth2 = SelDrawWidth - 12;
