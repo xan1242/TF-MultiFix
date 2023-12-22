@@ -667,7 +667,7 @@ void CreateTestWindow()
     testWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)testWindow.window.height * 0.5f));
 
     testWindow.window.color = 0xFFFFFFFF;
-    testWindow.ItemDrawCallback = (uintptr_t)&TestWindowCallback;
+    testWindow.itemDrawCallback = (uintptr_t)&TestWindowCallback;
 
     int SelDrawWidth = testWindow.window.width;
 
@@ -715,10 +715,10 @@ void CreateTestWindow()
     testWindow.window.captionFontColor = 0xFFFFFFFF;
     //testWindow.unk60 = 0x184;
     testWindow.itemLockBitfield = YGSEL_LOCKITEM(1) | YGSEL_LOCKITEM(2);
-    testWindow.SelDrawWidth1 = SelDrawWidth - 12;
-    testWindow.SelDrawHeight1 = 25;
-    testWindow.SelDrawWidth2 = SelDrawWidth - 12;
-    testWindow.SelDrawHeight1 = 25;
+    testWindow.selDrawWidth1 = SelDrawWidth - 12;
+    testWindow.selDrawHeight1 = 25;
+    testWindow.selDrawWidth2 = SelDrawWidth - 12;
+    testWindow.selDrawHeight1 = 25;
 
     YgSelWnd_Init(&testWindow);
 #ifdef TFMULTIFIX_DEBUG_PRINT
@@ -744,8 +744,12 @@ void DrawTestWindow()
 //     sceKernelPrintf("TestWindow EhPacket: 0x%X", packet);
 // #endif
 
-    YgSelWnd_Cont(&testWindow);
+    int retval = YgSelWnd_Cont(&testWindow);
     YgSelWnd_Draw((uintptr_t)&packet, &testWindow);
+
+#ifdef TFMULTIFIX_DEBUG_PRINT
+        sceKernelPrintf("flags: 0x%X | contret: 0x%08X", testWindow.currentItem, retval);
+#endif
 
     EhPckt_Close(packet);
 }
