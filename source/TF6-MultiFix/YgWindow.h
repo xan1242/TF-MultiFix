@@ -24,8 +24,13 @@
 
 #define YGSEL_LOCKITEM(index) 1 << (index)
 
-#define YGSEL_DECIDE_CANCEL 1
-#define YGSEL_DECIDE_CONFIRM 2
+#define YGSEL_DECIDESTATUS_CANCEL 1
+#define YGSEL_DECIDESTATUS_CONFIRM 2
+
+#define YGSEL_DIALOGBUTTON_SEL_OK 1
+#define YGSEL_DIALOGBUTTON_SEL_YES 2
+#define YGSEL_DIALOGBUTTON_SEL_NO 3
+#define YGSEL_DIALOGBUTTON_SEL_CANCEL 4
 
 #define YGWINDOW_BG_LIGHT 0
 #define YGWINDOW_BG_BLUE 1
@@ -109,7 +114,7 @@ typedef struct _YgSelWnd
 	/* 0x0D2 */ short maxitems;
 	/* 0x0D4 */ short unk54; // seems important
 	/* 0x0D6 */ unsigned char currentItem;
-	/* 0x0D7 */ unsigned char unk57; // flags?? byte_4CFA5B & 0xF0 | a4 & 0xF -- 0, can be 3, 4
+	/* 0x0D7 */ unsigned char currentDialogItem;
 	/* 0x0D8 */ int unk58; // padding?
 	/* 0x0DC */ int unk59; // has something to do with unk56 and selFlags & 0x7800
 	/* 0x0E0 */ uint32_t itemLockBitfield; // locks items

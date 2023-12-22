@@ -605,6 +605,62 @@ void DrawBasicTestWindow()
     EhPckt_Close(packet);
 }
 
+YgSelWnd dialogTestWindow;
+wchar_t dialogTestText[] = L"I am a test dialog. I am actually a YgSelWnd.";
+int bDialogTestWindowInited = 0;
+
+void CreateDialogTestWindow()
+{
+    YgSys_memset(&dialogTestWindow, 0, sizeof(YgSelWnd));
+    dialogTestWindow.heapptr = helpers_GetMainEhHeap();
+
+    dialogTestWindow.selFlags = YGSEL_DIALOGBUTTONS_YESNOCANCEL;
+
+    dialogTestWindow.window.color = 0xFFFFFFFF;
+    dialogTestWindow.window.unk3 = 1;
+
+    dialogTestWindow.window.width = 200;
+    dialogTestWindow.window.height = 100;
+    dialogTestWindow.window.bAutoSizeWindow = 0;
+    dialogTestWindow.window.bWindowCaption = 0;
+
+    dialogTestWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)dialogTestWindow.window.width * 0.5f));
+    dialogTestWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)dialogTestWindow.window.height * 0.5f));
+
+    dialogTestWindow.window.windowBGColor = YGWINDOW_BG_DARK;
+
+    dialogTestWindow.window.windowText = dialogTestText;
+    dialogTestWindow.window.captionFontColor = 0xFFFFFFFF;
+
+    dialogTestWindow.window.topPadding = 0;
+    dialogTestWindow.window.bottomPadding = 0;
+    dialogTestWindow.window.leftPadding = 0;
+    dialogTestWindow.window.rightPadding = 0;
+    dialogTestWindow.window.windowFontSize = 12;
+    dialogTestWindow.window.windowFontColor = 0xFFFFFFFF;
+    dialogTestWindow.window.unk43 = 1;
+    dialogTestWindow.window.unk44 = 1;
+
+    YgSelWnd_Init(&dialogTestWindow);
+    bDialogTestWindowInited = 1;
+}
+
+void DrawDialogTestWindow()
+{
+    if (!bDialogTestWindowInited)
+        return;
+
+    uintptr_t packet = EhPckt_Open(4, 0);
+    int retval = YgSelWnd_Cont(&dialogTestWindow);
+    YgSelWnd_Draw((uintptr_t)&packet, &dialogTestWindow);
+
+#ifdef TFMULTIFIX_DEBUG_PRINT
+    sceKernelPrintf("flags: 0x%X | decide: 0x%X | contret: 0x%08X", dialogTestWindow.currentDialogItem, dialogTestWindow.decideStatus, retval);
+#endif
+
+    EhPckt_Close(packet);
+}
+
 YgSelWnd testWindow;
 wchar_t testWindowTitle[] = L"Test Window Yay!";
 wchar_t* testWindowItems[] =
@@ -707,7 +763,7 @@ void CreateTestWindow()
     testWindow.window.unk43 = 2;
     testWindow.window.unk44 = 2;
     //testWindow.window.unk50 = 0;
-    testWindow.unk57 = 0;
+    //testWindow.unk57 = 0;
 
 
 
@@ -811,8 +867,9 @@ void HandleButtonCheats()
 // do stuff at the end of main loop
 void lSoftReset_Hook()
 {
-    DrawTestWindow();
+    //DrawTestWindow();
     //DrawBasicTestWindow();
+    DrawDialogTestWindow();
     HandleButtonCheats();
     return lSoftReset();
 }
@@ -858,9 +915,9 @@ void HandlePostInit()
 #ifdef TFMULTIFIX_DEBUG_PRINT
     sceKernelPrintf("After YgSys_InitApplication(), heap addr: 0x%X", helpers_GetMainEhHeap());
 #endif
-    CreateTestWindow();
+    //CreateTestWindow();
     //CreateBasicTestWindow();
-
+    CreateDialogTestWindow();
 
 }
 
