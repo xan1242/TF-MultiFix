@@ -13,7 +13,6 @@
 YgSelWnd aboutWindow;
 int bAboutWindowInited = 0;
 
-//wchar_t installDisableText[] = L"The installation feature has been disabled.\n\nYou can re-enable it in the MultiFix Configuration window.";
 char aboutWindow_VersionFormat[] = MULTIFIX_ABOUT_FORMAT;
 
 #define ABOUTWINDOW_MAXTEXT 512
