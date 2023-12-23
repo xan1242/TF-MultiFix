@@ -186,6 +186,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\tutorial.c" />
     <ClCompile Include="source\TF6-MultiFix\tutoriallist.c" />
     <ClCompile Include="source\TF6-MultiFix\umdreplace.c" />
+    <ClCompile Include="source\TF6-MultiFix\windows\aboutwindow.c" />
     <ClCompile Include="source\TF6-MultiFix\windows\installdisabledialog.c" />
     <ClCompile Include="source\TF6-MultiFix\windows\multifixwindow.c" />
     <ClCompile Include="source\TF6-MultiFix\YgWindow.c" />
@@ -221,6 +222,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClInclude Include="source\TF6-MultiFix\tutorial.h" />
     <ClInclude Include="source\TF6-MultiFix\tutoriallist.h" />
     <ClInclude Include="source\TF6-MultiFix\umdreplace.h" />
+    <ClInclude Include="source\TF6-MultiFix\windows\aboutwindow.h" />
     <ClInclude Include="source\TF6-MultiFix\windows\installdisabledialog.h" />
     <ClInclude Include="source\TF6-MultiFix\windows\multifixwindow.h" />
     <ClInclude Include="source\TF6-MultiFix\YgWindow.h" />

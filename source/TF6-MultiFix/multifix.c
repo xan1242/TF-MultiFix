@@ -37,6 +37,7 @@
 #include <pspctrl.h>
 #include "multifixconfig.h"
 #include "windows/multifixwindow.h"
+#include "windows/aboutwindow.h"
 
 #include <psputility.h>
 #include <psputility_msgdialog.h>
@@ -69,6 +70,7 @@ int bShowTestDialog = 0;
 int bShowTestSelWindow = 0;
 
 int bShowMfWindow = 0;
+int bShowAboutWindow = 0;
 
 int bIsOnPPSSPP = 0;
 void SetPPSSPP(int val)
@@ -961,7 +963,21 @@ void HandleDialogs()
             int currItem = (retval >> 8) & 0xFF;
             int bValueChanged = (retval >> 16) & 0xFF;
 
+            if (decideStatus == YGSEL_DECIDESTATUS_CONFIRM)
+            {
+                if (currItem == (mfwindow_GetItemCount() - 1))
+                {
+                    bShowAboutWindow = 1;
+                }
+            }
+
         }
+    }
+
+    if (bShowAboutWindow)
+    {
+        if (aboutwindow_Draw())
+            bShowAboutWindow = 0;
     }
 }
 

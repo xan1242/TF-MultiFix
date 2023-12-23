@@ -6,6 +6,21 @@
 #ifndef MULTIFIX_H
 #define MULTIFIX_H
 
+#define MODULE_VERSION_MAJOR 1
+#define MODULE_VERSION_MINOR 0
+
+// formatting the window is a bit janky so we do it here...
+#define MULTIFIX_ABOUT_FORMAT "\
+             Tag Force 6 MultiFix v%d.%d\n\n%s\
+"
+#define MULTIFIX_ABOUT_TEXT "\
+A multi-purpose fix & enhancement kit for\n\
+Yu-Gi-Oh! Tag Force games.\n\
+\n\
+\n\
+Created by Xan / Tenjoin\
+"
+
 // define for debug printing to sceKernelPrintf
 #define TFMULTIFIX_DEBUG_PRINT
 // define for debug printing of the return address of YgFont_PrintLine64 and YgFont_PrintLineFit64

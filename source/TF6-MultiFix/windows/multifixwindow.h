@@ -7,7 +7,7 @@
 #define MULTIFIXWINDOW_H
 
 int mfwindow_Draw();
-
+int mfwindow_GetItemCount();
 
 
 #endif

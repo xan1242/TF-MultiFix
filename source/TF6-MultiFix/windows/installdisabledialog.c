@@ -7,6 +7,7 @@
 #include "../helpers.h"
 #include "../multifixconfig.h"
 #include "../YgWindow.h"
+#include "installdisabledialog.h"
 
 YgSelWnd installDisableWindow;
 int bInstallDisableWindowInited = 0;
@@ -65,7 +66,7 @@ int installdisabledialog_Draw()
 	//helpers_SetDialogBoxWantsIO(1);
 
 	uintptr_t packet = EhPckt_Open(4, 0);
-	int retval = YgSelWnd_Cont(&installDisableWindow);
+	YgSelWnd_Cont(&installDisableWindow);
 	YgSelWnd_Draw((uintptr_t)&packet, &installDisableWindow);
 
 	EhPckt_Close(packet);

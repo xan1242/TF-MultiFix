@@ -24,7 +24,7 @@ int mfwindow_bValueChanged = 0;
 #define MFWINDOW_SETTING_TYPE_BOOL 1
 #define MFWINDOW_SETTING_TYPE_FLOAT 2
 #define MFWINDOW_SETTING_TYPE_INTSTRING 3
-#define MFWINDOW_SETTING_TYPE_EMPTY 4
+#define MFWINDOW_SETTING_TYPE_NONE 4
 
 #define MFWINDOW_VALPOSITION 3.6f
 
@@ -35,9 +35,19 @@ char* mfWindowItems[] =
     "See partner's cards",
     "Disable duel \"Help\" icon",
     "Disable install feature",
+    "About MultiFix...",
 };
+#define MFWINDOW_ITEM_COUNT sizeof(mfWindowItems) / sizeof(char*)
 
-//char* mfWindowItemDrawList[sizeof(mfWindowItems) / sizeof(char*)];
+char* mfWindow2Items[] =
+{
+    "Swaps cross and circle as confirm buttons.",
+    "Enables matrix font style (uppercase glyphs for lowercase letters) on card names, types, etc.",
+    "Shows partner's cards mid-duel, just like the older Tag Force games.",
+    "Disables the \"Help\" icon in the lower right corner during duels. The icon can obstruct the visibility of the card there.",
+    "Disables the \"Install Data\" feature. It is recommended to keep it disabled as it could potentially cause issues for translations and/or mods. This acts as a safe guard against it.",
+    "About this plugin.",
+};
 
 typedef struct _mfWindowSetting
 {
@@ -49,32 +59,38 @@ typedef struct _mfWindowSetting
     float fmax;
     int type;
     int hidden;
+    int selectable;
+    int index;
     char* name;
     char* description;
 }mfWindowSetting;
 
-mfWindowSetting mfWindowSettings[sizeof(mfWindowItems) / sizeof(char*)];
-mfWindowSetting* mfWindowSettingDrawList[sizeof(mfWindowItems) / sizeof(char*)];
+mfWindowSetting mfWindowSettings[MFWINDOW_ITEM_COUNT] =
+{
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 1, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 2, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 3, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 4, NULL, NULL},
+    // about is always last!
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 0, 1, (MFWINDOW_ITEM_COUNT - 1), NULL, NULL},
+};
+
+
+mfWindowSetting* mfWindowSettingDrawList[MFWINDOW_ITEM_COUNT];
 
 #define MFWINDOW_MAXTEXT 128
 #define MFWINDOW_MAXVALTEXT 32
 
 ygBasicWindowPack mfWindow2;
 int bMfWindow2Inited = 0;
-char* mfWindow2Items[] =
-{
-    "Swaps cross and circle as confirm buttons.",
-    "Enables matrix font style (uppercase glyphs for lowercase letters) on card names, types, etc.",
-    "Shows partner's cards mid-duel, just like the older Tag Force games.",
-    "Disables the \"Help\" icon in the lower right corner during duels. The icon can obstruct the visibility of the card there.",
-    "Disables the \"Install Data\" feature. It is recommended to keep it disabled as it could potentially cause issues for translations and/or mods. This acts as a safe guard against it.",
-};
 
 #define MFWINDOW2_MAXTEXT 256
 
 uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
 {
     mfWindowSetting* currSetting = mfWindowSettingDrawList[item_index];
+    //sceKernelPrintf("showing opt: %s", currSetting->name);
 
     YgFont_SetEhPckt(ehpacket);
 
@@ -112,24 +128,37 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
             break;
         }
         case MFWINDOW_SETTING_TYPE_INT:
-        default:
         {
             YgSys_sprintf(sprintfbuf, "<%d>", *(currSetting->val));
             break;
         }
+        case MFWINDOW_SETTING_TYPE_NONE:
+        default:
+        {
+            break;
+        }
     }
 
-    
-    sceCccUTF8toUTF16(convBuffer, ((MFWINDOW_MAXVALTEXT - 1) * sizeof(wchar_t)), sprintfbuf);
-    float valXpos = (float)X * MFWINDOW_VALPOSITION;
-    YgFont_PrintLine64(((int)valXpos) << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
-
+    if (currSetting->type != MFWINDOW_SETTING_TYPE_NONE)
+    {
+        sceCccUTF8toUTF16(convBuffer, ((MFWINDOW_MAXVALTEXT - 1) * sizeof(wchar_t)), sprintfbuf);
+        float valXpos = (float)X * MFWINDOW_VALPOSITION;
+        YgFont_PrintLine64(((int)valXpos) << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
+    }
 
     return YgFont_GetEhPckt();
 }
 
 void mfwindow_Create()
 {
+    // assign some defaults
+    for (int i = 0; i < MFWINDOW_ITEM_COUNT; i++)
+    {
+        mfWindowSettings[i].index = i;
+        mfWindowSettings[i].name = mfWindowItems[i];
+        mfWindowSettings[i].description = mfWindow2Items[i];
+    }
+
     MultiFixConfig* config = mfconfig_GetConfig();
     mfwindow_bValueChanged = 0;
     mfWindowSettings[0].val = &config->bSwapConfirmButtons;
@@ -137,53 +166,23 @@ void mfwindow_Create()
     mfWindowSettings[2].val = &config->bSeePartnerCards;
     mfWindowSettings[3].val = &config->bDisableDuelHelpIcon;
     mfWindowSettings[4].val = &config->bDisableInstall;
-
-    mfWindowSettings[0].min = 0;
-    mfWindowSettings[1].min = 0;
-    mfWindowSettings[2].min = 0;
-    mfWindowSettings[3].min = 0;
-    mfWindowSettings[4].min = 0;
-
-    mfWindowSettings[0].max = 1;
-    mfWindowSettings[1].max = 1;
-    mfWindowSettings[2].max = 1;
-    mfWindowSettings[3].max = 1;
-    mfWindowSettings[4].max = 1;
-
-    mfWindowSettings[0].type = MFWINDOW_SETTING_TYPE_BOOL;
-    mfWindowSettings[1].type = MFWINDOW_SETTING_TYPE_BOOL;
-    mfWindowSettings[2].type = MFWINDOW_SETTING_TYPE_BOOL;
-    mfWindowSettings[3].type = MFWINDOW_SETTING_TYPE_BOOL;
-    mfWindowSettings[4].type = MFWINDOW_SETTING_TYPE_BOOL;
-
-    mfWindowSettings[0].hidden = 0;
-    mfWindowSettings[1].hidden = 0;
-    mfWindowSettings[2].hidden = 0;
-    mfWindowSettings[3].hidden = 0;
-    mfWindowSettings[4].hidden = 0;
-
-    mfWindowSettings[0].name = mfWindowItems[0];
-    mfWindowSettings[1].name = mfWindowItems[1];
-    mfWindowSettings[2].name = mfWindowItems[2];
-    mfWindowSettings[3].name = mfWindowItems[3];
-    mfWindowSettings[4].name = mfWindowItems[4];
-
-    mfWindowSettings[0].description = mfWindow2Items[0];
-    mfWindowSettings[1].description = mfWindow2Items[1];
-    mfWindowSettings[2].description = mfWindow2Items[2];
-    mfWindowSettings[3].description = mfWindow2Items[3];
-    mfWindowSettings[4].description = mfWindow2Items[4];
-
+    mfWindowSettings[5].val = NULL;
 
     YgSys_memset(&mfWindow, 0, sizeof(YgSelWnd));
     YgSys_memset(&mfWindowSettingDrawList, 0, sizeof(mfWindowSettingDrawList));
     mfWindow.heapptr = helpers_GetMainEhHeap();
     mfWindow.window.caption = mfWindowCaption;
     mfWindow.itemcount = 0;
+    // lock all by default
+    mfWindow.itemLockBitfield = 0xFFFFFFFF;
 
-
-    for (int i = 0; i < (sizeof(mfWindowItems) / sizeof(wchar_t*)); i++)
+    for (int i = 0; i < MFWINDOW_ITEM_COUNT; i++)
     {
+        if (mfWindowSettings[i].selectable)
+        {
+            mfWindow.itemLockBitfield &= ~(YGSEL_LOCKITEM(i));
+        }
+
         if (!mfWindowSettings[i].hidden)
         {
             mfWindowSettingDrawList[mfWindow.itemcount] = &mfWindowSettings[i];
@@ -229,8 +228,9 @@ void mfwindow_Create()
 
     mfWindow.window.captionFontSize = 12;
     mfWindow.window.captionFontColor = 0xFFFFFFFF;
-    // lock all
-    mfWindow.itemLockBitfield = 0xFFFFFFFF;
+    
+
+
 
     int SelDrawWidth = mfWindow.window.width;
     mfWindow.selDrawWidth1 = SelDrawWidth - 12;
@@ -300,6 +300,10 @@ int mfwindow2_Draw()
     return 0;
 }
 
+int mfwindow_GetItemCount()
+{
+    return MFWINDOW_ITEM_COUNT;
+}
 
 int mfwindow_Draw()
 {
@@ -313,7 +317,7 @@ int mfwindow_Draw()
 
     helpers_SetDialogBoxWantsIO(1);
 
-    //sceKernelPrintf("curr item: 0x%08X | val2: 0x%08X\n", mfWindow.currentItem, mfWindow.unk54);
+    //sceKernelPrintf("item: 0x%08X | page: 0x%08X\n", mfWindow.currentItem, mfWindow.currentItemPage);
 
     int currItem = mfWindow.currentItem + mfWindow.currentItemPage;
 
@@ -323,22 +327,24 @@ int mfwindow_Draw()
     mfWindowSetting* setting = mfWindowSettingDrawList[currItem];
     int* val = setting->val;
 
-    if (buttons & PSP_CTRL_LEFT)
+    if (val)
     {
-        *val -= 1;
-        mfwindow_bValueChanged = 1;
-        YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
+        if (buttons & PSP_CTRL_LEFT)
+        {
+            *val -= 1;
+            mfwindow_bValueChanged = 1;
+            YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
+            *val = loopAround(*val, setting->min, setting->max);
+        }
+
+        if (buttons & PSP_CTRL_RIGHT)
+        {
+            *val += 1;
+            mfwindow_bValueChanged = 1;
+            YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
+            *val = loopAround(*val, setting->min, setting->max);
+        }
     }
-
-    if (buttons & PSP_CTRL_RIGHT)
-    {
-        *val += 1;
-        mfwindow_bValueChanged = 1;
-        YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
-    }
-
-    *val = loopAround(*val, setting->min, setting->max);
-
 
 
     YgSelWnd_Cont(&mfWindow);
@@ -358,7 +364,7 @@ int mfwindow_Draw()
         // 8 bits = decide status
         // 8 bits = item
         // 8 bits = mfwindow_bValueChanged
-        int retval = (mfWindow.decideStatus & 0xFF) | ((currItem & 0xFF) << 8) | ((mfwindow_bValueChanged & 0xFF) << 16);
+        int retval = (mfWindow.decideStatus & 0xFF) | ((setting->index & 0xFF) << 8) | ((mfwindow_bValueChanged & 0xFF) << 16);
 
         return retval;
     }

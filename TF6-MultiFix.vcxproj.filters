@@ -107,6 +107,9 @@
     <ClCompile Include="source\TF6-MultiFix\windows\installdisabledialog.c">
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\windows\aboutwindow.c">
+      <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -185,6 +188,9 @@
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\windows\multifixwindow.h">
+      <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\windows\aboutwindow.h">
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClInclude>
   </ItemGroup>

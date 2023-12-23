@@ -22,8 +22,7 @@
 // This is the name of this module that will be presented to the PSP OS.
 #define MODULE_NAME "TFMultiFix"
 
-#define MODULE_VERSION_MAJOR 1
-#define MODULE_VERSION_MINOR 0
+
 
 // Uncomment for logging
 // We use a global definition like so to reduce final binary size (which is very important because PSP is memory constrained!)
