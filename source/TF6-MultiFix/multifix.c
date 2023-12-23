@@ -36,7 +36,7 @@
 #include "YgWindow.h"
 #include <pspctrl.h>
 #include "multifixconfig.h"
-#include "multifixwindow.h"
+#include "windows/multifixwindow.h"
 
 #include <psputility.h>
 #include <psputility_msgdialog.h>
@@ -804,7 +804,7 @@ void CreateTestWindow()
     //testWindow.unk23_1 = 117;
     //testWindow.unk23_2 = 16;
     //testWindow.unk24 = testWindowTitle;
-    testWindow.window.bCaptionFontShadow = 1;
+    testWindow.window.bFontShadow = 1;
     testWindow.window.leftPadding = 2;
     testWindow.window.rightPadding = 2;
     testWindow.window.topPadding = 2;

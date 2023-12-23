@@ -10,6 +10,9 @@
     <Filter Include="source\TF6-MultiFix">
       <UniqueIdentifier>{b85c3f64-e2b7-4caf-825a-1d9dcf12d02e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\TF6-MultiFix\windows">
+      <UniqueIdentifier>{26f3828f-c7f5-4642-9e86-0ad595d2e538}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include=".\data\plugin.ini">
@@ -98,11 +101,11 @@
     <ClCompile Include="source\TF6-MultiFix\YgWindow.c">
       <Filter>source\TF6-MultiFix</Filter>
     </ClCompile>
-    <ClCompile Include="source\TF6-MultiFix\multifixwindow.c">
-      <Filter>source\TF6-MultiFix</Filter>
+    <ClCompile Include="source\TF6-MultiFix\windows\multifixwindow.c">
+      <Filter>source\TF6-MultiFix\windows</Filter>
     </ClCompile>
-    <ClCompile Include="source\TF6-MultiFix\installdisabledialog.c">
-      <Filter>source\TF6-MultiFix</Filter>
+    <ClCompile Include="source\TF6-MultiFix\windows\installdisabledialog.c">
+      <Filter>source\TF6-MultiFix\windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,11 +181,11 @@
     <ClInclude Include="source\TF6-MultiFix\YgWindow.h">
       <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
-    <ClInclude Include="source\TF6-MultiFix\multifixwindow.h">
-      <Filter>source\TF6-MultiFix</Filter>
+    <ClInclude Include="source\TF6-MultiFix\windows\installdisabledialog.h">
+      <Filter>source\TF6-MultiFix\windows</Filter>
     </ClInclude>
-    <ClInclude Include="source\TF6-MultiFix\installdisabledialog.h">
-      <Filter>source\TF6-MultiFix</Filter>
+    <ClInclude Include="source\TF6-MultiFix\windows\multifixwindow.h">
+      <Filter>source\TF6-MultiFix\windows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,9 +4,9 @@
 //
 
 #include <stdio.h>
-#include "helpers.h"
-#include "multifixconfig.h"
-#include "YgWindow.h"
+#include "../helpers.h"
+#include "../multifixconfig.h"
+#include "../YgWindow.h"
 #include <pspctrl.h>
 #include <pspuser.h>
 

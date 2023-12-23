@@ -174,9 +174,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\field.c" />
     <ClCompile Include="source\TF6-MultiFix\gallery.c" />
     <ClCompile Include="source\TF6-MultiFix\helpers.c" />
-    <ClCompile Include="source\TF6-MultiFix\installdisabledialog.c" />
     <ClCompile Include="source\TF6-MultiFix\multifixconfig.c" />
-    <ClCompile Include="source\TF6-MultiFix\multifixwindow.c" />
     <ClCompile Include="source\TF6-MultiFix\password.c" />
     <ClCompile Include="source\TF6-MultiFix\recipeviewer.c" />
     <ClCompile Include="source\TF6-MultiFix\selectcard.c" />
@@ -188,6 +186,8 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\tutorial.c" />
     <ClCompile Include="source\TF6-MultiFix\tutoriallist.c" />
     <ClCompile Include="source\TF6-MultiFix\umdreplace.c" />
+    <ClCompile Include="source\TF6-MultiFix\windows\installdisabledialog.c" />
+    <ClCompile Include="source\TF6-MultiFix\windows\multifixwindow.c" />
     <ClCompile Include="source\TF6-MultiFix\YgWindow.c" />
   </ItemGroup>
   <ItemGroup>
@@ -209,9 +209,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClInclude Include="source\TF6-MultiFix\field.h" />
     <ClInclude Include="source\TF6-MultiFix\gallery.h" />
     <ClInclude Include="source\TF6-MultiFix\helpers.h" />
-    <ClInclude Include="source\TF6-MultiFix\installdisabledialog.h" />
     <ClInclude Include="source\TF6-MultiFix\multifixconfig.h" />
-    <ClInclude Include="source\TF6-MultiFix\multifixwindow.h" />
     <ClInclude Include="source\TF6-MultiFix\password.h" />
     <ClInclude Include="source\TF6-MultiFix\recipeviewer.h" />
     <ClInclude Include="source\TF6-MultiFix\selectcard.h" />
@@ -223,6 +221,8 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClInclude Include="source\TF6-MultiFix\tutorial.h" />
     <ClInclude Include="source\TF6-MultiFix\tutoriallist.h" />
     <ClInclude Include="source\TF6-MultiFix\umdreplace.h" />
+    <ClInclude Include="source\TF6-MultiFix\windows\installdisabledialog.h" />
+    <ClInclude Include="source\TF6-MultiFix\windows\multifixwindow.h" />
     <ClInclude Include="source\TF6-MultiFix\YgWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

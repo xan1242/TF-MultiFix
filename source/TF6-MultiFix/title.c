@@ -7,7 +7,7 @@
 #include "multifixconfig.h"
 #include "helpers.h"
 #include "title.h"
-#include "installdisabledialog.h"
+#include "windows/installdisabledialog.h"
 
 uintptr_t _base_addr_title = 0;
 uintptr_t _base_size_title = 0;

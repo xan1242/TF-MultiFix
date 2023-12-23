@@ -4,14 +4,14 @@
 //
 
 #include <stdio.h>
-#include "helpers.h"
-#include "multifixconfig.h"
-#include "YgWindow.h"
+#include "../helpers.h"
+#include "../multifixconfig.h"
+#include "../YgWindow.h"
 
 YgSelWnd installDisableWindow;
 int bInstallDisableWindowInited = 0;
 
-wchar_t installDisableText[] = L"The installation feature has been disabled.\n\nYou can re-enable it in the MultiFix configuration window.";
+wchar_t installDisableText[] = L"The installation feature has been disabled.\n\nYou can re-enable it in the MultiFix Configuration window.";
 
 void installdisabledialog_Create()
 {
