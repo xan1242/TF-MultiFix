@@ -72,9 +72,9 @@ typedef struct _ygBasicWindow
 	/* 0x034 / 0x080 */ short captionWidth;
 	/* 0x036 / 0x082 */ short captionHeight;
 	/* 0x038 / 0x084 */ wchar_t* windowText; // arg2 of lYgSys_SysMsg_CreateSelWindow, can be 0
-	/* 0x03C / 0x088 */ int bCaptionFontShadow; // 1
+	/* 0x03C / 0x088 */ int bFontShadow; // 1
 	/* 0x040 / 0x08C */ int unk26;
-	/* 0x044 / 0x090 */ int bCaptionFontRuby;
+	/* 0x044 / 0x090 */ int bFontRuby;
 	/* 0x048 / 0x094 */ short leftPadding; // 10
 	/* 0x04A / 0x096 */ short rightPadding; // 10
 	/* 0x04C / 0x098 */ short topPadding; // 8
@@ -112,7 +112,7 @@ typedef struct _YgSelWnd
 	/* 0x0CC */ unsigned int selFlags;
 	/* 0x0D0 */ short itemcount;
 	/* 0x0D2 */ short maxitems;
-	/* 0x0D4 */ short unk54; // seems important
+	/* 0x0D4 */ short currentItemPage;
 	/* 0x0D6 */ unsigned char currentItem;
 	/* 0x0D7 */ unsigned char currentDialogItem;
 	/* 0x0D8 */ int unk58; // padding?

@@ -16,6 +16,7 @@ typedef struct _MultiFixConfig
 	int bSeePartnerCards;
 	int CheatControlPartner;
 	int bDisableInstall;
+	int bDisableDuelHelpIcon;
 }MultiFixConfig;
 
 // accessors
@@ -37,6 +38,8 @@ int mfconfig_GetCheatControlPartner();
 int mfconfig_SetCheatControlPartner(int val);
 int mfconfig_GetDisableInstall();
 int mfconfig_SetDisableInstall(int val);
+int mfconfig_GetDisableDuelHelpIcon();
+int mfconfig_SetDisableDuelHelpIcon(int val);
 
 void mfconfig_Init();
 

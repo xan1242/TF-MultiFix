@@ -24,9 +24,9 @@ void installdisabledialog_Create()
 	installDisableWindow.window.unk3 = 1;
 
 	installDisableWindow.window.width = 300;
-	installDisableWindow.window.height = 100;
-	installDisableWindow.window.maxWidth = 400;
-	installDisableWindow.window.minWidth = 100;
+	installDisableWindow.window.height = 108;
+	//installDisableWindow.window.maxWidth = 400;
+	//installDisableWindow.window.minWidth = 100;
 
 	installDisableWindow.window.bAutoSizeWindow = 0;
 
@@ -46,6 +46,7 @@ void installdisabledialog_Create()
 	installDisableWindow.window.windowFontColor = 0xFFFFFFFF;
 	installDisableWindow.window.unk43 = 1;
 	installDisableWindow.window.unk44 = 1;
+	installDisableWindow.window.bFontShadow = 1;
 
 	//installDisableWindow.customPadBuffer = EhPad_GetAlways();
 

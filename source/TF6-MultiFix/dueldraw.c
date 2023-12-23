@@ -6,9 +6,19 @@
 #include "multifix.h"
 #include "dueldraw.h"
 #include "helpers.h"
+#include "multifixconfig.h"
 
 uintptr_t _base_addr_dueldraw = 0;
 uintptr_t _base_size_dueldraw = 0;
+
+int (*dueldraw_sub_262C0)() = (int (*)())(0);
+
+int dueldraw_sub_262C0_Hook()
+{
+    if (mfconfig_GetDisableDuelHelpIcon())
+        return 0;
+    return dueldraw_sub_262C0();
+}
 
 
 void dueldraw_Patch(uintptr_t base_addr, uintptr_t base_size)
@@ -19,6 +29,8 @@ void dueldraw_Patch(uintptr_t base_addr, uintptr_t base_size)
     uintptr_t oldsize = minj_GetBaseSize();
 
     minj_SetBaseAddress(base_addr, base_size);
+
+    dueldraw_sub_262C0 = (int (*)())(0x262C0 + base_addr);
 
     // fix displayed card when presenting cards from decks (e.g. Pot of Duality shows a random card from the deck)
     minj_MakeCALL(0x290C4, 0x121AC + base_addr);
@@ -44,6 +56,9 @@ void dueldraw_Patch(uintptr_t base_addr, uintptr_t base_size)
     minj_WriteMemory16(0x293C, (uint16_t)(9 << 6));
     // fix starchip infront of the category menu
     minj_WriteMemory32(0x2B5C, 0x02403021); // move a2, s2
+
+    // nuke the "help" icon at the bottom right corner
+    minj_MakeCALL(0x1C76C, (uintptr_t)&dueldraw_sub_262C0_Hook);
 
 
     minj_SetBaseAddress(oldaddr, oldsize);

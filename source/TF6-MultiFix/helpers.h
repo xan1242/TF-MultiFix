@@ -80,6 +80,7 @@ int YgSys_GetLang_Hook();
 int YgSys_GetLang_Hook2();
 void YgSys_InitApplication();
 void YgAdh_Update();
+void FirstLoopFunc(int unk);
 int YgSys_sprintf(char* str, const char* format, ...);
 int sceCccUTF8toUTF16(wchar_t* dest, size_t size, char* src);
 uintptr_t EhFolder_SearchFile(uintptr_t ptrMemEhFolder, const char* filename, uintptr_t unk);
@@ -99,6 +100,7 @@ int PatchButtonStrings_Text(uintptr_t ptrFolder, const char* filename);
 int PatchButtonStrings_Text_SJIS(uintptr_t ptrFolder, const char* filename);
 //void tf_ReplaceFirstChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
 //void tf_ReplaceLastChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
+int YgSys_SndPlaySE(int sound);
 uint32_t ReturnZeroFunc();
 int loopAround(int value, int min, int max);
 void helpers_SetPPSSPP(int val);
@@ -112,7 +114,7 @@ int helpers_GetDialogBoxWantsIO();
 uintptr_t helpers_GetMainEhHeap();
 
 // WINDOW DRAW STUFF
-uintptr_t EhPckt_Open(int unk1, int unk2);
+uintptr_t EhPckt_Open(int zorder, int unk2);
 int EhPckt_Close(uintptr_t packet);
 uintptr_t YgFont_SetEhPckt(uintptr_t ehpacket);
 uintptr_t YgFont_GetEhPckt();

@@ -8,6 +8,7 @@
 #include "multifixconfig.h"
 #include "YgWindow.h"
 #include <pspctrl.h>
+#include <pspuser.h>
 
 
 YgSelWnd mfWindow;
@@ -15,6 +16,9 @@ wchar_t mfWindowCaption[] = L"MultiFix Configuration";
 int bMfWindowInited = 0;
 int mfwindow_bValueChanged = 0;
 //int bShowMfWindow = 0;
+
+#define MFWINDOW_ZORDER 10
+#define MFWINDOW_MAXVISIBLEITEMS 4
 
 #define MFWINDOW_SETTING_TYPE_INT 0
 #define MFWINDOW_SETTING_TYPE_BOOL 1
@@ -28,6 +32,7 @@ char* mfWindowItems[] =
     "Use X as confirm button",
     "Matrix font on cards",
     "See partner's cards",
+    "Disable duel \"Help\" icon",
     "Disable install feature",
 };
 
@@ -49,12 +54,13 @@ int bMfWindow2Inited = 0;
 char* mfWindow2Items[] =
 {
     "Swaps cross and circle as confirm buttons.",
-    "Enables matrix font style (uppercase glyphs for lower-case letters) on card names, types, etc.",
+    "Enables matrix font style (uppercase glyphs for lowercase letters) on card names, types, etc.",
     "Shows partner's cards mid-duel, just like the older Tag Force games.",
-    "This disables the \"Install Data\" feature. It is recommended to keep it disabled as it could potentially cause issues for translations and/or mods. This acts as a safe guard against it.",
+    "Disables the \"Help\" icon in the lower right corner during duels. The icon can obstruct the visibility of the card there.",
+    "Disables the \"Install Data\" feature. It is recommended to keep it disabled as it could potentially cause issues for translations and/or mods. This acts as a safe guard against it.",
 };
 
-#define MFWINDOW2_MAXTEXT 512
+#define MFWINDOW2_MAXTEXT 256
 
 uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
 {
@@ -71,7 +77,7 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
 
     YgSys_strcpy(sprintfbuf, mfWindowItems[item_index]);
 
-    sceCccUTF8toUTF16(convBuffer, MFWINDOW_MAXTEXT - 1, sprintfbuf);
+    sceCccUTF8toUTF16(convBuffer, ((MFWINDOW_MAXTEXT - 1) * sizeof(wchar_t)), sprintfbuf);
     YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
 
     switch (mfWindowSettings[item_index].type)
@@ -81,7 +87,11 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
             if (*mfWindowSettings[item_index].val)
                 YgSys_strcpy(sprintfbuf, "<On>");
             else
+            {
+                YgFont_SetShadowFlg(0);
+                YgFont_SetDefaultColor(0xFF7F7F7F);
                 YgSys_strcpy(sprintfbuf, "<Off>");
+            }
             break;
         }
         case MFWINDOW_SETTING_TYPE_FLOAT:
@@ -98,7 +108,7 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
     }
 
     
-    sceCccUTF8toUTF16(convBuffer, MFWINDOW_MAXVALTEXT - 1, sprintfbuf);
+    sceCccUTF8toUTF16(convBuffer, ((MFWINDOW_MAXVALTEXT - 1) * sizeof(wchar_t)), sprintfbuf);
     float valXpos = (float)X * MFWINDOW_VALPOSITION;
     YgFont_PrintLine64(((int)valXpos) << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
 
@@ -113,31 +123,39 @@ void mfwindow_Create()
     mfWindowSettings[0].val = &config->bSwapConfirmButtons;
     mfWindowSettings[1].val = &config->bMatrixFont;
     mfWindowSettings[2].val = &config->bSeePartnerCards;
-    mfWindowSettings[3].val = &config->bDisableInstall;
+    mfWindowSettings[3].val = &config->bDisableDuelHelpIcon;
+    mfWindowSettings[4].val = &config->bDisableInstall;
 
     mfWindowSettings[0].min = 0;
     mfWindowSettings[1].min = 0;
     mfWindowSettings[2].min = 0;
     mfWindowSettings[3].min = 0;
+    mfWindowSettings[4].min = 0;
 
     mfWindowSettings[0].max = 1;
     mfWindowSettings[1].max = 1;
     mfWindowSettings[2].max = 1;
     mfWindowSettings[3].max = 1;
+    mfWindowSettings[4].max = 1;
 
     mfWindowSettings[0].type = MFWINDOW_SETTING_TYPE_BOOL;
     mfWindowSettings[1].type = MFWINDOW_SETTING_TYPE_BOOL;
     mfWindowSettings[2].type = MFWINDOW_SETTING_TYPE_BOOL;
     mfWindowSettings[3].type = MFWINDOW_SETTING_TYPE_BOOL;
+    mfWindowSettings[4].type = MFWINDOW_SETTING_TYPE_BOOL;
 
     YgSys_memset(&mfWindow, 0, sizeof(YgSelWnd));
     mfWindow.heapptr = helpers_GetMainEhHeap();
     mfWindow.window.caption = mfWindowCaption;
     mfWindow.itemcount = (sizeof(mfWindowItems) / sizeof(wchar_t*));
+    mfWindow.maxitems = MFWINDOW_MAXVISIBLEITEMS;
     mfWindow.selFlags = YGSEL_HIGHLIGHT | YGSEL_VERTICAL;
 
     mfWindow.window.width = 300;
-    mfWindow.window.height = (32 * mfWindow.itemcount) - (4 * mfWindow.itemcount);
+    if (mfWindow.itemcount < MFWINDOW_MAXVISIBLEITEMS)
+        mfWindow.window.height = (32 * mfWindow.itemcount) - (4 * mfWindow.itemcount);
+    else
+        mfWindow.window.height = (32 * MFWINDOW_MAXVISIBLEITEMS) - (4 * MFWINDOW_MAXVISIBLEITEMS);
 
     mfWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)mfWindow.window.width * 0.5f));
     mfWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)mfWindow.window.height * 0.5f));
@@ -154,7 +172,7 @@ void mfwindow_Create()
     mfWindow.window.bAutoSizeCaption = 1; // this is broken until the font is initialized
     mfWindow.window.captionWidth = (int)((float)mfWindow.window.width * 0.65f);
     mfWindow.window.captionHeight = 16;
-    mfWindow.window.bCaptionFontShadow = 1;
+    mfWindow.window.bFontShadow = 1;
     // mfWindow.window.leftPadding = 0;
     // mfWindow.window.rightPadding = 0;
     // mfWindow.window.topPadding = 0;
@@ -193,12 +211,13 @@ void mfwindow2_Create()
     mfWindow2.window.height = 64;
 
     mfWindow2.window.Xpos = mfWindow.window.Xpos;
-    mfWindow2.window.Ypos = mfWindow.window.Ypos + mfWindow.window.height;
+    mfWindow2.window.Ypos = mfWindow.window.Ypos + mfWindow.window.height + 4;
 
     mfWindow2.window.windowBGColor = YGWINDOW_BG_DARK;
 
     mfWindow2.window.windowFontSize = 12;
     mfWindow2.window.windowFontColor = 0xFFFFFFFF;
+    mfWindow2.window.bFontShadow = 1;
 
     mfWindow2.window.unk43 = 1;
     mfWindow2.window.unk44 = 1;
@@ -213,11 +232,13 @@ int mfwindow2_Draw()
     if (!bMfWindow2Inited)
         return;
 
+    int currItem = mfWindow.currentItem + mfWindow.currentItemPage;
+
     wchar_t convBuffer[MFWINDOW2_MAXTEXT];
-    sceCccUTF8toUTF16(convBuffer, MFWINDOW2_MAXTEXT - 1, mfWindow2Items[mfWindow.currentItem]);
+    sceCccUTF8toUTF16(convBuffer, (MFWINDOW2_MAXTEXT * sizeof(wchar_t)) - 1, mfWindow2Items[currItem]);
     mfWindow2.window.windowText = convBuffer;
 
-    uintptr_t packet = EhPckt_Open(4, 0);
+    uintptr_t packet = EhPckt_Open(MFWINDOW_ZORDER, 0);
 
     ygBasicWindow_Draw((uintptr_t)&packet, &mfWindow2.res);
 
@@ -247,22 +268,28 @@ int mfwindow_Draw()
 
     helpers_SetDialogBoxWantsIO(1);
 
-    uintptr_t packet = EhPckt_Open(4, 0);
+    //sceKernelPrintf("curr item: 0x%08X | val2: 0x%08X\n", mfWindow.currentItem, mfWindow.unk54);
+
+    int currItem = mfWindow.currentItem + mfWindow.currentItemPage;
+
+    uintptr_t packet = EhPckt_Open(MFWINDOW_ZORDER, 0);
 
     uint32_t buttons = GetPadButtons(1);
-    mfWindowSetting* setting = &(mfWindowSettings[mfWindow.currentItem]);
+    mfWindowSetting* setting = &(mfWindowSettings[currItem]);
     int* val = setting->val;
 
     if (buttons & PSP_CTRL_LEFT)
     {
         *val -= 1;
         mfwindow_bValueChanged = 1;
+        YgSys_SndPlaySE(0xDA75);
     }
 
     if (buttons & PSP_CTRL_RIGHT)
     {
         *val += 1;
         mfwindow_bValueChanged = 1;
+        YgSys_SndPlaySE(0xDA75);
     }
 
     *val = loopAround(*val, setting->min, setting->max);

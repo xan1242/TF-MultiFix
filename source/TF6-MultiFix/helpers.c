@@ -45,11 +45,13 @@ wchar_t* (*_YgSys_GetStrFromResource)(uintptr_t, int) = (wchar_t* (*)(uintptr_t,
 uintptr_t (*_EhFolder_SearchFile)(uintptr_t, const char*, uintptr_t) = (uintptr_t (*)(uintptr_t, const char*, uintptr_t))(0);
 void (*_YgSys_InitApplication)() = (void (*)())(0);
 void (*_YgAdh_Update)() = (void (*)())(0);
+void (*_FirstLoopFunc)(int) = (void (*)(int))(0);
 int (*_sceCccUTF8toUTF16)(wchar_t* dest, size_t size, char* src) = (int (*)(wchar_t*, size_t, char*))(0);
 int (*_YgSys_sprintf)(char* str, const char* format, ...) = (int (*)(char*, const char*, ...))(0);
+int (*_YgSys_SndPlaySE)(int sound) = (int (*)(int))(0);
 
 // WINDOW DRAW STUFF
-uintptr_t(*_EhPckt_Open)(int unk1, int unk2) = (uintptr_t(*)(int, int))(0);
+uintptr_t(*_EhPckt_Open)(int zorder, int unk2) = (uintptr_t(*)(int, int))(0);
 int(*_EhPckt_Close)(uintptr_t packet) = (int(*)(uintptr_t))(0);
 uintptr_t(*_YgFont_SetEhPckt)(uintptr_t ehpacket) = (uintptr_t(*)(uintptr_t))(0);
 uintptr_t(*_YgFont_GetEhPckt)() = (uintptr_t(*)())(0);
@@ -117,6 +119,16 @@ void YgSys_InitApplication()
 void YgAdh_Update()
 {
     return _YgAdh_Update();
+}
+
+void FirstLoopFunc(int unk)
+{
+    return _FirstLoopFunc(unk);
+}
+
+int YgSys_SndPlaySE(int sound)
+{
+    return _YgSys_SndPlaySE(sound);
 }
 
 int YgSys_GetLang()
@@ -880,9 +892,9 @@ int loopAround(int value, int min, int max)
 }
 
 // window draw stuff -- not checking func pointers for performance reasons
-uintptr_t EhPckt_Open(int unk1, int unk2)
+uintptr_t EhPckt_Open(int zorder, int unk2)
 {
-    return _EhPckt_Open(unk1, unk2);
+    return _EhPckt_Open(zorder, unk2);
 }
 
 int EhPckt_Close(uintptr_t packet)
@@ -983,6 +995,7 @@ void helpers_Init(uintptr_t base_addr)
 {
     _YgSys_InitApplication = (void (*)())(0x84F8 + base_addr);
     _YgAdh_Update = (void (*)())(0x1D75C + base_addr);
+    _FirstLoopFunc = (void (*)(int))(0x2B064 + base_addr);
     //_EhPad_Get = (uintptr_t(*)())(0x3A428 + base_addr);
     _YgFont_PrintLine64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0x17F0 + base_addr);
     _YgFont_PrintLineFit64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0x4410 + base_addr);
@@ -1009,6 +1022,7 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_strlen = (size_t(*)(const char*))(0x4A6A0 + base_addr);
     _sceCccUTF8toUTF16 = (int (*)(wchar_t*, size_t, char*))(0x640DC + base_addr);
     _YgSys_sprintf = (int (*)(char*, const char*, ...))(0x48FB4 + base_addr);
+    _YgSys_SndPlaySE = (int (*)(int))(0x2D258 + base_addr);
 
     // window draw stuff
     _EhPckt_Open = (uintptr_t(*)(int, int))(0x0003A954 + base_addr);

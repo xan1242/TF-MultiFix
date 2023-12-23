@@ -10,124 +10,136 @@
 
 MultiFixConfig mfconfig = 
 {
-	1,		  // bSwapConfirmButtons
-	0,        // bInstaWinCheat
-	0,		  // CheatOpponentLP
-	8000,	  // CheatPlayerLP
-	0,		  // bMatrixFont
-	1,		  // bSeePartnerCards
-	0,		  // CheatControlPartner
-	1		  // bDisableInstall
+    1,		  // bSwapConfirmButtons
+    0,        // bInstaWinCheat
+    0,		  // CheatOpponentLP
+    8000,	  // CheatPlayerLP
+    0,		  // bMatrixFont
+    1,		  // bSeePartnerCards
+    0,		  // CheatControlPartner
+    1,		  // bDisableInstall
+    1,        // bDisableDuelHelpIcon
 };
 
 // accessors
 MultiFixConfig* mfconfig_GetConfig()
 {
-	return &mfconfig;
+    return &mfconfig;
 }
 
 MultiFixConfig* mfconfig_SetConfig(MultiFixConfig* inConfig)
 {
-	YgSys_memcpy(&mfconfig, inConfig, sizeof(MultiFixConfig));
+    YgSys_memcpy(&mfconfig, inConfig, sizeof(MultiFixConfig));
 
-	return &mfconfig;
+    return &mfconfig;
 }
 
 int mfconfig_GetSwapConfirmButtons()
 {
-	return mfconfig.bSwapConfirmButtons;
+    return mfconfig.bSwapConfirmButtons;
 }
 
 int mfconfig_SetSwapConfirmButtons(int val)
 {
-	mfconfig.bSwapConfirmButtons = (val == 1);
-	return val;
+    mfconfig.bSwapConfirmButtons = (val == 1);
+    return val;
 }
 
 int mfconfig_GetInstaWinCheat()
 {
-	return mfconfig.bInstaWinCheat;
+    return mfconfig.bInstaWinCheat;
 }
 
 int mfconfig_SetInstaWinCheat(int val)
 {
-	mfconfig.bInstaWinCheat = (val == 1);
-	return val;
+    mfconfig.bInstaWinCheat = (val == 1);
+    return val;
 }
 
 int mfconfig_GetCheatOpponentLP()
 {
-	return mfconfig.CheatOpponentLP;
+    return mfconfig.CheatOpponentLP;
 }
 
 int mfconfig_SetCheatOpponentLP(int val)
 {
-	mfconfig.CheatOpponentLP = val;
-	return val;
+    mfconfig.CheatOpponentLP = val;
+    return val;
 }
 
 int mfconfig_GetCheatPlayerLP()
 {
-	return mfconfig.CheatPlayerLP;
+    return mfconfig.CheatPlayerLP;
 }
 
 int mfconfig_SetCheatPlayerLP(int val)
 {
-	mfconfig.CheatPlayerLP = val;
-	return val;
+    mfconfig.CheatPlayerLP = val;
+    return val;
 }
 
 int mfconfig_GetMatrixFont()
 {
-	return mfconfig.bMatrixFont;
+    return mfconfig.bMatrixFont;
 }
 
 int mfconfig_SetMatrixFont(int val)
 {
-	mfconfig.bMatrixFont = (val == 1);
-	return val;
+    mfconfig.bMatrixFont = (val == 1);
+    return val;
 }
 
 int mfconfig_GetSeePartnerCards()
 {
-	return mfconfig.bSeePartnerCards;
+    return mfconfig.bSeePartnerCards;
 }
 
 int mfconfig_SetSeePartnerCards(int val)
 {
-	mfconfig.bSeePartnerCards = val;
-	return mfconfig.bSeePartnerCards;
+    mfconfig.bSeePartnerCards = val;
+    return mfconfig.bSeePartnerCards;
 }
 
 int mfconfig_GetCheatControlPartner()
 {
-	return mfconfig.CheatControlPartner;
+    return mfconfig.CheatControlPartner;
 }
 
 int mfconfig_SetCheatControlPartner(int val)
 {
-	mfconfig.CheatControlPartner = val;
-	return mfconfig.CheatControlPartner;
+    mfconfig.CheatControlPartner = val;
+    return mfconfig.CheatControlPartner;
 }
 
 int mfconfig_GetDisableInstall()
 {
-	return mfconfig.bDisableInstall;
+    return mfconfig.bDisableInstall;
 }
 
 int mfconfig_SetDisableInstall(int val)
 {
-	mfconfig.bDisableInstall = (val == 1);
-	return val;
+    mfconfig.bDisableInstall = (val == 1);
+    return val;
+}
+
+int mfconfig_GetDisableDuelHelpIcon()
+{
+    return mfconfig.bDisableDuelHelpIcon;
+}
+
+int mfconfig_SetDisableDuelHelpIcon(int val)
+{
+    mfconfig.bDisableDuelHelpIcon = (val == 1);
+    return val;
 }
 
 void mfconfig_Init()
 {
-	// TODO: add config reading here
+    // TODO: add config reading here
 
-	// TEST
-	mfconfig_SetInstaWinCheat(1);
-	mfconfig_SetCheatControlPartner(1);
+    // TEST
+    mfconfig_SetInstaWinCheat(1);
+    mfconfig_SetCheatControlPartner(1);
 
-	//mfconfig_SetSwapConfirmButtons(0);
+    //mfconfig_SetSwapConfirmButtons(0);
 }

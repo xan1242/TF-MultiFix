@@ -889,7 +889,7 @@ void HandleButtonCheats()
 {
     uint32_t buttons = GetPadButtons(0);
 
-    if (buttons & (PSP_CTRL_WLAN_UP | PSP_CTRL_RTRIGGER)) // wlan on & R = cheat input mode
+    if ((buttons & PSP_CTRL_WLAN_UP) && (buttons & PSP_CTRL_RTRIGGER)) // wlan on & R = cheat input mode
     {
         if (buttons & PSP_CTRL_TRIANGLE)
         {
@@ -945,10 +945,10 @@ void HandleDialogs()
 {
     helpers_SetDialogBoxWantsIO(0);
 
-    if (bShowTestDialog)
-        DrawDialogTestWindow();
-    if (bShowTestSelWindow)
-        DrawTestWindow();
+    //if (bShowTestDialog)
+    //    DrawDialogTestWindow();
+    //if (bShowTestSelWindow)
+    //    DrawTestWindow();
     if (bShowMfWindow)
     {
         if (mfwindow_Draw() < 0)
@@ -969,6 +969,13 @@ void lSoftReset_Hook()
 // do stuff before VSync
 void YgAdh_Update_Hook()
 {
+
+
+    return YgAdh_Update();
+}
+
+void FirstLoopFunc_Hook(int unk)
+{
     helpers_SetBlockNextInputPoll(0);
     HandleDialogs();
     HandleButtonCheats();
@@ -976,7 +983,7 @@ void YgAdh_Update_Hook()
     if (helpers_GetDialogBoxWantsIO())
         helpers_SetBlockNextInputPoll(1);
 
-    return YgAdh_Update();
+    return FirstLoopFunc(unk);
 }
 
 //
@@ -1051,8 +1058,9 @@ void TFFixesInject()
 
     // main loop hook
     lSoftReset = (void(*)())(0x5954 + base_addr);
-    minj_MakeCALL(0x5BF0, (uintptr_t)&lSoftReset_Hook);
-    minj_MakeCALL(0x5BE0, (uintptr_t)&YgAdh_Update_Hook);
+    //minj_MakeCALL(0x5BF0, (uintptr_t)&lSoftReset_Hook);
+    //minj_MakeCALL(0x5BE0, (uintptr_t)&YgAdh_Update_Hook);
+    minj_MakeCALL(0x5B7C, (uintptr_t)&FirstLoopFunc_Hook);
     // EhPad_Get with input blocking
     minj_MakeJMPwNOP(0x3A428, (uintptr_t)&EhPad_Get);
 
