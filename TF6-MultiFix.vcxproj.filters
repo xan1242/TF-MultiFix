@@ -110,6 +110,12 @@
     <ClCompile Include="source\TF6-MultiFix\windows\aboutwindow.c">
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\windows\cheatmenu_duel.c">
+      <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\windows\konamidialog.c">
+      <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -191,6 +197,12 @@
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\windows\aboutwindow.h">
+      <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\windows\cheatmenu_duel.h">
+      <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\windows\konamidialog.h">
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClInclude>
   </ItemGroup>

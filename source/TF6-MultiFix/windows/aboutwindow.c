@@ -13,8 +13,6 @@
 YgSelWnd aboutWindow;
 int bAboutWindowInited = 0;
 
-char aboutWindow_VersionFormat[] = MULTIFIX_ABOUT_FORMAT;
-
 #define ABOUTWINDOW_MAXTEXT 512
 
 void aboutwindow_Create()
@@ -49,7 +47,7 @@ void aboutwindow_Create()
 	aboutWindow.window.bFontShadow = 1;
 
 	char printbuf[ABOUTWINDOW_MAXTEXT];
-	YgSys_sprintf(printbuf, aboutWindow_VersionFormat, MODULE_VERSION_MAJOR, MODULE_VERSION_MINOR, MULTIFIX_ABOUT_TEXT);
+	YgSys_sprintf(printbuf, MULTIFIX_ABOUT_FORMAT, MODULE_VERSION_MAJOR, MODULE_VERSION_MINOR, MULTIFIX_ABOUT_TEXT);
 	wchar_t windowtext[ABOUTWINDOW_MAXTEXT];
 	sceCccUTF8toUTF16(windowtext, (ABOUTWINDOW_MAXTEXT - 1) * 2, printbuf);
 	aboutWindow.window.windowText = windowtext;
@@ -72,7 +70,7 @@ int aboutwindow_Draw()
 	helpers_SetDialogBoxWantsIO(1);
 
 	char printbuf[ABOUTWINDOW_MAXTEXT];
-	YgSys_sprintf(printbuf, aboutWindow_VersionFormat, MODULE_VERSION_MAJOR, MODULE_VERSION_MINOR, MULTIFIX_ABOUT_TEXT);
+	YgSys_sprintf(printbuf, MULTIFIX_ABOUT_FORMAT, MODULE_VERSION_MAJOR, MODULE_VERSION_MINOR, MULTIFIX_ABOUT_TEXT);
 	wchar_t windowtext[ABOUTWINDOW_MAXTEXT];
 	sceCccUTF8toUTF16(windowtext, (ABOUTWINDOW_MAXTEXT - 1) * 2, printbuf);
 	aboutWindow.window.windowText = windowtext;

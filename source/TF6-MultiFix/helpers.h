@@ -23,6 +23,8 @@
 
 #define WCHAR_CIRCLE L'\x25CB'
 #define WCHAR_CROSS L'\xD7'
+#define WCHAR_SQUARE L'\x25A1'
+#define WCHAR_TRIANGLE L'\x25B3'
 
 #define MAIN_EHHEAP_ADDR 0x314BD4
 #define EHPAD_ADDR 0x59D4BC
@@ -33,6 +35,9 @@
 #define SOUND_ID_MENU_INVALID 0xDA78
 #define SOUND_ID_MENU_WINDOWPOPUP_1 0xDA79
 #define SOUND_ID_MENU_WINDOWPOPUP_2 0xDA7D
+
+#define KONAMI_CODE_LENGTH 10
+#define KONAMI_CODE {PSP_CTRL_UP, PSP_CTRL_UP, PSP_CTRL_DOWN, PSP_CTRL_DOWN, PSP_CTRL_LEFT, PSP_CTRL_RIGHT, PSP_CTRL_LEFT, PSP_CTRL_RIGHT, PSP_CTRL_CIRCLE, PSP_CTRL_CROSS}
 
 
 typedef enum _EhGameState
@@ -119,6 +124,8 @@ void helpers_SetBlockNextInputPoll(int val);
 int helpers_GetBlockNextInputPoll();
 void helpers_SetDialogBoxWantsIO(int val);
 int helpers_GetDialogBoxWantsIO();
+int helpers_KonamiCodeCheck(uint32_t buttons);
+void helpers_SetLastTwoKonamiButtons(uint32_t decline, uint32_t accept);
 uintptr_t helpers_GetMainEhHeap();
 
 // WINDOW DRAW STUFF

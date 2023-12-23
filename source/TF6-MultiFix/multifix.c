@@ -38,6 +38,7 @@
 #include "multifixconfig.h"
 #include "windows/multifixwindow.h"
 #include "windows/aboutwindow.h"
+#include "windows/konamidialog.h"
 
 #include <psputility.h>
 #include <psputility_msgdialog.h>
@@ -69,8 +70,11 @@ uintptr_t base_addr = 0;
 int bShowTestDialog = 0;
 int bShowTestSelWindow = 0;
 
+int bCheatMenuEnabled = 0;
+
 int bShowMfWindow = 0;
 int bShowAboutWindow = 0;
+int bShowKonamiDialog = 0;
 
 int bIsOnPPSSPP = 0;
 void SetPPSSPP(int val)
@@ -96,14 +100,16 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
     YgSys_strcpy(modNameUpper, modName);
     str_tocase(modNameUpper, 1);
 
-    if (tf_strstr(modNameUpper, "PSMF"))
+    int nameHash = bStringHash(modNameUpper);
+
+    if ((nameHash == PSMF_PRX_STRHASH) || (nameHash == LIBPSMFPLAYER_PRX_STRHASH))
     {
         if (lEhModule_Load_EndCallback)
             return lEhModule_Load_EndCallback(unk1, unk2);
         return 0;
     }
 
-    int nameHash = bStringHash(modNameUpper);
+    
 
     SetGameState(EHSTATE_UNKNOWN);
 
@@ -221,15 +227,14 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
     char modNameUpper[16];
     YgSys_strcpy(modNameUpper, modName);
     str_tocase(modNameUpper, 1);
+    int nameHash = bStringHash(modNameUpper);
 
-    if (tf_strstr(modNameUpper, "psmf"))
+    if ((nameHash == PSMF_PRX_STRHASH) || (nameHash == LIBPSMFPLAYER_PRX_STRHASH))
     {
         if (lEhModule_Load_EndCallback)
             return lEhModule_Load_EndCallback(unk1, unk2);
         return 0;
     }
-
-    int nameHash = bStringHash(modNameUpper);
 
     SetGameState(EHSTATE_UNKNOWN);
 
@@ -538,358 +543,19 @@ void YgFont_SetMatrixFontFlg_Hook(int val)
     }
 }
 
-
-
-// uintptr_t HookCallback(uintptr_t addr, uintptr_t dest)
-// {
-//     uintptr_t ptrLUI = 0;
-//     uintptr_t ptrADDIU = 0;
-// 
-//     uintptr_t cbptr = MIPS_DiscoverPtr(addr + base_addr, &ptrLUI, &ptrADDIU, a2);
-// 
-//     uint32_t newLUI = 0;
-//     uint32_t newADDIU = 0;
-// 
-//     MIPS_CalcNewRegValue((uint32_t)dest, &newLUI, &newADDIU, a2);
-// 
-//     injector.WriteMemory32(ptrLUI, newLUI);
-//     injector.WriteMemory32(ptrADDIU, newADDIU);
-// 
-//     return cbptr;
-// }
-
-//ygWindowResource basicTestWindowRes;
-//ygBasicWindow basicTestWindow;
-
-ygBasicWindowPack basicTestWindow;
-
-int bBasicTestWindowInited = 0;
-
-wchar_t basicTestWindowText[] = L"Hello, I am a ygBasicWindow! This is a lot of text for a little window that I've jumbled together in the source code of this plugin. A lot. What does Pot of Greed do anyway? Everyone says it's broken but it just says you draw two cards, right?";
-
-void CreateBasicTestWindow()
-{
-    ygBasicWindow_Init(&basicTestWindow.res, helpers_GetMainEhHeap());
-    YgSys_memset(&basicTestWindow.window, 0, sizeof(ygBasicWindow));
-
-    basicTestWindow.window.color = 0xFFFFFFFF;
-    basicTestWindow.window.unk3 = 1;
-
-    basicTestWindow.window.width = 200;
-    basicTestWindow.window.height = 100;
-    //basicTestWindow.window.unk14 = 400;
-    //basicTestWindow.window.unk16 = 400;
-    basicTestWindow.window.bAutoSizeWindow = 0;
-    basicTestWindow.window.bWindowCaption = 2;
-
-    basicTestWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)basicTestWindow.window.width * 0.5f));
-    basicTestWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)basicTestWindow.window.height * 0.5f));
-
-    basicTestWindow.window.windowBGColor = YGWINDOW_BG_DARK;
-
-    basicTestWindow.window.windowText = basicTestWindowText;
-    basicTestWindow.window.captionFontColor = 0xFFFFFFFF;
-
-    basicTestWindow.window.topPadding = 0;
-    basicTestWindow.window.bottomPadding = 0;
-    basicTestWindow.window.leftPadding = 0;
-    basicTestWindow.window.rightPadding = 0;
-    basicTestWindow.window.windowFontSize = 12;
-    basicTestWindow.window.windowFontColor = 0xFFFFFFFF;
-    basicTestWindow.window.unk43 = 1;
-    basicTestWindow.window.unk44 = 1;
-    //basicTestWindow.window.bAutoSizeWindow = 0;
-    //basicTestWindow.window.unk13 = 400;
-    //basicTestWindow.window.unk15 = 100;
-
-#ifdef TFMULTIFIX_DEBUG_PRINT
-    sceKernelPrintf("unk43 addr: 0x%X", &basicTestWindow.window.unk43);
-#endif
-
-    ygBasicWindow_Create(&basicTestWindow.res, &basicTestWindow.window);
-    ygBasicWindow_ReqestOpenAnim(&basicTestWindow.res, &basicTestWindow.window);
-    bBasicTestWindowInited = 1;
-}
-
-void DrawBasicTestWindow()
-{
-    if (!bBasicTestWindowInited)
-        return;
-
-    uintptr_t packet = EhPckt_Open(4, 0);
-
-    ygBasicWindow_Draw((uintptr_t)&packet, &basicTestWindow.res);
-
-    EhPckt_Close(packet);
-}
-
-YgSelWnd dialogTestWindow;
-wchar_t dialogTestText[] = L"I am a test dialog. I am actually a YgSelWnd.";
-int bDialogTestWindowInited = 0;
-
-void CreateDialogTestWindow()
-{
-    YgSys_memset(&dialogTestWindow, 0, sizeof(YgSelWnd));
-    dialogTestWindow.heapptr = helpers_GetMainEhHeap();
-
-    dialogTestWindow.selFlags = YGSEL_DIALOGBUTTONS_YESNOCANCEL;
-
-    dialogTestWindow.window.color = 0xFFFFFFFF;
-    dialogTestWindow.window.unk3 = 1;
-
-    dialogTestWindow.window.width = 200;
-    dialogTestWindow.window.height = 100;
-    dialogTestWindow.window.bAutoSizeWindow = 0;
-    dialogTestWindow.window.bWindowCaption = 0;
-
-    dialogTestWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)dialogTestWindow.window.width * 0.5f));
-    dialogTestWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)dialogTestWindow.window.height * 0.5f));
-
-    dialogTestWindow.window.windowBGColor = YGWINDOW_BG_DARK;
-
-    dialogTestWindow.window.windowText = dialogTestText;
-    dialogTestWindow.window.captionFontColor = 0xFFFFFFFF;
-
-    dialogTestWindow.window.topPadding = 0;
-    dialogTestWindow.window.bottomPadding = 0;
-    dialogTestWindow.window.leftPadding = 0;
-    dialogTestWindow.window.rightPadding = 0;
-    dialogTestWindow.window.windowFontSize = 12;
-    dialogTestWindow.window.windowFontColor = 0xFFFFFFFF;
-    dialogTestWindow.window.unk43 = 1;
-    dialogTestWindow.window.unk44 = 1;
-
-    dialogTestWindow.customPadBuffer = EhPad_GetAlways();
-
-    YgSelWnd_Init(&dialogTestWindow);
-    bDialogTestWindowInited = 1;
-}
-
-void DrawDialogTestWindow()
-{
-    if (!bDialogTestWindowInited)
-    {
-        CreateDialogTestWindow();
-        return;
-    }
-
-    helpers_SetDialogBoxWantsIO(1);
-
-    uintptr_t packet = EhPckt_Open(4, 0);
-    int retval = YgSelWnd_Cont(&dialogTestWindow);
-    YgSelWnd_Draw((uintptr_t)&packet, &dialogTestWindow);
-
-#ifdef TFMULTIFIX_DEBUG_PRINT
-    sceKernelPrintf("flags: 0x%X | decide: 0x%X | contret: 0x%08X", dialogTestWindow.currentDialogItem, dialogTestWindow.decideStatus, retval);
-#endif
-
-    EhPckt_Close(packet);
-
-    if (dialogTestWindow.decideStatus)
-    {
-        bShowTestDialog = 0;
-        bDialogTestWindowInited = 0;
-    }
-}
-
-YgSelWnd testWindow;
-wchar_t testWindowTitle[] = L"Test Window Yay!";
-wchar_t* testWindowItems[] =
-{
-    L"Item 1",
-    L"Item 2",
-    L"Item 3",
-    L"Item 4",
-    L"Item 5"
-};
-
-char* testWindowItemsChar[] =
-{
-    "Item 1",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 5"
-};
-
-int bTestWindowDarkMode = 0;
-int bTestWindowInited = 0;
-
-int TestWindowValues[5];
-
-uintptr_t TestWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
-{
-//#ifdef TFMULTIFIX_DEBUG_PRINT
-//    sceKernelPrintf("TestWindowCallback !!!");
-//#endif
-
-    YgFont_SetEhPckt(ehpacket);
-
-    YgFont_SetSize(15, 15);
-    YgFont_SetRubyCharFlg(0);
-    YgFont_SetShadowFlg(1);
-    YgFont_SetChColorFlg(1);
-    if (bTestWindowDarkMode)
-        YgFont_SetDefaultColor(0xFFFFFFFF);
-    else
-        YgFont_SetDefaultColor(0xFF000000);
-
-    if (testWindow.itemLockBitfield & YGSEL_LOCKITEM(item_index))
-    {
-        YgFont_SetDefaultColor(0xFF7F7F7F);
-    }
-
-    char sprintfbuf[32];
-    YgSys_sprintf(sprintfbuf, "%s %d\t<%d>", "Item", item_index, TestWindowValues[item_index]);
-
-    wchar_t testConv[32];
-    sceCccUTF8toUTF16(testConv, 32 - 1, sprintfbuf);
-
-    //YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, testWindowItems[item_index]);
-    //_YgFont_Printf(X << 6, (Y + 4) << 6, testWindowItemsChar[item_index]);
-    YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, testConv);
-
-    //wchar_t testValueStr[] = L"<0>";
-
-    //YgFont_PrintLine64((testWindow.window.width) << 6, (Y + 4) << 6, (480 - testWindow.window.width) << 6, testValueStr);
-
-    return YgFont_GetEhPckt();
-}
-
-void CreateTestWindow()
-{
-#ifdef TFMULTIFIX_DEBUG_PRINT
-    sceKernelPrintf("Creating test YgSelWnd...");
-#endif
-    YgSys_memset(&testWindow, 0, sizeof(YgSelWnd));
-    testWindow.heapptr = helpers_GetMainEhHeap();
-    testWindow.window.caption = testWindowTitle;
-    testWindow.itemcount = (sizeof(testWindowItems) / sizeof(wchar_t*));
-    //testWindow.window.maxitems = 2;
-    testWindow.selFlags = YGSEL_HIGHLIGHT | YGSEL_VERTICAL;
-    //testWindow.unk50 = 2;
-
-    testWindow.window.width = 200;
-    testWindow.window.height = (32 * testWindow.itemcount) - (4 * testWindow.itemcount);
-    //testWindow.window.Ysize = 32 * 2;
-
-    testWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)testWindow.window.width * 0.5f));
-    testWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)testWindow.window.height * 0.5f));
-
-    testWindow.window.color = 0xFFFFFFFF;
-    testWindow.itemDrawCallback = (uintptr_t)&TestWindowCallback;
-
-    int SelDrawWidth = testWindow.window.width;
-
-    //testWindow.unk2 = 1;
-    testWindow.window.unk3 = 1;
-    if (bTestWindowDarkMode)
-    {
-        testWindow.window.windowBGColor = YGWINDOW_BG_DARK;
-    }
-    else
-    {
-        testWindow.window.windowBGColor = YGWINDOW_BG_LIGHT;
-    }
-    testWindow.window.captionBGColor = YGWINDOW_BG_DARK;
-
-
-    testWindow.window.bAutoSizeWindow = 0;
-    //testWindow.unk13 = 400;
-    //testWindow.unk14 = 0;
-    //testWindow.unk15 = 100;
-    
-    testWindow.window.bWindowCaption = 1;
-    testWindow.window.bAutoSizeCaption = 0; // this is broken until the font is initialized
-    testWindow.window.captionWidth = (int)((float)testWindow.window.width * 0.65f);
-    testWindow.window.captionHeight = 16;
-    //testWindow.unk23_1 = 117;
-    //testWindow.unk23_2 = 16;
-    //testWindow.unk24 = testWindowTitle;
-    testWindow.window.bFontShadow = 1;
-    testWindow.window.leftPadding = 2;
-    testWindow.window.rightPadding = 2;
-    testWindow.window.topPadding = 2;
-    testWindow.window.bottomPadding = 2;
-    testWindow.window.windowFontSize = 0;
-    testWindow.window.windowFontColor = 0;
-    //testWindow.unk42 = -1;
-    testWindow.window.unk43 = 2;
-    testWindow.window.unk44 = 2;
-    //testWindow.window.unk50 = 0;
-    //testWindow.unk57 = 0;
-
-
-
-    testWindow.window.captionFontSize = 12;
-    testWindow.window.captionFontColor = 0xFFFFFFFF;
-    //testWindow.unk60 = 0x184;
-    testWindow.itemLockBitfield = YGSEL_LOCKITEM(1) | YGSEL_LOCKITEM(2);
-    testWindow.selDrawWidth1 = SelDrawWidth - 12;
-    testWindow.selDrawHeight1 = 25;
-    testWindow.selDrawWidth2 = SelDrawWidth - 12;
-    testWindow.selDrawHeight1 = 25;
-
-    YgSelWnd_Init(&testWindow);
-#ifdef TFMULTIFIX_DEBUG_PRINT
-    sceKernelPrintf("YgSelWnd created at 0x%X", &testWindow);
-    sceKernelPrintf("captionWidth at 0x%X", &testWindow.window.captionWidth);
-#endif
-    bTestWindowInited = 1;
-}
-
-void DrawTestWindow()
-{
-    if (!bTestWindowInited)
-    {
-        CreateTestWindow();
-        return;
-    }
-
-    helpers_SetDialogBoxWantsIO(1);
-    
-    // if ((testWindow.captionWidth <= 21) || (testWindow.captionHeight <= 4))
-    // {
-    //     testWindow.captionWidth = 0;
-    //     testWindow.captionHeight = 0;
-    // }
-
-    uintptr_t packet = EhPckt_Open(4, 0);
-// #ifdef TFMULTIFIX_DEBUG_PRINT
-//     sceKernelPrintf("TestWindow EhPacket: 0x%X", packet);
-// #endif
-
-    uint32_t buttons = GetPadButtons(1);
-    if (buttons & PSP_CTRL_LEFT)
-    {
-        TestWindowValues[testWindow.currentItem]--;
-    }
-    if (buttons & PSP_CTRL_RIGHT)
-    {
-        TestWindowValues[testWindow.currentItem]++;
-    }
-
-    int retval = YgSelWnd_Cont(&testWindow);
-    YgSelWnd_Draw((uintptr_t)&packet, &testWindow);
-
-
-
-#ifdef TFMULTIFIX_DEBUG_PRINT
-        sceKernelPrintf("flags: 0x%X | contret: 0x%08X", testWindow.currentItem, retval);
-#endif
-
-    EhPckt_Close(packet);
-
-    if (testWindow.decideStatus)
-    {
-        bShowTestSelWindow = 0;
-        bTestWindowInited = 0;
-    }
-}
-
-void HandleButtonCheats()
+void HandleButtonInputs()
 {
     uint32_t buttons = GetPadButtons(0);
+    uint32_t buttons2 = GetPadButtons(1);
+    if (GetGameState() == EHSTATE_TITLE)
+    {
+        if (helpers_KonamiCodeCheck(buttons2) && !bCheatMenuEnabled)
+        {
+            bCheatMenuEnabled = 1;
+            mfwindow_SetCheatsEnabled(1);
+            bShowKonamiDialog = 1;
+        }
+    }
 
     if ((buttons & PSP_CTRL_WLAN_UP) && (buttons & PSP_CTRL_RTRIGGER)) // wlan on & R = cheat input mode
     {
@@ -965,7 +631,7 @@ void HandleDialogs()
 
             if (decideStatus == YGSEL_DECIDESTATUS_CONFIRM)
             {
-                if (currItem == (mfwindow_GetItemCount() - 1))
+                if (currItem == MFWINDOW_ITEM_ABOUT)
                 {
                     bShowAboutWindow = 1;
                 }
@@ -978,6 +644,12 @@ void HandleDialogs()
     {
         if (aboutwindow_Draw())
             bShowAboutWindow = 0;
+    }
+
+    if (bShowKonamiDialog)
+    {
+        if (konamidialog_Draw())
+            bShowKonamiDialog = 0;
     }
 }
 
@@ -1003,7 +675,7 @@ void FirstLoopFunc_Hook(int unk)
 {
     helpers_SetBlockNextInputPoll(0);
     HandleDialogs();
-    HandleButtonCheats();
+    HandleButtonInputs();
 
     if (helpers_GetDialogBoxWantsIO())
         helpers_SetBlockNextInputPoll(1);

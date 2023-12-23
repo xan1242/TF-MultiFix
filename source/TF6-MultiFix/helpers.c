@@ -19,6 +19,9 @@ int _bIsOnPPSSPP = 0;
 EhGameState helper_GameState = EHSTATE_UNKNOWN;
 
 char dummyPadBuf[0x40];
+unsigned int konamiCodeSequence[KONAMI_CODE_LENGTH] = KONAMI_CODE;
+int konamiCodeIndex = 0;
+uint32_t konamiCodeLastButtons = 0;
 
 uintptr_t (*_YgFont_PrintLine64)(int, int, uintptr_t, wchar_t*) = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0);
 uintptr_t (*_YgFont_PrintLineFit64)(int, int, uintptr_t, wchar_t*, int32_t) = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0);
@@ -960,6 +963,39 @@ void helpers_SetYgLangHookBase(uintptr_t base_addr)
     yglang_base = base_addr;
 }
 #endif
+
+int helpers_KonamiCodeCheck(uint32_t buttons) 
+{
+    helpers_SetLastTwoKonamiButtons(YgSys_GetAssignButton_Hook(1), YgSys_GetAssignButton_Hook(0));
+
+    if (!buttons)
+        return 0;
+
+    if (buttons & konamiCodeSequence[konamiCodeIndex]) 
+    {
+        konamiCodeIndex++;
+    }
+    else 
+    {
+        konamiCodeIndex = 0;
+    }
+
+    if (konamiCodeIndex == KONAMI_CODE_LENGTH) 
+    {
+        konamiCodeIndex = 0;
+        return 1;
+    }
+
+    konamiCodeLastButtons = buttons;
+
+    return 0;
+}
+
+void helpers_SetLastTwoKonamiButtons(uint32_t decline, uint32_t accept)
+{
+    konamiCodeSequence[KONAMI_CODE_LENGTH - 2] = decline;
+    konamiCodeSequence[KONAMI_CODE_LENGTH - 1] = accept;
+}
 
 uintptr_t helpers_GetMainEhHeap()
 {

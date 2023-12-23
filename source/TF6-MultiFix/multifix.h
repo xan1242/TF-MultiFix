@@ -17,6 +17,8 @@
 A multi-purpose fix & enhancement kit for\n\
 Yu-Gi-Oh! Tag Force games.\n\
 \n\
+For more info, visit:\n\
+https://github.com/xan1242/TF-MultiFix\n\
 \n\
 Created by Xan / Tenjoin\
 "
@@ -39,6 +41,7 @@ Created by Xan / Tenjoin\
 
 void TFFixesInject();
 void SetPPSSPP(int val);
+int YgSys_GetAssignButton_Hook(int isDeclineButton);
 //int YgSys_GetLang_Hook();
 //int YgSys_GetLang_Hook2();
 //int YgSys_GetLang_Hook_Loud();
@@ -69,5 +72,8 @@ void SetPPSSPP(int val);
 #define REL_TUTORIAL_PRX_STRHASH 0x3ECE7B3D
 #define REL_TUTORIALLIST_PRX_STRHASH 0x42EA7A19
 #define REL_UMDREPLACE_PRX_STRHASH 0x70952A6B
+
+#define PSMF_PRX_STRHASH 0x0DE24C3D
+#define LIBPSMFPLAYER_PRX_STRHASH 0xED694461
 
 #endif

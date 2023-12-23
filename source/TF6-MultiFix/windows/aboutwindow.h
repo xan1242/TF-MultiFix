@@ -6,9 +6,6 @@
 #ifndef ABOUTWINDOW_H
 #define ABOUTWINDOW_H
 
-
-
-
 int aboutwindow_Draw();
 
 #endif

@@ -7,6 +7,7 @@
 #include "../helpers.h"
 #include "../multifixconfig.h"
 #include "../YgWindow.h"
+#include "multifixwindow.h"
 #include <pspctrl.h>
 #include <pspuser.h>
 
@@ -15,38 +16,43 @@ YgSelWnd mfWindow;
 wchar_t mfWindowCaption[] = L"MultiFix Configuration";
 int bMfWindowInited = 0;
 int mfwindow_bValueChanged = 0;
-//int bShowMfWindow = 0;
+int mfwindow_bCheatsEnabled = 0;
+int mfwindow_bCheatLocals = 0;
+
+ygBasicWindowPack mfWindow2;
+int bMfWindow2Inited = 0;
 
 #define MFWINDOW_ZORDER 10
 #define MFWINDOW_MAXVISIBLEITEMS 4
-
-#define MFWINDOW_SETTING_TYPE_INT 0
-#define MFWINDOW_SETTING_TYPE_BOOL 1
-#define MFWINDOW_SETTING_TYPE_FLOAT 2
-#define MFWINDOW_SETTING_TYPE_INTSTRING 3
-#define MFWINDOW_SETTING_TYPE_NONE 4
-
 #define MFWINDOW_VALPOSITION 3.6f
+#define MFWINDOW_MAXTEXT 128
+#define MFWINDOW_MAXVALTEXT 32
+#define MFWINDOW2_MAXTEXT 256
 
-char* mfWindowItems[] =
+char* mfWindowItemNames[] =
 {
-    "Use X as confirm button",
-    "Matrix font on cards",
-    "See partner's cards",
-    "Disable duel \"Help\" icon",
-    "Disable install feature",
-    "About MultiFix...",
+    MFWINDOW_ITEM_NAME_SWAPBUTTON,
+    MFWINDOW_ITEM_NAME_MATRIXFONT,
+    MFWINDOW_ITEM_NAME_PARTNERCARD,
+    MFWINDOW_ITEM_NAME_DUELHELP,
+    MFWINDOW_ITEM_NAME_INSTALLDISABLE,
+    MFWINDOW_ITEM_NAME_SOUNDTEST,
+    MFWINDOW_ITEM_NAME_CHEATSGLOBAL,
+    MFWINDOW_ITEM_NAME_CHEATSLOCAL,
+    MFWINDOW_ITEM_NAME_ABOUT,
 };
-#define MFWINDOW_ITEM_COUNT sizeof(mfWindowItems) / sizeof(char*)
 
-char* mfWindow2Items[] =
+char* mfWindowItemDescriptions[] =
 {
-    "Swaps cross and circle as confirm buttons.",
-    "Enables matrix font style (uppercase glyphs for lowercase letters) on card names, types, etc.",
-    "Shows partner's cards mid-duel, just like the older Tag Force games.",
-    "Disables the \"Help\" icon in the lower right corner during duels. The icon can obstruct the visibility of the card there.",
-    "Disables the \"Install Data\" feature. It is recommended to keep it disabled as it could potentially cause issues for translations and/or mods. This acts as a safe guard against it.",
-    "About this plugin.",
+    MFWINDOW_ITEM_DESC_SWAPBUTTON,
+    MFWINDOW_ITEM_DESC_MATRIXFONT,
+    MFWINDOW_ITEM_DESC_PARTNERCARD,
+    MFWINDOW_ITEM_DESC_DUELHELP,
+    MFWINDOW_ITEM_DESC_INSTALLDISABLE,
+    MFWINDOW_ITEM_DESC_SOUNDTEST,
+    MFWINDOW_ITEM_DESC_CHEATSGLOBAL,
+    MFWINDOW_ITEM_DESC_CHEATSLOCAL,
+    MFWINDOW_ITEM_DESC_ABOUT,
 };
 
 typedef struct _mfWindowSetting
@@ -60,6 +66,7 @@ typedef struct _mfWindowSetting
     int type;
     int hidden;
     int selectable;
+    int greyedout;
     int index;
     char* name;
     char* description;
@@ -67,25 +74,21 @@ typedef struct _mfWindowSetting
 
 mfWindowSetting mfWindowSettings[MFWINDOW_ITEM_COUNT] =
 {
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, NULL, NULL},
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 1, NULL, NULL},
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 2, NULL, NULL},
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 3, NULL, NULL},
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 4, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_SWAPBUTTON, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_MATRIXFONT, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_PARTNERCARD, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_DUELHELP, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_INSTALLDISABLE, NULL, NULL},
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 0, 1, 0, MFWINDOW_ITEM_SOUNDTEST, NULL, NULL},
+    // cheats are always here
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 1, 1, 0, MFWINDOW_ITEM_CHEATSGLOBAL, NULL, NULL},
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 1, 1, 0, MFWINDOW_ITEM_CHEATSLOCAL, NULL, NULL},
     // about is always last!
-    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 0, 1, (MFWINDOW_ITEM_COUNT - 1), NULL, NULL},
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 0, 1, 0, MFWINDOW_ITEM_ABOUT, NULL, NULL},
 };
 
 
 mfWindowSetting* mfWindowSettingDrawList[MFWINDOW_ITEM_COUNT];
-
-#define MFWINDOW_MAXTEXT 128
-#define MFWINDOW_MAXVALTEXT 32
-
-ygBasicWindowPack mfWindow2;
-int bMfWindow2Inited = 0;
-
-#define MFWINDOW2_MAXTEXT 256
 
 uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
 {
@@ -98,7 +101,16 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
     YgFont_SetRubyCharFlg(0);
     YgFont_SetShadowFlg(1);
     YgFont_SetChColorFlg(1);
-    YgFont_SetDefaultColor(0xFF000000);
+    if (currSetting->greyedout)
+    {
+        YgFont_SetShadowFlg(0);
+        YgFont_SetDefaultColor(0xFF7F7F7F);
+    }
+    else
+    {
+        YgFont_SetShadowFlg(1);
+        YgFont_SetDefaultColor(0xFF000000);
+    }
 
     char sprintfbuf[MFWINDOW_MAXTEXT];
     wchar_t convBuffer[MFWINDOW_MAXTEXT];
@@ -113,12 +125,12 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
         case MFWINDOW_SETTING_TYPE_BOOL:
         {
             if (*(currSetting->val))
-                YgSys_strcpy(sprintfbuf, "<On>");
+                YgSys_strcpy(sprintfbuf, MFWINDOW_LABEL_BOOL_TRUE);
             else
             {
                 YgFont_SetShadowFlg(0);
                 YgFont_SetDefaultColor(0xFF7F7F7F);
-                YgSys_strcpy(sprintfbuf, "<Off>");
+                YgSys_strcpy(sprintfbuf, MFWINDOW_LABEL_BOOL_FALSE);
             }
             break;
         }
@@ -141,6 +153,12 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
 
     if (currSetting->type != MFWINDOW_SETTING_TYPE_NONE)
     {
+        if (currSetting->greyedout)
+        {
+            YgFont_SetShadowFlg(0);
+            YgFont_SetDefaultColor(0xFF7F7F7F);
+        }
+
         sceCccUTF8toUTF16(convBuffer, ((MFWINDOW_MAXVALTEXT - 1) * sizeof(wchar_t)), sprintfbuf);
         float valXpos = (float)X * MFWINDOW_VALPOSITION;
         YgFont_PrintLine64(((int)valXpos) << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
@@ -155,18 +173,49 @@ void mfwindow_Create()
     for (int i = 0; i < MFWINDOW_ITEM_COUNT; i++)
     {
         mfWindowSettings[i].index = i;
-        mfWindowSettings[i].name = mfWindowItems[i];
-        mfWindowSettings[i].description = mfWindow2Items[i];
+        mfWindowSettings[i].name = mfWindowItemNames[i];
+        mfWindowSettings[i].description = mfWindowItemDescriptions[i];
     }
 
     MultiFixConfig* config = mfconfig_GetConfig();
     mfwindow_bValueChanged = 0;
-    mfWindowSettings[0].val = &config->bSwapConfirmButtons;
-    mfWindowSettings[1].val = &config->bMatrixFont;
-    mfWindowSettings[2].val = &config->bSeePartnerCards;
-    mfWindowSettings[3].val = &config->bDisableDuelHelpIcon;
-    mfWindowSettings[4].val = &config->bDisableInstall;
-    mfWindowSettings[5].val = NULL;
+    mfWindowSettings[MFWINDOW_ITEM_SWAPBUTTON].val = &config->bSwapConfirmButtons;
+    mfWindowSettings[MFWINDOW_ITEM_MATRIXFONT].val = &config->bMatrixFont;
+    mfWindowSettings[MFWINDOW_ITEM_PARTNERCARD].val = &config->bSeePartnerCards;
+    mfWindowSettings[MFWINDOW_ITEM_DUELHELP].val = &config->bDisableDuelHelpIcon;
+    mfWindowSettings[MFWINDOW_ITEM_INSTALLDISABLE].val = &config->bDisableInstall;
+
+    if (mfwindow_bCheatsEnabled)
+    {
+        mfWindowSettings[MFWINDOW_ITEM_CHEATSGLOBAL].hidden = 0;
+        mfWindowSettings[MFWINDOW_ITEM_CHEATSLOCAL].hidden = 0;
+
+        // check if we have locals
+        EhGameState state = GetGameState();
+        sceKernelPrintf("state: %d", state);
+
+        if ((state == EHSTATE_DUEL) ||
+            (state == EHSTATE_SHOP))
+        {
+            mfwindow_bCheatLocals = 1;
+        }
+        else
+        {
+            mfwindow_bCheatLocals = 0;
+        }
+
+        if (mfwindow_bCheatLocals)
+        {
+            mfWindowSettings[MFWINDOW_ITEM_CHEATSLOCAL].greyedout = 0;
+            mfWindowSettings[MFWINDOW_ITEM_CHEATSLOCAL].selectable = 1;
+        }
+        else
+        {
+            mfWindowSettings[MFWINDOW_ITEM_CHEATSLOCAL].greyedout = 1;
+            mfWindowSettings[MFWINDOW_ITEM_CHEATSLOCAL].selectable = 0;
+        }
+
+    }
 
     YgSys_memset(&mfWindow, 0, sizeof(YgSelWnd));
     YgSys_memset(&mfWindowSettingDrawList, 0, sizeof(mfWindowSettingDrawList));
@@ -178,14 +227,14 @@ void mfwindow_Create()
 
     for (int i = 0; i < MFWINDOW_ITEM_COUNT; i++)
     {
-        if (mfWindowSettings[i].selectable)
-        {
-            mfWindow.itemLockBitfield &= ~(YGSEL_LOCKITEM(i));
-        }
-
         if (!mfWindowSettings[i].hidden)
         {
-            mfWindowSettingDrawList[mfWindow.itemcount] = &mfWindowSettings[i];
+            int j = mfWindow.itemcount;
+            mfWindowSettingDrawList[j] = &mfWindowSettings[i];
+            if (mfWindowSettingDrawList[j]->selectable)
+            {
+                mfWindow.itemLockBitfield &= ~(YGSEL_LOCKITEM(j));
+            }
             mfWindow.itemcount++;
         }
     }
@@ -224,13 +273,9 @@ void mfwindow_Create()
     // mfWindow.window.unk43 = 0;
     // mfWindow.window.unk44 = 0;
 
-
-
     mfWindow.window.captionFontSize = 12;
     mfWindow.window.captionFontColor = 0xFFFFFFFF;
     
-
-
 
     int SelDrawWidth = mfWindow.window.width;
     mfWindow.selDrawWidth1 = SelDrawWidth - 12;
@@ -239,6 +284,10 @@ void mfwindow_Create()
     mfWindow.selDrawHeight1 = 25;
 
     YgSelWnd_Init(&mfWindow);
+
+    mfWindow.window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)mfWindow.window.width * 0.5f));
+    mfWindow.window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)mfWindow.window.height * 0.5f));
+
     bMfWindowInited = 1;
 }
 
@@ -303,6 +352,16 @@ int mfwindow2_Draw()
 int mfwindow_GetItemCount()
 {
     return MFWINDOW_ITEM_COUNT;
+}
+
+void mfwindow_SetCheatsEnabled(int val)
+{
+    mfwindow_bCheatsEnabled = val;
+}
+
+void mfwindow_SetCheatLocals(int val)
+{
+    mfwindow_bCheatLocals = val;
 }
 
 int mfwindow_Draw()
