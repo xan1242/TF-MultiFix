@@ -41,6 +41,8 @@ typedef struct _mfWindowSetting
     int* val;
     int min;
     int max;
+    float fmin;
+    float fmax;
     int type;
 }mfWindowSetting;
 
