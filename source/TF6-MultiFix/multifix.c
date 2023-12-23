@@ -891,6 +891,7 @@ void HandleButtonCheats()
 
     if ((buttons & PSP_CTRL_WLAN_UP) && (buttons & PSP_CTRL_RTRIGGER)) // wlan on & R = cheat input mode
     {
+        helpers_SetBlockNextInputPoll(1);
         if (buttons & PSP_CTRL_TRIANGLE)
         {
             //bShowTestDialog = 1;
@@ -951,8 +952,16 @@ void HandleDialogs()
     //    DrawTestWindow();
     if (bShowMfWindow)
     {
-        if (mfwindow_Draw() < 0)
+        int retval = mfwindow_Draw();
+        if (retval)
+        {
             bShowMfWindow = 0;
+
+            int decideStatus = retval & 0xFF;
+            int currItem = (retval >> 8) & 0xFF;
+            int bValueChanged = (retval >> 16) & 0xFF;
+
+        }
     }
 }
 

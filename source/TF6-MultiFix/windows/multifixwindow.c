@@ -24,6 +24,7 @@ int mfwindow_bValueChanged = 0;
 #define MFWINDOW_SETTING_TYPE_BOOL 1
 #define MFWINDOW_SETTING_TYPE_FLOAT 2
 #define MFWINDOW_SETTING_TYPE_INTSTRING 3
+#define MFWINDOW_SETTING_TYPE_EMPTY 4
 
 #define MFWINDOW_VALPOSITION 3.6f
 
@@ -36,17 +37,24 @@ char* mfWindowItems[] =
     "Disable install feature",
 };
 
+//char* mfWindowItemDrawList[sizeof(mfWindowItems) / sizeof(char*)];
+
 typedef struct _mfWindowSetting
 {
     int* val;
+    float* fval;
     int min;
     int max;
     float fmin;
     float fmax;
     int type;
+    int hidden;
+    char* name;
+    char* description;
 }mfWindowSetting;
 
 mfWindowSetting mfWindowSettings[sizeof(mfWindowItems) / sizeof(char*)];
+mfWindowSetting* mfWindowSettingDrawList[sizeof(mfWindowItems) / sizeof(char*)];
 
 #define MFWINDOW_MAXTEXT 128
 #define MFWINDOW_MAXVALTEXT 32
@@ -66,6 +74,8 @@ char* mfWindow2Items[] =
 
 uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
 {
+    mfWindowSetting* currSetting = mfWindowSettingDrawList[item_index];
+
     YgFont_SetEhPckt(ehpacket);
 
     YgFont_SetSize(15, 15);
@@ -77,16 +87,16 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
     char sprintfbuf[MFWINDOW_MAXTEXT];
     wchar_t convBuffer[MFWINDOW_MAXTEXT];
 
-    YgSys_strcpy(sprintfbuf, mfWindowItems[item_index]);
+    YgSys_strcpy(sprintfbuf, currSetting->name);
 
     sceCccUTF8toUTF16(convBuffer, ((MFWINDOW_MAXTEXT - 1) * sizeof(wchar_t)), sprintfbuf);
     YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
 
-    switch (mfWindowSettings[item_index].type)
+    switch (currSetting->type)
     {
         case MFWINDOW_SETTING_TYPE_BOOL:
         {
-            if (*mfWindowSettings[item_index].val)
+            if (*(currSetting->val))
                 YgSys_strcpy(sprintfbuf, "<On>");
             else
             {
@@ -98,13 +108,13 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
         }
         case MFWINDOW_SETTING_TYPE_FLOAT:
         {
-            YgSys_sprintf(sprintfbuf, "<%.2f>", *mfWindowSettings[item_index].val);
+            YgSys_sprintf(sprintfbuf, "<%.2f>", *(currSetting->fval));
             break;
         }
         case MFWINDOW_SETTING_TYPE_INT:
         default:
         {
-            YgSys_sprintf(sprintfbuf, "<%d>", *mfWindowSettings[item_index].val);
+            YgSys_sprintf(sprintfbuf, "<%d>", *(currSetting->val));
             break;
         }
     }
@@ -146,10 +156,41 @@ void mfwindow_Create()
     mfWindowSettings[3].type = MFWINDOW_SETTING_TYPE_BOOL;
     mfWindowSettings[4].type = MFWINDOW_SETTING_TYPE_BOOL;
 
+    mfWindowSettings[0].hidden = 0;
+    mfWindowSettings[1].hidden = 0;
+    mfWindowSettings[2].hidden = 0;
+    mfWindowSettings[3].hidden = 0;
+    mfWindowSettings[4].hidden = 0;
+
+    mfWindowSettings[0].name = mfWindowItems[0];
+    mfWindowSettings[1].name = mfWindowItems[1];
+    mfWindowSettings[2].name = mfWindowItems[2];
+    mfWindowSettings[3].name = mfWindowItems[3];
+    mfWindowSettings[4].name = mfWindowItems[4];
+
+    mfWindowSettings[0].description = mfWindow2Items[0];
+    mfWindowSettings[1].description = mfWindow2Items[1];
+    mfWindowSettings[2].description = mfWindow2Items[2];
+    mfWindowSettings[3].description = mfWindow2Items[3];
+    mfWindowSettings[4].description = mfWindow2Items[4];
+
+
     YgSys_memset(&mfWindow, 0, sizeof(YgSelWnd));
+    YgSys_memset(&mfWindowSettingDrawList, 0, sizeof(mfWindowSettingDrawList));
     mfWindow.heapptr = helpers_GetMainEhHeap();
     mfWindow.window.caption = mfWindowCaption;
-    mfWindow.itemcount = (sizeof(mfWindowItems) / sizeof(wchar_t*));
+    mfWindow.itemcount = 0;
+
+
+    for (int i = 0; i < (sizeof(mfWindowItems) / sizeof(wchar_t*)); i++)
+    {
+        if (!mfWindowSettings[i].hidden)
+        {
+            mfWindowSettingDrawList[mfWindow.itemcount] = &mfWindowSettings[i];
+            mfWindow.itemcount++;
+        }
+    }
+
     mfWindow.maxitems = MFWINDOW_MAXVISIBLEITEMS;
     mfWindow.selFlags = YGSEL_HIGHLIGHT | YGSEL_VERTICAL;
 
@@ -235,9 +276,10 @@ int mfwindow2_Draw()
         return;
 
     int currItem = mfWindow.currentItem + mfWindow.currentItemPage;
+    mfWindowSetting* currSetting = mfWindowSettingDrawList[currItem];
 
     wchar_t convBuffer[MFWINDOW2_MAXTEXT];
-    sceCccUTF8toUTF16(convBuffer, (MFWINDOW2_MAXTEXT * sizeof(wchar_t)) - 1, mfWindow2Items[currItem]);
+    sceCccUTF8toUTF16(convBuffer, (MFWINDOW2_MAXTEXT * sizeof(wchar_t)) - 1, currSetting->description);
     mfWindow2.window.windowText = convBuffer;
 
     uintptr_t packet = EhPckt_Open(MFWINDOW_ZORDER, 0);
@@ -263,6 +305,7 @@ int mfwindow_Draw()
 {
     if (!bMfWindowInited)
     {
+        YgSys_SndPlaySE(SOUND_ID_MENU_WINDOWPOPUP_1);
         mfwindow_Create();
         mfwindow2_Create();
         return 0;
@@ -277,21 +320,21 @@ int mfwindow_Draw()
     uintptr_t packet = EhPckt_Open(MFWINDOW_ZORDER, 0);
 
     uint32_t buttons = GetPadButtons(1);
-    mfWindowSetting* setting = &(mfWindowSettings[currItem]);
+    mfWindowSetting* setting = mfWindowSettingDrawList[currItem];
     int* val = setting->val;
 
     if (buttons & PSP_CTRL_LEFT)
     {
         *val -= 1;
         mfwindow_bValueChanged = 1;
-        YgSys_SndPlaySE(0xDA75);
+        YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
     }
 
     if (buttons & PSP_CTRL_RIGHT)
     {
         *val += 1;
         mfwindow_bValueChanged = 1;
-        YgSys_SndPlaySE(0xDA75);
+        YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
     }
 
     *val = loopAround(*val, setting->min, setting->max);
@@ -309,9 +352,15 @@ int mfwindow_Draw()
     {
         bMfWindowInited = 0;
         YgSelWnd_Term(&mfWindow);
-        if (mfwindow_bValueChanged)
-            return -2;
-        return -1;
+
+        // return value status pack
+        // in order
+        // 8 bits = decide status
+        // 8 bits = item
+        // 8 bits = mfwindow_bValueChanged
+        int retval = (mfWindow.decideStatus & 0xFF) | ((currItem & 0xFF) << 8) | ((mfwindow_bValueChanged & 0xFF) << 16);
+
+        return retval;
     }
 
     return 0;
