@@ -18,7 +18,7 @@ int _bIsOnPPSSPP = 0;
 //uintptr_t (*_EhPad_Get)() = (uintptr_t(*)())(0);
 EhGameState helper_GameState = EHSTATE_UNKNOWN;
 
-char dummyPadBuf[0x40];
+unsigned char dummyPadBuf[0x40];
 unsigned int konamiCodeSequence[KONAMI_CODE_LENGTH] = KONAMI_CODE;
 int konamiCodeIndex = 0;
 uint32_t konamiCodeLastButtons = 0;
@@ -1068,6 +1068,9 @@ void helpers_Init(uintptr_t base_addr)
     _YgFont_SetSize = (void(*)(int, int))(0x12A0 + base_addr);
     _YgFont_SetChColorFlg = (void(*)(int))(0x20D4 + base_addr);
     _YgFont_SetDefaultColor = (void(*)(uint32_t))(0x12F4 + base_addr);
+
+    dummyPadBuf[0x10] = 0x80;
+    dummyPadBuf[0x14] = 0x80;
 
     ygfont_base = base_addr;
     yglang_base = base_addr;

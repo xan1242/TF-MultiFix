@@ -93,6 +93,12 @@ void DestroyAllWindows()
         aboutwindow_Destroy();
     if (konamidialog_IsActive())
         konamidialog_Destroy();
+    if (mfwindow_IsActive())
+        mfwindow_Destroy();
+
+    bShowMfWindow = 0;
+    bShowAboutWindow = 0;
+    bShowKonamiDialog = 0;
 }
 
 int bIsAnyWindowShown()
@@ -125,10 +131,6 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
     SetGameState(EHSTATE_UNKNOWN);
 
     DestroyAllWindows();
-
-    bShowMfWindow = 0;
-    bShowAboutWindow = 0;
-    bShowKonamiDialog = 0;
 
     if (nameHash == REL_TITLE_PRX_STRHASH)
     {
@@ -255,13 +257,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
 
     SetGameState(EHSTATE_UNKNOWN);
     DestroyAllWindows();
-    
-    bShowMfWindow = 0;
-    bShowAboutWindow = 0;
-    bShowKonamiDialog = 0;
-
-
-
+   
     if (nameHash == REL_FIELD_PRX_STRHASH)
     {
         uintptr_t bs = 0;

@@ -58,6 +58,8 @@ typedef enum _mfWindowSettingType
 int mfwindow_Draw();
 int mfwindow_GetItemCount();
 void mfwindow_SetCheatsEnabled(int val);
-void mfwindow_SetCheatLocals(int val);
+//void mfwindow_SetCheatLocals(int val);
+int mfwindow_IsActive();
+void mfwindow_Destroy();
 
 #endif
