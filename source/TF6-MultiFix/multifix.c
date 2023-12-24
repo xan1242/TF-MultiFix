@@ -87,6 +87,19 @@ int (*ptr_lEhScript_ModuleRead_FinishCB)(uintptr_t unk1, uintptr_t unk2) = (int(
 int (*lEhModule_Load_EndCallback)(uintptr_t unk1, uintptr_t unk2) = (int(*)(uintptr_t, uintptr_t))0;
 void (*lSoftReset)() = (void(*)())0;
 
+void DestroyAllWindows()
+{
+    if (aboutwindow_IsActive())
+        aboutwindow_Destroy();
+    if (konamidialog_IsActive())
+        konamidialog_Destroy();
+}
+
+int bIsAnyWindowShown()
+{
+    return bShowMfWindow || bShowAboutWindow || bShowKonamiDialog;
+}
+
 int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
 {
     char* modName = (char*)(unk1 + 4);
@@ -109,9 +122,13 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
         return 0;
     }
 
-    
-
     SetGameState(EHSTATE_UNKNOWN);
+
+    DestroyAllWindows();
+
+    bShowMfWindow = 0;
+    bShowAboutWindow = 0;
+    bShowKonamiDialog = 0;
 
     if (nameHash == REL_TITLE_PRX_STRHASH)
     {
@@ -237,6 +254,12 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
     }
 
     SetGameState(EHSTATE_UNKNOWN);
+    DestroyAllWindows();
+    
+    bShowMfWindow = 0;
+    bShowAboutWindow = 0;
+    bShowKonamiDialog = 0;
+
 
 
     if (nameHash == REL_FIELD_PRX_STRHASH)
@@ -564,7 +587,8 @@ void HandleButtonInputs()
         {
             //bShowTestDialog = 1;
             //bShowTestSelWindow = 1;
-            bShowMfWindow = 1;
+            if (!bIsAnyWindowShown())
+                bShowMfWindow = 1;
         }
 
         // duel cheats

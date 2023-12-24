@@ -7,5 +7,7 @@
 #define ABOUTWINDOW_H
 
 int aboutwindow_Draw();
+int aboutwindow_IsActive();
+void aboutwindow_Destroy();
 
 #endif

@@ -29,7 +29,7 @@ typedef enum _mfWindowItem
 #define MFWINDOW_ITEM_NAME_SOUNDTEST        "Sound Test"
 #define MFWINDOW_ITEM_NAME_CHEATSGLOBAL     "Cheats (global)"
 #define MFWINDOW_ITEM_NAME_CHEATSLOCAL      "Cheats (specifics)"
-#define MFWINDOW_ITEM_NAME_ABOUT            "About MultiFix..."
+#define MFWINDOW_ITEM_NAME_ABOUT            "About MultiFix"
 
 #define MFWINDOW_ITEM_DESC_SWAPBUTTON       "Swaps cross and circle as confirm buttons."
 #define MFWINDOW_ITEM_DESC_MATRIXFONT       "Enables matrix font style (uppercase glyphs for lowercase letters) on card names, types, etc."

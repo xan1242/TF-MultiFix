@@ -192,7 +192,6 @@ void mfwindow_Create()
 
         // check if we have locals
         EhGameState state = GetGameState();
-        sceKernelPrintf("state: %d", state);
 
         if ((state == EHSTATE_DUEL) ||
             (state == EHSTATE_SHOP))

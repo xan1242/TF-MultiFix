@@ -23,5 +23,7 @@ Have fun!\
 "
 
 int konamidialog_Draw();
+void konamidialog_Destroy();
+int konamidialog_IsActive();
 
 #endif
