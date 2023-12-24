@@ -1069,6 +1069,7 @@ void helpers_Init(uintptr_t base_addr)
     _YgFont_SetChColorFlg = (void(*)(int))(0x20D4 + base_addr);
     _YgFont_SetDefaultColor = (void(*)(uint32_t))(0x12F4 + base_addr);
 
+    // needed for analog sticks
     dummyPadBuf[0x10] = 0x80;
     dummyPadBuf[0x14] = 0x80;
 

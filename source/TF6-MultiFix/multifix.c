@@ -45,31 +45,6 @@
 
 uintptr_t base_addr = 0;
 
-// uintptr_t base_addr_field = 0;
-// uintptr_t base_size_field = 0;
-// 
-// uintptr_t base_addr_shop = 0;
-// uintptr_t base_size_shop = 0;
-// 
-// uintptr_t base_addr_deck = 0;
-// uintptr_t base_size_deck = 0;
-// 
-// uintptr_t base_addr_dueleng = 0;
-// uintptr_t base_size_dueleng = 0;
-// 
-// uintptr_t base_addr_duelmgr = 0;
-// uintptr_t base_size_duelmgr = 0;
-// 
-// uintptr_t base_addr_charalist = 0;
-// uintptr_t base_size_charalist = 0;
-// 
-// uintptr_t base_addr_tutoriallist = 0;
-// uintptr_t base_size_tutoriallist = 0;
-
-
-int bShowTestDialog = 0;
-int bShowTestSelWindow = 0;
-
 int bCheatMenuEnabled = 0;
 
 int bShowMfWindow = 0;
@@ -89,16 +64,16 @@ void (*lSoftReset)() = (void(*)())0;
 
 void DestroyAllWindows()
 {
+    bShowMfWindow = 0;
+    bShowAboutWindow = 0;
+    bShowKonamiDialog = 0;
+
     if (aboutwindow_IsActive())
         aboutwindow_Destroy();
     if (konamidialog_IsActive())
         konamidialog_Destroy();
     if (mfwindow_IsActive())
         mfwindow_Destroy();
-
-    bShowMfWindow = 0;
-    bShowAboutWindow = 0;
-    bShowKonamiDialog = 0;
 }
 
 int bIsAnyWindowShown()
@@ -581,8 +556,6 @@ void HandleButtonInputs()
         helpers_SetBlockNextInputPoll(1);
         if (buttons & PSP_CTRL_TRIANGLE)
         {
-            //bShowTestDialog = 1;
-            //bShowTestSelWindow = 1;
             if (!bIsAnyWindowShown())
                 bShowMfWindow = 1;
         }
@@ -634,10 +607,6 @@ void HandleDialogs()
 {
     helpers_SetDialogBoxWantsIO(0);
 
-    //if (bShowTestDialog)
-    //    DrawDialogTestWindow();
-    //if (bShowTestSelWindow)
-    //    DrawTestWindow();
     if (bShowMfWindow)
     {
         int retval = mfwindow_Draw();
@@ -674,22 +643,22 @@ void HandleDialogs()
 }
 
 // do stuff at the end of main loop
-void lSoftReset_Hook()
-{
-    //DrawTestWindow();
-    //DrawBasicTestWindow();
-    //DrawDialogTestWindow();
-    //HandleButtonCheats();
-    return lSoftReset();
-}
+//void lSoftReset_Hook()
+//{
+//    //DrawTestWindow();
+//    //DrawBasicTestWindow();
+//    //DrawDialogTestWindow();
+//    //HandleButtonCheats();
+//    return lSoftReset();
+//}
 
 // do stuff before VSync
-void YgAdh_Update_Hook()
-{
-
-
-    return YgAdh_Update();
-}
+//void YgAdh_Update_Hook()
+//{
+//
+//
+//    return YgAdh_Update();
+//}
 
 void FirstLoopFunc_Hook(int unk)
 {
@@ -739,22 +708,18 @@ void YgFont_SetShadowFlg_Hook2(int val)
 // 
 // }
 
-void HandlePostInit()
-{
-#ifdef TFMULTIFIX_DEBUG_PRINT
-    sceKernelPrintf("After YgSys_InitApplication(), heap addr: 0x%X", helpers_GetMainEhHeap());
-#endif
-    //CreateTestWindow();
-    //CreateBasicTestWindow();
-    //CreateDialogTestWindow();
+//void HandlePostInit()
+//{
+//#ifdef TFMULTIFIX_DEBUG_PRINT
+//    sceKernelPrintf("After YgSys_InitApplication(), heap addr: 0x%X", helpers_GetMainEhHeap());
+//#endif
+//}
 
-}
-
-void YgSys_InitApplication_Hook()
-{
-    YgSys_InitApplication();
-    HandlePostInit();
-}
+//void YgSys_InitApplication_Hook()
+//{
+//    YgSys_InitApplication();
+//    HandlePostInit();
+//}
 
 void TFFixesInject()
 {
@@ -771,7 +736,7 @@ void TFFixesInject()
     mfconfig_Init();
 
     // init hook
-    minj_MakeCALL(0x5AD0, (uintptr_t)&YgSys_InitApplication_Hook);
+    //minj_MakeCALL(0x5AD0, (uintptr_t)&YgSys_InitApplication_Hook);
 
     // main loop hook
     lSoftReset = (void(*)())(0x5954 + base_addr);
@@ -843,12 +808,6 @@ void TFFixesInject()
     minj_MakeNOP(0xE698);
     minj_MakeNOP(0x18520);
 
-    //if (!mfconfig_GetMatrixFont())
-    //{
-    //    // kill YgFont_SetMatrixFontFlg
-    //    minj_MakeJMPwNOP(0x2218, 0x224C + base_addr);
-    //}
-
 #ifdef YG_GETLANG_DEBUG
     minj_MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang);
 #endif
@@ -858,30 +817,4 @@ void TFFixesInject()
     minj_MakeCALL(0xCF44, (uintptr_t)&YgFont_SetShadowFlg_Hook1);
     minj_MakeCALL(0xCF6C, (uintptr_t)&YgFont_SetShadowFlg_Hook2);
 
-    //if (mfconfig_GetDisableInstall())
-    //{
-    //    minj_MakeCALL(0x12650, (uintptr_t)&InstallDialogHook);
-    //    minj_MakeNOP(0x12744);
-    //}
-
-    // get partner name from regular chr names
-    //minj_MakeNOP(0x23A10);
-
-    //injector.WriteMemory16(0x2848, 0x40);
-
-
-    // injector.MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang_Hook);
-    // 
-    // injector.MakeCALL(0x23088, (uintptr_t)&YgSys_GetLang_Hook2);
-    // injector.MakeCALL(0x23C9C, (uintptr_t)&YgSys_GetLang_Hook2);
-    // injector.MakeCALL(0x19504, (uintptr_t)&YgSys_GetLang_Hook2);
-    // injector.MakeCALL(0x1958C, (uintptr_t)&YgSys_GetLang_Hook2);
-    // injector.MakeCALL(0xEE10, (uintptr_t)&YgSys_GetLang_Hook2);
-    // injector.MakeCALL(0xEEC4, (uintptr_t)&YgSys_GetLang_Hook2);
-    // injector.MakeCALL(0xEEC4, (uintptr_t)&YgSys_GetLang_Hook2);
-
-
-    //injector.MakeInline(1, 0x8DE8, li(a0, 1));
-    //injector.MakeInlineLI(0x8DE8, 1);
-    
 }
