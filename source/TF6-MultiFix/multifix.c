@@ -39,6 +39,7 @@
 #include "windows/multifixwindow.h"
 #include "windows/aboutwindow.h"
 #include "windows/konamidialog.h"
+#include "windows/cheatmenu_duel.h"
 
 #include <psputility.h>
 #include <psputility_msgdialog.h>
@@ -50,6 +51,7 @@ int bCheatMenuEnabled = 0;
 int bShowMfWindow = 0;
 int bShowAboutWindow = 0;
 int bShowKonamiDialog = 0;
+int bShowCheatMenuDuel = 0;
 
 int bIsOnPPSSPP = 0;
 void SetPPSSPP(int val)
@@ -67,6 +69,7 @@ void DestroyAllWindows()
     bShowMfWindow = 0;
     bShowAboutWindow = 0;
     bShowKonamiDialog = 0;
+    bShowCheatMenuDuel = 0;
 
     if (aboutwindow_IsActive())
         aboutwindow_Destroy();
@@ -74,11 +77,13 @@ void DestroyAllWindows()
         konamidialog_Destroy();
     if (mfwindow_IsActive())
         mfwindow_Destroy();
+    if (cheatmenu_duel_IsActive())
+        cheatmenu_duel_Destroy();
 }
 
 int bIsAnyWindowShown()
 {
-    return bShowMfWindow || bShowAboutWindow || bShowKonamiDialog;
+    return bShowMfWindow || bShowAboutWindow || bShowKonamiDialog || bShowCheatMenuDuel;
 }
 
 int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
@@ -551,7 +556,7 @@ void HandleButtonInputs()
         }
     }
 
-    if ((buttons & PSP_CTRL_WLAN_UP) && (buttons & PSP_CTRL_RTRIGGER)) // wlan on & R = cheat input mode
+    if ((buttons & PSP_CTRL_WLAN_UP) && (buttons & PSP_CTRL_RTRIGGER)) // wlan on & R = plugin input mode
     {
         helpers_SetBlockNextInputPoll(1);
         if (buttons & PSP_CTRL_TRIANGLE)
@@ -560,47 +565,55 @@ void HandleButtonInputs()
                 bShowMfWindow = 1;
         }
 
-        // duel cheats
-        if (GetGameState() == EHSTATE_DUEL)
+        if (bCheatMenuEnabled)
         {
-            if (mfconfig_GetInstaWinCheat())
+            // duel cheats
+            if (GetGameState() == EHSTATE_DUEL)
             {
                 if (buttons & PSP_CTRL_SQUARE)
                 {
-#ifdef TFMULTIFIX_DEBUG_PRINT
-                    sceKernelPrintf("Player Cheat on !!!");
-#endif
-                    dueleng_chtSetPlayerLP(mfconfig_GetCheatPlayerLP());
+                    if (!bIsAnyWindowShown())
+                        bShowCheatMenuDuel = 1;
                 }
 
-                if (buttons & PSP_CTRL_SELECT)
-                {
-#ifdef TFMULTIFIX_DEBUG_PRINT
-                    sceKernelPrintf("Opponent LP Cheat on !!!");
-#endif
-                    dueleng_chtSetOpponentLP(mfconfig_GetCheatOpponentLP());
-                }
-            }
-
-            if (mfconfig_GetCheatControlPartner() == 1)
-            {
-                if (buttons & PSP_CTRL_LEFT)
-                {
-#ifdef TFMULTIFIX_DEBUG_PRINT
-                    sceKernelPrintf("Player control cheat: AI off !!!");
-#endif
-                    dueleng_chtSetPlayerControl(0, 0);
-                }
-                else if (buttons & PSP_CTRL_RIGHT)
-                {
-#ifdef TFMULTIFIX_DEBUG_PRINT
-                    sceKernelPrintf("Player control cheat: AI on !!!");
-#endif
-                    dueleng_chtSetPlayerControl(0, 1);
-                }
+                //            if (mfconfig_GetInstaWinCheat())
+                //            {
+                //                if (buttons & PSP_CTRL_SQUARE)
+                //                {
+                //#ifdef TFMULTIFIX_DEBUG_PRINT
+                //                    sceKernelPrintf("Player Cheat on !!!");
+                //#endif
+                //                    dueleng_chtSetPlayerLP(mfconfig_GetCheatPlayerLP());
+                //                }
+                //
+                //                if (buttons & PSP_CTRL_SELECT)
+                //                {
+                //#ifdef TFMULTIFIX_DEBUG_PRINT
+                //                    sceKernelPrintf("Opponent LP Cheat on !!!");
+                //#endif
+                //                    dueleng_chtSetOpponentLP(mfconfig_GetCheatOpponentLP());
+                //                }
+                //            }
+                //
+                //            if (mfconfig_GetCheatControlPartner() == 1)
+                //            {
+                //                if (buttons & PSP_CTRL_LEFT)
+                //                {
+                //#ifdef TFMULTIFIX_DEBUG_PRINT
+                //                    sceKernelPrintf("Player control cheat: AI off !!!");
+                //#endif
+                //                    dueleng_chtSetPlayerControl(0, 0);
+                //                }
+                //                else if (buttons & PSP_CTRL_RIGHT)
+                //                {
+                //#ifdef TFMULTIFIX_DEBUG_PRINT
+                //                    sceKernelPrintf("Player control cheat: AI on !!!");
+                //#endif
+                //                    dueleng_chtSetPlayerControl(0, 1);
+                //                }
             }
         }
-    }
+   }
 }
 
 void HandleDialogs()
@@ -624,6 +637,12 @@ void HandleDialogs()
                 {
                     bShowAboutWindow = 1;
                 }
+
+                if ((currItem == MFWINDOW_ITEM_CHEATSLOCAL) && bCheatMenuEnabled)
+                {
+                    if (GetGameState() == EHSTATE_DUEL)
+                        bShowCheatMenuDuel = 1;
+                }
             }
 
         }
@@ -639,6 +658,12 @@ void HandleDialogs()
     {
         if (konamidialog_Draw())
             bShowKonamiDialog = 0;
+    }
+
+    if (bShowCheatMenuDuel && bCheatMenuEnabled)
+    {
+        if (cheatmenu_duel_Draw())
+            bShowCheatMenuDuel = 0;
     }
 }
 

@@ -112,7 +112,6 @@ int aboutwindow_Draw()
 	uintptr_t packet = EhPckt_Open(10, 0);
 	YgSelWnd_Cont(aboutWindow);
 	YgSelWnd_Draw((uintptr_t)&packet, aboutWindow);
-
 	EhPckt_Close(packet);
 
 	if (aboutWindow->decideStatus)

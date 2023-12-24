@@ -28,6 +28,7 @@ OBJS = main.o \
        windows/installdisabledialog.o \
        windows/aboutwindow.o \
        windows/konamidialog.o \
+       windows/cheatmenu_duel.o \
        exports.o \
        ../../includes/psp/pspmallochelper.o \
        ../../includes/psp/stringhash.o \

@@ -91,8 +91,13 @@ void dueleng_sub_A28C_Hook(int PlayerNum, int WhoIsInControl)
 
     dueleng_sub_5228();
 
-    if (PlayerNum == 0)
-        *(uint32_t*)(4 * PlayerNum + (0x38E3DC + _base_addr_dueleng) + 8) = 0;
+    if (mfconfig_GetCheatControlPartner() == 2)
+    {
+        if (PlayerNum == 0)
+            *(uint32_t*)(4 * PlayerNum + (0x38E3DC + _base_addr_dueleng) + 8) = 0;
+        else
+            *(uint32_t*)(4 * PlayerNum + (0x38E3DC + _base_addr_dueleng) + 8) = WhoIsInControl;
+    }
     else
         *(uint32_t*)(4 * PlayerNum + (0x38E3DC + _base_addr_dueleng) + 8) = WhoIsInControl;
 }
@@ -118,10 +123,10 @@ void dueleng_Patch(uintptr_t base_addr, uintptr_t base_size)
     dueleng_sub_5228 = (void (*)())(0x5228 + base_addr);
     dueleng_uUpdatePlayerState = (int (*)())(0x1EE320 + base_addr);
 
-    if (mfconfig_GetCheatControlPartner() == 2)
-    {
+    //if (mfconfig_GetCheatControlPartner() == 2)
+    //{
         minj_MakeJMPwNOP(0xA28C, (uintptr_t)&dueleng_sub_A28C_Hook);
-    }
+    //}
 
 
     // minj_MakeCALL(0x698, (uintptr_t)&dueleng_sub_A28C_Hook);

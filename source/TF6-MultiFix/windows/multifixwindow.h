@@ -6,6 +6,35 @@
 #ifndef MULTIFIXWINDOW_H
 #define MULTIFIXWINDOW_H
 
+typedef struct _mfWindowSetting
+{
+    int* val;
+    float* fval;
+    int min;
+    int max;
+    float fmin;
+    float fmax;
+    int type;
+    int hidden;
+    int selectable;
+    int greyedout;
+    int loopable;
+    int index;
+    char* name;
+    char* description;
+}mfWindowSetting;
+
+typedef enum _mfWindowSettingType
+{
+    MFWINDOW_SETTING_TYPE_UNK = -1,
+    MFWINDOW_SETTING_TYPE_INT,
+    MFWINDOW_SETTING_TYPE_BOOL,
+    MFWINDOW_SETTING_TYPE_FLOAT,
+    MFWINDOW_SETTING_TYPE_INTSTRING,
+    MFWINDOW_SETTING_TYPE_NONE,
+    MFWINDOW_SETTING_TYPE_COUNT
+}mfWindowSettingType;
+
 typedef enum _mfWindowItem
 {
     MFWINDOW_ITEM_UNK = -1,
@@ -41,19 +70,9 @@ typedef enum _mfWindowItem
 #define MFWINDOW_ITEM_DESC_CHEATSLOCAL      "Cheats that are specific to the mode that you're currently in."
 #define MFWINDOW_ITEM_DESC_ABOUT            "About this plugin."
 
-typedef enum _mfWindowSettingType
-{
-    MFWINDOW_SETTING_TYPE_UNK = -1,
-    MFWINDOW_SETTING_TYPE_INT,
-    MFWINDOW_SETTING_TYPE_BOOL,
-    MFWINDOW_SETTING_TYPE_FLOAT,
-    MFWINDOW_SETTING_TYPE_INTSTRING,
-    MFWINDOW_SETTING_TYPE_NONE,
-    MFWINDOW_SETTING_TYPE_COUNT
-}mfWindowSettingType;
-
 #define MFWINDOW_LABEL_BOOL_TRUE "<On>"
 #define MFWINDOW_LABEL_BOOL_FALSE "<Off>"
+#define MFWINDOW_SELWIDTH_DIFF 12
 
 int mfwindow_Draw();
 int mfwindow_GetItemCount();
@@ -61,5 +80,7 @@ void mfwindow_SetCheatsEnabled(int val);
 //void mfwindow_SetCheatLocals(int val);
 int mfwindow_IsActive();
 void mfwindow_Destroy();
+void mfWindowSetting_AddInt(mfWindowSetting* setting, int addval);
+void mfWindowSetting_HandleExtraControls(mfWindowSetting* setting);
 
 #endif

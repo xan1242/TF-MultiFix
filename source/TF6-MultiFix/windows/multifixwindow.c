@@ -26,7 +26,7 @@ int bMfWindow2Inited = 0;
 
 #define MFWINDOW_ZORDER 10
 #define MFWINDOW_MAXVISIBLEITEMS 4
-#define MFWINDOW_VALPOSITION 3.6f
+//#define MFWINDOW_VALPOSITION 3.6f
 #define MFWINDOW_MAXTEXT 128
 #define MFWINDOW_MAXVALTEXT 32
 #define MFWINDOW2_MAXTEXT 256
@@ -57,36 +57,19 @@ char* mfWindowItemDescriptions[] =
     MFWINDOW_ITEM_DESC_ABOUT,
 };
 
-typedef struct _mfWindowSetting
-{
-    int* val;
-    float* fval;
-    int min;
-    int max;
-    float fmin;
-    float fmax;
-    int type;
-    int hidden;
-    int selectable;
-    int greyedout;
-    int index;
-    char* name;
-    char* description;
-}mfWindowSetting;
-
 mfWindowSetting mfWindowSettings[MFWINDOW_ITEM_COUNT] =
 {
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_SWAPBUTTON, NULL, NULL},
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_MATRIXFONT, NULL, NULL},
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_PARTNERCARD, NULL, NULL},
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_DUELHELP, NULL, NULL},
-    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, MFWINDOW_ITEM_INSTALLDISABLE, NULL, NULL},
-    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 0, 1, 0, MFWINDOW_ITEM_SOUNDTEST, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, 1, MFWINDOW_ITEM_SWAPBUTTON, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, 1, MFWINDOW_ITEM_MATRIXFONT, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, 1, MFWINDOW_ITEM_PARTNERCARD, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, 1, MFWINDOW_ITEM_DUELHELP, NULL, NULL},
+    {NULL, NULL, 0, 1, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_BOOL, 0, 0, 0, 1, MFWINDOW_ITEM_INSTALLDISABLE, NULL, NULL},
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 0, 1, 0, 0, MFWINDOW_ITEM_SOUNDTEST, NULL, NULL},
     // cheats are always here
-    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 1, 1, 0, MFWINDOW_ITEM_CHEATSGLOBAL, NULL, NULL},
-    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 1, 1, 0, MFWINDOW_ITEM_CHEATSLOCAL, NULL, NULL},
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 1, 1, 0, 0, MFWINDOW_ITEM_CHEATSGLOBAL, NULL, NULL},
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 1, 1, 0, 0, MFWINDOW_ITEM_CHEATSLOCAL, NULL, NULL},
     // about is always last!
-    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 0, 1, 0, MFWINDOW_ITEM_ABOUT, NULL, NULL},
+    {NULL, NULL, 0, 0, 0.0f, 0.0f, MFWINDOW_SETTING_TYPE_NONE, 0, 1, 0, 0, MFWINDOW_ITEM_ABOUT, NULL, NULL},
 };
 
 mfWindowSetting* mfWindowSettingDrawList[MFWINDOW_ITEM_COUNT];
@@ -121,7 +104,7 @@ void _mfwindow_Destroy()
 void _mfwindow2_Destroy()
 {
     bMfWindow2Inited = 0;
-    if (mfWindow)
+    if (mfWindow2)
     {
         ygBasicWindow_Term(&mfWindow2->res);
         psp_free(mfWindow2);
@@ -131,11 +114,12 @@ void _mfwindow2_Destroy()
 
 void mfwindow_Destroy()
 {
+    mfwindow_bNotifyDestroy = 1;
     _mfwindow2_Destroy();
     _mfwindow_Destroy();
 }
 
-
+// TODO: abstract this!!! provide the setting and window data separately!
 uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
 {
     mfWindowSetting* currSetting = mfWindowSettingDrawList[item_index];
@@ -206,8 +190,12 @@ uintptr_t mfWindowCallback(uintptr_t ehpacket, int item_index, int X, int Y)
         }
 
         sceCccUTF8toUTF16(convBuffer, ((MFWINDOW_MAXVALTEXT - 1) * sizeof(wchar_t)), sprintfbuf);
-        float valXpos = (float)X * MFWINDOW_VALPOSITION;
-        YgFont_PrintLine64(((int)valXpos) << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
+
+        //float valXpos = (float)X * MFWINDOW_VALPOSITION;
+
+        // manually right justify
+        int valXpos = mfWindow->window.width + mfWindow->window.Xpos - (YgFont_GetStrWidth(convBuffer) >> 6) - MFWINDOW_SELWIDTH_DIFF;
+        YgFont_PrintLine64(valXpos << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
     }
 
     return YgFont_GetEhPckt();
@@ -222,7 +210,7 @@ void mfwindow_Create()
     // assign some defaults
     for (int i = 0; i < MFWINDOW_ITEM_COUNT; i++)
     {
-        mfWindowSettings[i].index = i;
+        //mfWindowSettings[i].index = i;
         mfWindowSettings[i].name = mfWindowItemNames[i];
         mfWindowSettings[i].description = mfWindowItemDescriptions[i];
     }
@@ -288,8 +276,8 @@ void mfwindow_Create()
     else
         mfWindow->window.height = (32 * MFWINDOW_MAXVISIBLEITEMS) - (4 * MFWINDOW_MAXVISIBLEITEMS);
 
-    mfWindow->window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)mfWindow->window.width * 0.5f));
-    mfWindow->window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)mfWindow->window.height * 0.5f));
+    //mfWindow->window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)mfWindow->window.width * 0.5f));
+    //mfWindow->window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)mfWindow->window.height * 0.5f));
 
     mfWindow->window.color = 0xFFFFFFFF;
     mfWindow->itemDrawCallback = (uintptr_t)&mfWindowCallback;
@@ -318,9 +306,9 @@ void mfwindow_Create()
     
 
     int SelDrawWidth = mfWindow->window.width;
-    mfWindow->selDrawWidth1 = SelDrawWidth - 12;
+    mfWindow->selDrawWidth1 = SelDrawWidth - MFWINDOW_SELWIDTH_DIFF;
     mfWindow->selDrawHeight1 = 25;
-    mfWindow->selDrawWidth2 = SelDrawWidth - 12;
+    mfWindow->selDrawWidth2 = SelDrawWidth - MFWINDOW_SELWIDTH_DIFF;
     mfWindow->selDrawHeight1 = 25;
 
     YgSelWnd_Init(mfWindow);
@@ -410,6 +398,67 @@ void mfwindow_SetCheatsEnabled(int val)
 //    mfwindow_bCheatLocals = val;
 //}
 
+void mfWindowSetting_AddInt(mfWindowSetting* setting, int addval)
+{
+    int* val = setting->val;
+    *val += addval;
+    if (setting->loopable)
+        *val = loopAround(*val, setting->min, setting->max);
+    else
+    {
+        if (*val > setting->max)
+            *val = setting->max;
+        if (*val < setting->min)
+            *val = setting->min;
+    }
+}
+
+void mfWindowSetting_HandleExtraControls(mfWindowSetting* setting)
+{
+    uint32_t buttons = GetPadButtons(1);
+    int* val = setting->val;
+
+    if (val)
+    {
+        if (buttons & PSP_CTRL_LEFT)
+        {
+            mfwindow_bValueChanged = 1;
+            YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
+            if ((setting->type == MFWINDOW_SETTING_TYPE_INT) || (setting->type == MFWINDOW_SETTING_TYPE_BOOL))
+                mfWindowSetting_AddInt(setting, -1);
+            // *val -= 1;
+            // if (setting->loopable)
+            //     *val = loopAround(*val, setting->min, setting->max);
+            // else
+            // {
+            //     if (*val > setting->max)
+            //         *val = setting->max;
+            //     if (*val < setting->min)
+            //         *val = setting->min;
+            // }
+        }
+
+        if (buttons & PSP_CTRL_RIGHT)
+        {
+            mfwindow_bValueChanged = 1;
+            YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
+            if ((setting->type == MFWINDOW_SETTING_TYPE_INT) || (setting->type == MFWINDOW_SETTING_TYPE_BOOL))
+                mfWindowSetting_AddInt(setting, 1);
+
+            // *val += 1;
+            // if (setting->loopable)
+            //     *val = loopAround(*val, setting->min, setting->max);
+            // else
+            // {
+            //     if (*val > setting->max)
+            //         *val = setting->max;
+            //     if (*val < setting->min)
+            //         *val = setting->min;
+            // }
+        }
+    }
+}
+
 int mfwindow_Draw()
 {
     if (!bMfWindowInited)
@@ -418,8 +467,6 @@ int mfwindow_Draw()
         YgSys_SndPlaySE(SOUND_ID_MENU_WINDOWPOPUP_1);
         mfwindow_Create();
         mfwindow2_Create();
-
-        sceKernelPrintf("created at: 0x%08X | 0x%08X", mfWindow, mfWindow2);
 
         return 0;
     }
@@ -432,36 +479,12 @@ int mfwindow_Draw()
     //sceKernelPrintf("item: 0x%08X | page: 0x%08X\n", mfWindow.currentItem, mfWindow.currentItemPage);
 
     int currItem = mfWindow->currentItem + mfWindow->currentItemPage;
+    mfWindowSetting* setting = mfWindowSettingDrawList[currItem];
+    mfWindowSetting_HandleExtraControls(setting);
+    YgSelWnd_Cont(mfWindow);
 
     uintptr_t packet = EhPckt_Open(MFWINDOW_ZORDER, 0);
-
-    uint32_t buttons = GetPadButtons(1);
-    mfWindowSetting* setting = mfWindowSettingDrawList[currItem];
-    int* val = setting->val;
-
-    if (val)
-    {
-        if (buttons & PSP_CTRL_LEFT)
-        {
-            *val -= 1;
-            mfwindow_bValueChanged = 1;
-            YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
-            *val = loopAround(*val, setting->min, setting->max);
-        }
-
-        if (buttons & PSP_CTRL_RIGHT)
-        {
-            *val += 1;
-            mfwindow_bValueChanged = 1;
-            YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
-            *val = loopAround(*val, setting->min, setting->max);
-        }
-    }
-
-
-    YgSelWnd_Cont(mfWindow);
     YgSelWnd_Draw((uintptr_t)&packet, mfWindow);
-
     EhPckt_Close(packet);
 
     mfwindow2_Draw();
