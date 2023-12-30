@@ -26,13 +26,13 @@ int aboutwindow_IsActive()
 
 void aboutwindow_Destroy()
 {
-	if (DialogWindow_IsActive(aboutWindow))
-	{
-		DialogWindow_Destroy(aboutWindow);
-	}
-
 	if (aboutWindow)
 	{
+		if (DialogWindow_IsActive(aboutWindow))
+		{
+			DialogWindow_Destroy(aboutWindow);
+		}
+
 		psp_free(aboutWindow);
 		aboutWindow = NULL;
 	}
@@ -54,7 +54,7 @@ void aboutwindow_Create()
 	YgSys_memset(aboutWindow, 0, sizeof(DialogWindow));
 
 	aboutWindow->buttons = DIALOGWINDOW_BUTTONS_OK;
-	aboutWindow->zOrder = 10;
+	aboutWindow->zOrder = MULTIFIX_WINDOW_ZORDER;
 
 	char printbuf[ABOUTWINDOW_MAXTEXT];
 	YgSys_sprintf(printbuf, MULTIFIX_ABOUT_FORMAT, MODULE_VERSION_MAJOR, MODULE_VERSION_MINOR, MULTIFIX_ABOUT_TEXT);

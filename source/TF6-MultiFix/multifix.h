@@ -23,6 +23,8 @@ https://github.com/xan1242/TF-MultiFix\n\
 Created by Xan / Tenjoin\
 "
 
+#define MULTIFIX_WINDOW_ZORDER 10
+
 // define for debug printing to sceKernelPrintf
 #define TFMULTIFIX_DEBUG_PRINT
 // define for debug printing of the return address of YgFont_PrintLine64 and YgFont_PrintLineFit64

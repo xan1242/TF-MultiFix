@@ -7,94 +7,56 @@
 #include "../helpers.h"
 #include "../multifix.h"
 #include "../multifixconfig.h"
-#include "../YgWindow.h"
+#include "../DialogWindow.h"
 #include "konamidialog.h"
 #include "../../../includes/psp/pspmallochelper.h"
 
-YgSelWnd* konamiDialog;
-int bKonamiDialogInited = 0;
-int konamiDialog_bNotifyDestroy = 0;
-
-wchar_t KonamiDialogText[] = KONAMIDIALOG_TEXT;
+DialogWindow* konamiDialog;
 
 int konamidialog_IsActive()
 {
-	return (bKonamiDialogInited != 0) || (konamiDialog != NULL);
+	return konamiDialog != NULL;
 }
 
 void konamidialog_Destroy()
 {
-	konamiDialog_bNotifyDestroy = 1;
-	bKonamiDialogInited = 0;
-	YgSelWnd_Term(konamiDialog);
-	psp_free(konamiDialog);
-	konamiDialog = NULL;
+	if (konamiDialog)
+	{
+		if (DialogWindow_IsActive(konamiDialog))
+		{
+			DialogWindow_Destroy(konamiDialog);
+		}
+
+		psp_free(konamiDialog);
+		konamiDialog = NULL;
+	}
 }
 
 void konamidialog_Create()
 {
 	if (konamiDialog)
 		psp_free(konamiDialog);
-	konamiDialog = (YgSelWnd*)psp_malloc(sizeof(YgSelWnd));
-	YgSys_memset(konamiDialog, 0, sizeof(YgSelWnd));
-	konamiDialog->heapptr = helpers_GetMainEhHeap();
 
-	konamiDialog->selFlags = YGSEL_DIALOGBUTTONS_OK;
+	konamiDialog = (DialogWindow*)psp_malloc(sizeof(DialogWindow));
+	YgSys_memset(konamiDialog, 0, sizeof(DialogWindow));
 
-	konamiDialog->window.color = 0xFFFFFFFF;
-	konamiDialog->window.unk3 = 1;
+	konamiDialog->buttons = DIALOGWINDOW_BUTTONS_OK;
+	konamiDialog->zOrder = MULTIFIX_WINDOW_ZORDER;
 
-	konamiDialog->window.width = 0;
-	konamiDialog->window.height = 0;
-	konamiDialog->window.maxWidth = 400;
-	konamiDialog->window.minWidth = 100;
+	konamiDialog->text = KONAMIDIALOG_TEXT;
 
-	konamiDialog->window.bAutoSizeWindow = 1;
-
-	konamiDialog->window.topPadding = 8;
-	konamiDialog->window.bottomPadding = 0;
-	konamiDialog->window.leftPadding = 10;
-	konamiDialog->window.rightPadding = 10;
-
-	konamiDialog->window.windowBGColor = YGWINDOW_BG_DARK;
-
-	//aboutWindow.window.windowText = installDisableText;
-	konamiDialog->window.windowFontSize = 12;
-	konamiDialog->window.windowFontColor = 0xFFFFFFFF;
-	konamiDialog->window.unk43 = 1;
-	konamiDialog->window.unk44 = 1;
-	konamiDialog->window.bFontShadow = 1;
-
-	konamiDialog->window.windowText = KonamiDialogText;
-
-	YgSelWnd_Init(konamiDialog);
-
-	konamiDialog->window.Xpos = (int)(PSP_SCREEN_HALF_WIDTH_FLOAT - ((float)konamiDialog->window.width * 0.5f));
-	konamiDialog->window.Ypos = (int)(PSP_SCREEN_HALF_HEIGHT_FLOAT - ((float)konamiDialog->window.height * 0.5f));
-	bKonamiDialogInited = 1;
+	DialogWindow_Create(konamiDialog);
 }
 
 int konamidialog_Draw()
 {
-	if (!bKonamiDialogInited)
+	if (!konamiDialog)
 	{
-		konamiDialog_bNotifyDestroy = 0;
 		konamidialog_Create();
 		return 0;
 	}
 
-	if (konamiDialog_bNotifyDestroy)
-		return 0;
-
-	helpers_SetDialogBoxWantsIO(1);
-
-	uintptr_t packet = EhPckt_Open(10, 0);
-	YgSelWnd_Cont(konamiDialog);
-	YgSelWnd_Draw((uintptr_t)&packet, konamiDialog);
-
-	EhPckt_Close(packet);
-
-	if (konamiDialog->decideStatus)
+	if (DialogWindow_Draw(konamiDialog))
 	{
 		konamidialog_Destroy();
 		return -1;
