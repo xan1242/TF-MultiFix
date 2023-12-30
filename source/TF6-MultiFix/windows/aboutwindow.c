@@ -54,6 +54,7 @@ void aboutwindow_Create()
 	YgSys_memset(aboutWindow, 0, sizeof(DialogWindow));
 
 	aboutWindow->buttons = DIALOGWINDOW_BUTTONS_OK;
+	aboutWindow->bBlockGameControl = 1;
 	aboutWindow->zOrder = MULTIFIX_WINDOW_ZORDER;
 
 	char printbuf[ABOUTWINDOW_MAXTEXT];

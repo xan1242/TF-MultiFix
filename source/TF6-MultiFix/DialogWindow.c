@@ -24,19 +24,12 @@ void DialogWindow_Destroy(DialogWindow* window)
 		psp_free(window->selwnd);
 		window->selwnd = NULL;
 	}
-	//if (window->text)
-	//{
-	//	psp_free(window->text);
-	//	window->text = NULL;
-	//}
 }
 
 void DialogWindow_Create(DialogWindow* window)
 {
 	if (window->selwnd)
 		psp_free(window->selwnd);
-	//if (window->text)
-	//	psp_free(window->text);
 
 	window->selwnd = (YgSelWnd*)psp_malloc(sizeof(YgSelWnd));
 	YgSys_memset(window->selwnd, 0, sizeof(YgSelWnd));
@@ -94,7 +87,8 @@ int DialogWindow_Draw(DialogWindow* window)
 	if ((!window->bInited) || (!window->selwnd) || (window->bNotifyDestroy))
 		return 0;
 
-	helpers_SetDialogBoxWantsIO(1);
+	if (window->bBlockGameControl)
+		helpers_SetDialogBoxWantsIO(1);
 
 	uintptr_t packet = EhPckt_Open(window->zOrder, 0);
 	YgSelWnd_Cont(window->selwnd);

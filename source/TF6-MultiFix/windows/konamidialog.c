@@ -41,6 +41,7 @@ void konamidialog_Create()
 	YgSys_memset(konamiDialog, 0, sizeof(DialogWindow));
 
 	konamiDialog->buttons = DIALOGWINDOW_BUTTONS_OK;
+	konamiDialog->bBlockGameControl = 1;
 	konamiDialog->zOrder = MULTIFIX_WINDOW_ZORDER;
 
 	konamiDialog->text = KONAMIDIALOG_TEXT;

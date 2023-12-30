@@ -33,6 +33,7 @@ typedef struct _DialogWindow
 	YgSelWnd* selwnd;
 	int bInited;
 	int bNotifyDestroy;
+	int bBlockGameControl;
 	int zOrder;
 	// add these in if necessary, removed for optimization & simplification
 	//int bAutoSize;
