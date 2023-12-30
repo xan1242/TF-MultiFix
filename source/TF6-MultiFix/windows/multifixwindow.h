@@ -50,6 +50,8 @@ typedef enum _mfWindowItem
     MFWINDOW_ITEM_COUNT
 }mfWindowItem;
 
+#define MFWINDOW_CAPTION L"MultiFix Configuration"
+
 #define MFWINDOW_ITEM_NAME_SWAPBUTTON       "Use X as confirm button"
 #define MFWINDOW_ITEM_NAME_MATRIXFONT       "Matrix font on cards"
 #define MFWINDOW_ITEM_NAME_PARTNERCARD      "See partner's cards"

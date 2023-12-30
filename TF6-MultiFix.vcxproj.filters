@@ -119,6 +119,9 @@
     <ClCompile Include="source\TF6-MultiFix\DialogWindow.c">
       <Filter>source\TF6-MultiFix</Filter>
     </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\MenuWindow.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -209,6 +212,9 @@
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\DialogWindow.h">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\MenuWindow.h">
       <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
   </ItemGroup>

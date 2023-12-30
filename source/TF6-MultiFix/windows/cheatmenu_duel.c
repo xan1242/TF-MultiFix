@@ -331,7 +331,7 @@ int cheatmenu_duel_Draw()
 
     int currItem = cheatmenu_duel_Window->currentItem + cheatmenu_duel_Window->currentItemPage;
     mfWindowSetting* setting = cheatmenu_duel_SettingDrawList[currItem];
-    mfWindowSetting_HandleExtraControls(setting);
+    //mfWindowSetting_HandleExtraControls(setting);
     YgSelWnd_Cont(cheatmenu_duel_Window);
 
     uintptr_t packet = EhPckt_Open(10, 0);
