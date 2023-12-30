@@ -17,6 +17,8 @@ typedef enum _cheatmenu_duel_WindowItem
     CHEATMENU_DUEL_ITEM_COUNT
 }cheatmenu_duel_WindowItem;
 
+#define CHEATMENU_DUEL_CAPTION L"Duel Cheat Menu"
+
 #define CHEATMENU_DUEL_ITEM_NAME_SETOPPONENTLP   "Set opponent LP"
 #define CHEATMENU_DUEL_ITEM_NAME_SETPLAYERLP     "Set player LP"
 #define CHEATMENU_DUEL_ITEM_NAME_DRAWCARD        "Draw a card"

@@ -95,6 +95,8 @@ void mfwindow_Create()
     mfWindow->bBlockGameControl = 1;
     mfWindow->zOrder = MULTIFIX_WINDOW_ZORDER;
     mfWindow->itemDrawCallback = (uintptr_t)&mfWindowCallback;
+    mfWindow->itemCount = MFWINDOW_ITEM_COUNT;
+    mfWindow->items = mfWindowSettings;
 
     for (int i = 0; i < MFWINDOW_ITEM_COUNT; i++)
     {
@@ -130,9 +132,6 @@ void mfwindow_Create()
         }
 
     }
-
-    mfWindow->items = mfWindowSettings;
-    mfWindow->itemCount = MFWINDOW_ITEM_COUNT;
 
     MenuWindow_Create(mfWindow);
 }

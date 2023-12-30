@@ -327,8 +327,8 @@ int MenuWindow_Draw(MenuWindow* window)
 		// return value status pack
 		// in order
 		// 8 bits = decide status
-		// 8 bits = item
-		// 8 bits = mfwindow_bValueChanged
+		// 8 bits = item index
+		// 8 bits = bValueChanged
 		int retval = (window->selwnd->decideStatus & 0xFF) | ((item->index & 0xFF) << 8) | ((window->bValueChanged & 0xFF) << 16);
 		return retval;
 	}
