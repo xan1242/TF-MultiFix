@@ -270,6 +270,9 @@ void MenuWindow_AddInt(MenuWindowItem* item, int addval)
 
 void MenuWindow_HandleExtraControls(MenuWindow* window, MenuWindowItem* item)
 {
+	if (item->type == MENUWINDOW_ITEM_TYPE_NONE)
+		return;
+
 	uint32_t buttons = GetPadButtons(1);
 	uint32_t buttons_fast = GetPadButtons(0);
 
@@ -294,22 +297,25 @@ void MenuWindow_HandleExtraControls(MenuWindow* window, MenuWindowItem* item)
 			bCheckRight = buttons & PSP_CTRL_RIGHT;
 		}
 
-		if (buttons_fast & PSP_CTRL_LTRIGGER)
+		if (item->type != MENUWINDOW_ITEM_TYPE_BOOL)
 		{
-			inc = 10;
-			dec = -10;
-		}
+			if (buttons_fast & PSP_CTRL_LTRIGGER)
+			{
+				inc = 10;
+				dec = -10;
+			}
 
-		if (buttons_fast & PSP_CTRL_RTRIGGER)
-		{
-			inc = 100;
-			dec = -100;
-		}
+			if (buttons_fast & PSP_CTRL_RTRIGGER)
+			{
+				inc = 100;
+				dec = -100;
+			}
 
-		if ((buttons_fast & PSP_CTRL_LTRIGGER) && (buttons_fast & PSP_CTRL_RTRIGGER))
-		{
-			inc = 1000;
-			dec = -1000;
+			if ((buttons_fast & PSP_CTRL_LTRIGGER) && (buttons_fast & PSP_CTRL_RTRIGGER))
+			{
+				inc = 1000;
+				dec = -1000;
+			}
 		}
 
 		if (bCheckLeft)
