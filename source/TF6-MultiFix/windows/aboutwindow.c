@@ -6,16 +6,12 @@
 #include <stdio.h>
 #include "../helpers.h"
 #include "../multifix.h"
-//#include "../multifixconfig.h"
-//#include "../YgWindow.h"
 #include "../DialogWindow.h"
 #include "aboutwindow.h"
 #include "../../../includes/psp/pspmallochelper.h"
 
 DialogWindow* aboutWindow;
 wchar_t* aboutWindowText;
-//int bAboutWindowInited = 0;
-//int aboutWindow_bNotifyDestroy = 0;
 
 #define ABOUTWINDOW_MAXTEXT 512
 
