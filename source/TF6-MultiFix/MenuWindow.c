@@ -14,7 +14,7 @@
 
 int MenuWindow_IsActive(MenuWindow* window)
 {
-	return (window->bInited != 0) || (window->selwnd != NULL) || (window->descwnd != NULL) || (window->itemDrawList != NULL);
+	return (window->bInited != 0) || (window->selwnd != NULL) || (window->descwnd != NULL) || (window->itemDrawList != NULL) || (window->descwindowtext != NULL);
 }
 
 void MenuWindow_Destroy(MenuWindow* window)
@@ -40,6 +40,12 @@ void MenuWindow_Destroy(MenuWindow* window)
 	{
 		psp_free(window->itemDrawList);
 		window->itemDrawList = NULL;
+	}
+
+	if (window->descwindowtext)
+	{
+		psp_free(window->descwindowtext);
+		window->descwindowtext = NULL;
 	}
 }
 
@@ -206,10 +212,17 @@ void MenuWindow_CreateDescWindow(MenuWindow* window)
 {
 	if (window->descwnd)
 		psp_free(window->descwnd);
+	if (window->descwindowtext)
+		psp_free(window->descwindowtext);
+
 	window->descwnd = (ygBasicWindowPack*)psp_malloc(sizeof(ygBasicWindowPack));
+	window->descwindowtext = (wchar_t*)psp_malloc(MENUWINDOW_DESC_MAXTEXT * sizeof(wchar_t));
 
 	ygBasicWindow_Init(&window->descwnd->res, helpers_GetMainEhHeap());
 	YgSys_memset(&window->descwnd->window, 0, sizeof(ygBasicWindow));
+	YgSys_memset(window->descwindowtext, 0, MENUWINDOW_DESC_MAXTEXT * sizeof(wchar_t));
+
+	window->descwnd->window.windowText = window->descwindowtext;
 
 	window->descwnd->window.color = 0xFFFFFFFF;
 	window->descwnd->window.unk3 = 1;
@@ -287,16 +300,12 @@ int MenuWindow_DrawDesc(MenuWindow* window)
 
 	int idx = window->selwnd->currentItem + window->selwnd->currentItemPage;
 	MenuWindowItem* currItem = window->itemDrawList[idx];
-
-	wchar_t convBuffer[MENUWINDOW_DESC_MAXTEXT];
-	sceCccUTF8toUTF16(convBuffer, (MENUWINDOW_DESC_MAXTEXT * sizeof(wchar_t)) - 1, currItem->description);
-	window->descwnd->window.windowText = convBuffer;
+	
+	sceCccUTF8toUTF16(window->descwindowtext, (MENUWINDOW_DESC_MAXTEXT * sizeof(wchar_t)), currItem->description);
 
 	uintptr_t packet = EhPckt_Open(window->zOrder, 0);
 	ygBasicWindow_Draw((uintptr_t)&packet, &window->descwnd->res);
 	EhPckt_Close(packet);
-
-	window->descwnd->window.windowText = NULL;
 
 	return 0;
 }

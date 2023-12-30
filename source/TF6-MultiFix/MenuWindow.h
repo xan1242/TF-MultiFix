@@ -62,6 +62,7 @@ typedef struct _MenuWindow
     MenuWindowItem** itemDrawList;
     uintptr_t itemDrawCallback;
 	wchar_t* caption;
+    wchar_t* descwindowtext;
 }MenuWindow;
 
 uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, MenuWindow* window);
