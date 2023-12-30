@@ -31,8 +31,6 @@ MenuWindowItem mfWindowSettings[MFWINDOW_ITEM_COUNT] =
     {NULL, NULL, 0, 0, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_NONE, 0, 1, 0, 0, MFWINDOW_ITEM_ABOUT, MFWINDOW_ITEM_NAME_ABOUT, MFWINDOW_ITEM_DESC_ABOUT},
 };
 
-//mfWindowSetting* mfWindowSettingDrawList[MFWINDOW_ITEM_COUNT];
-
 int mfwindow_IsActive()
 {
     return mfWindow != NULL;
