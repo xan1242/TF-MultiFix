@@ -167,6 +167,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\charalist.c" />
     <ClCompile Include="source\TF6-MultiFix\deck.c" />
     <ClCompile Include="source\TF6-MultiFix\decktutorial.c" />
+    <ClCompile Include="source\TF6-MultiFix\DialogWindow.c" />
     <ClCompile Include="source\TF6-MultiFix\dueldraw.c" />
     <ClCompile Include="source\TF6-MultiFix\dueleng.c" />
     <ClCompile Include="source\TF6-MultiFix\duelmgr.c" />
@@ -205,6 +206,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClInclude Include="source\TF6-MultiFix\charalist.h" />
     <ClInclude Include="source\TF6-MultiFix\deck.h" />
     <ClInclude Include="source\TF6-MultiFix\decktutorial.h" />
+    <ClInclude Include="source\TF6-MultiFix\DialogWindow.h" />
     <ClInclude Include="source\TF6-MultiFix\dueldraw.h" />
     <ClInclude Include="source\TF6-MultiFix\dueleng.h" />
     <ClInclude Include="source\TF6-MultiFix\duelmgr.h" />

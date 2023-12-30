@@ -116,6 +116,9 @@
     <ClCompile Include="source\TF6-MultiFix\windows\konamidialog.c">
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\DialogWindow.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -204,6 +207,9 @@
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\windows\konamidialog.h">
       <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\DialogWindow.h">
+      <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

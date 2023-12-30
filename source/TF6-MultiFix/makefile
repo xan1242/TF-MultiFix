@@ -24,6 +24,7 @@ OBJS = main.o \
        story.o \
        title.o \
        YgWindow.o \
+       DialogWindow.o \
        windows/multifixwindow.o \
        windows/installdisabledialog.o \
        windows/aboutwindow.o \
