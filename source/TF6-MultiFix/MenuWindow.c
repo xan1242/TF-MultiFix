@@ -220,7 +220,7 @@ void MenuWindow_CreateDescWindow(MenuWindow* window)
 
 	window->descwnd->window.windowBGColor = YGWINDOW_BG_DARK;
 
-	window->descwnd->window.windowFontSize = 12;
+	window->descwnd->window.windowFontSize = MENUWINDOW_DESC_FONTSIZE;
 	window->descwnd->window.windowFontColor = 0xFFFFFFFF;
 	window->descwnd->window.bFontShadow = 1;
 
