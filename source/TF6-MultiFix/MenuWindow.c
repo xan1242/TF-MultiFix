@@ -49,6 +49,7 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 		return ehpacket;
 
 	MenuWindowItem* currItem = window->itemDrawList[item_index];
+	int Y_corrected = Y + 2;
 
 	YgFont_SetEhPckt(ehpacket);
 
@@ -72,7 +73,7 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 	wchar_t convBuffer[MENUWINDOW_ITEM_MAXTEXT];
 
 	sceCccUTF8toUTF16(convBuffer, txtlen * sizeof(wchar_t), currItem->name);
-	YgFont_PrintLine64(X << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
+	YgFont_PrintLine64(X << 6, Y_corrected << 6, (480 - X) << 6, convBuffer);
 
 
 	switch (currItem->type)
@@ -122,7 +123,7 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 
 		// manually right justify
 		int valXpos = window->selwnd->window.width + window->selwnd->window.Xpos - (YgFont_GetStrWidth(convBuffer) >> 6) - MENUWINDOW_SELWIDTH_DIFF;
-		YgFont_PrintLine64(valXpos << 6, (Y + 4) << 6, (480 - X) << 6, convBuffer);
+		YgFont_PrintLine64(valXpos << 6, Y_corrected << 6, (480 - X) << 6, convBuffer);
 	}
 
 	return YgFont_GetEhPckt();
@@ -177,11 +178,16 @@ void MenuWindow_CreateItemWindow(MenuWindow* window)
 	}
 
 	window->selwnd->window.width = 300;
-	if (window->selwnd->itemcount < window->selwnd->maxitems)
-		window->selwnd->window.height = (32 * window->selwnd->itemcount) - (4 * window->selwnd->itemcount);
-	else
-		window->selwnd->window.height = (32 * window->selwnd->maxitems) - (4 * window->selwnd->maxitems);
 
+	int size_maxcount = window->selwnd->itemcount;
+	if (window->selwnd->itemcount < window->selwnd->maxitems)
+		size_maxcount = window->selwnd->maxitems;
+
+	window->selwnd->window.bAutoSizeWindow = 1;
+	window->selwnd->window.maxWidth = 400;
+	window->selwnd->window.minWidth = 300;
+	window->selwnd->window.maxHeight = 138;
+	
 	int SelDrawWidth = window->selwnd->window.width;
 	window->selwnd->selDrawWidth1 = SelDrawWidth - MENUWINDOW_SELWIDTH_DIFF;
 	window->selwnd->selDrawHeight1 = MENUWINDOW_ITEM_SELCURSOR_HEIGHT;
