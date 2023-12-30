@@ -271,24 +271,61 @@ void MenuWindow_AddInt(MenuWindowItem* item, int addval)
 void MenuWindow_HandleExtraControls(MenuWindow* window, MenuWindowItem* item)
 {
 	uint32_t buttons = GetPadButtons(1);
+	uint32_t buttons_fast = GetPadButtons(0);
+
 	int* val = item->val;
 
 	if (val)
 	{
-		if (buttons & PSP_CTRL_LEFT)
+		int bCheckLeft = 0;
+		int bCheckRight = 0;
+
+		int inc = 1;
+		int dec = -1;
+
+		if (buttons_fast & PSP_CTRL_SQUARE)
 		{
-			window->bValueChanged = 1;
-			YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
-			if ((item->type == MENUWINDOW_ITEM_TYPE_INT) || (item->type == MENUWINDOW_ITEM_TYPE_BOOL))
-				MenuWindow_AddInt(item, -1);
+			bCheckLeft = buttons_fast & PSP_CTRL_LEFT;
+			bCheckRight = buttons_fast & PSP_CTRL_RIGHT;
+		}
+		else
+		{
+			bCheckLeft = buttons & PSP_CTRL_LEFT;
+			bCheckRight = buttons & PSP_CTRL_RIGHT;
 		}
 
-		if (buttons & PSP_CTRL_RIGHT)
+		if (buttons_fast & PSP_CTRL_LTRIGGER)
+		{
+			inc = 10;
+			dec = -10;
+		}
+
+		if (buttons_fast & PSP_CTRL_RTRIGGER)
+		{
+			inc = 100;
+			dec = -100;
+		}
+
+		if ((buttons_fast & PSP_CTRL_LTRIGGER) && (buttons_fast & PSP_CTRL_RTRIGGER))
+		{
+			inc = 1000;
+			dec = -1000;
+		}
+
+		if (bCheckLeft)
 		{
 			window->bValueChanged = 1;
 			YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
 			if ((item->type == MENUWINDOW_ITEM_TYPE_INT) || (item->type == MENUWINDOW_ITEM_TYPE_BOOL))
-				MenuWindow_AddInt(item, 1);
+				MenuWindow_AddInt(item, dec);
+		}
+
+		if (bCheckRight)
+		{
+			window->bValueChanged = 1;
+			YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
+			if ((item->type == MENUWINDOW_ITEM_TYPE_INT) || (item->type == MENUWINDOW_ITEM_TYPE_BOOL))
+				MenuWindow_AddInt(item, inc);
 		}
 	}
 }
