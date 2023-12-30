@@ -660,7 +660,7 @@ void HandleDialogs()
             bShowKonamiDialog = 0;
     }
 
-    if (bShowCheatMenuDuel && bCheatMenuEnabled)
+    if (bShowCheatMenuDuel)
     {
         if (cheatmenu_duel_Draw())
             bShowCheatMenuDuel = 0;
