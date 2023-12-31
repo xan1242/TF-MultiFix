@@ -119,6 +119,7 @@ int YgSys_SndPlaySE(int sound);
 uintptr_t YgSys_GetTrunkFromMRK(int mrk);
 int YgSys_GetLimitation(uint16_t cardID);
 int YgSys_GetLimitation_Default(uint16_t cardID);
+int YgSys_GetTrunk(uint16_t cardID);
 uint32_t ReturnZeroFunc();
 int loopAround(int value, int min, int max);
 void helpers_SetPPSSPP(int val);

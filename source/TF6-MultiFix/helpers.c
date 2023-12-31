@@ -160,6 +160,17 @@ int YgSys_GetLimitation_Default(uint16_t cardID)
     return 3;
 }
 
+int YgSys_GetTrunk(uint16_t cardID)
+{
+    int result = 0;
+    uintptr_t trunk = YgSys_GetTrunkFromMRK(cardID);
+    if (trunk)
+    {
+        result = *(uint8_t*)(trunk + 1) & 0x7F;
+    }
+    return result;
+}
+
 int YgSys_GetLang()
 {
 #ifdef YG_GETLANG_DEBUG

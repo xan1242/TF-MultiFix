@@ -57,6 +57,8 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 	MenuWindowItem* currItem = window->itemDrawList[item_index];
 	int Y_corrected = Y + 2;
 
+	int oldshadow = YgFont_GetShadowFlg();
+
 	YgFont_SetEhPckt(ehpacket);
 
 	YgFont_SetSize(MENUWINDOW_ITEM_FONTSIZE, MENUWINDOW_ITEM_FONTSIZE);
@@ -141,6 +143,8 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 		int valXpos = window->selwnd->window.width + window->selwnd->window.Xpos - (YgFont_GetStrWidth(convBuffer) >> 6) - MENUWINDOW_SELWIDTH_DIFF;
 		YgFont_PrintLine64(valXpos << 6, Y_corrected << 6, (480 - X) << 6, convBuffer);
 	}
+
+	YgFont_SetShadowFlg(oldshadow);
 
 	return YgFont_GetEhPckt();
 }

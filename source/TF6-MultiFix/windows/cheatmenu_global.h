@@ -22,7 +22,7 @@ typedef enum _cheatmenu_global_WindowItem
 #define CHEATMENU_GLOBAL_ITEM_NAME_UNLOCKALLCARDS  "Unlock all cards"
 
 #define CHEATMENU_GLOBAL_DESC_NAME_PARTNERCONTROL  "Control the AI partner / CPU on player's side."
-#define CHEATMENU_GLOBAL_DESC_NAME_DISABLEBANLIST  "Disables forbidden & limited list entirely."
+#define CHEATMENU_GLOBAL_DESC_NAME_DISABLEBANLIST  "Disables the forbidden & limited list entirely."
 #define CHEATMENU_GLOBAL_DESC_NAME_UNLOCKALLCARDS  "Unlocks access to all cards."
 
 

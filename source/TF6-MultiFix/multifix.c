@@ -790,6 +790,18 @@ int YgSys_GetLimitation_Default_Hook(uint16_t cardID)
     return YgSys_GetLimitation_Default(cardID);
 }
 
+int YgSys_GetTrunk_Hook(uint16_t cardID)
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->bCheatUnlockAllCards)
+    {
+        if (YgSys_GetTrunkFromMRK(cardID))
+            return 9;
+    }
+
+    return YgSys_GetTrunk(cardID);
+}
+
 //int InstallDialogHook(pspUtilityMsgDialogParams* params)
 //{
 //    YgSys_strcpy(params->message, "The installation feature has been disabled.\nTo re-enable, please reconfigure the plugin.");
@@ -907,6 +919,10 @@ void TFFixesInject()
     // banlist stuff
     minj_MakeJMPwNOP(0x29204, (uintptr_t)&YgSys_GetLimitation_Hook);
     minj_MakeJMPwNOP(0x880C, (uintptr_t)&YgSys_GetLimitation_Default_Hook);
+
+    // card unlock
+    minj_MakeJMPwNOP(0x2B700, (uintptr_t)&YgSys_GetTrunk_Hook);
+
 
 #ifdef YG_GETLANG_DEBUG
     minj_MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang);
