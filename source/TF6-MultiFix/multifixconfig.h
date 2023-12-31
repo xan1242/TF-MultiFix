@@ -16,6 +16,7 @@ typedef struct _MultiFixConfig
 	int bCheatConstantControlPartner;
 	int bCheatDisableBanlist;
 	int bCheatUnlockAllCards;
+	int bCheatUnlockAllBoxes;
 	int bCheatInfiniteDP;
 
 }MultiFixConfig;

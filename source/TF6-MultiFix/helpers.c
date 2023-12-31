@@ -54,6 +54,7 @@ int (*_YgSys_sprintf)(char* str, const char* format, ...) = (int (*)(char*, cons
 int (*_YgSys_SndPlaySE)(int sound) = (int (*)(int))(0);
 uintptr_t(*_YgSys_GetTrunkFromMRK)(int mrk) = (uintptr_t(*)(int))(0);
 uintptr_t(*_YgSys_GetPersonalInfoPtr)() = (uintptr_t(*)())(0);
+uintptr_t(*_YgSys_GetBoxPtr)(int box) = (uintptr_t(*)(int))(0);
 
 // WINDOW DRAW STUFF
 uintptr_t(*_EhPckt_Open)(int zorder, int unk2) = (uintptr_t(*)(int, int))(0);
@@ -207,6 +208,24 @@ void YgSys_UpdateDuelPoint(int amount)
 
         *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET2) = newval2;
     }
+}
+
+uintptr_t YgSys_GetBoxPtr(int box)
+{
+    return _YgSys_GetBoxPtr(box);
+}
+
+int YgSys_GetBoxStatus(int box)
+{
+    int result = 0;
+    uintptr_t boxptr = YgSys_GetBoxPtr(box);
+
+    if (boxptr)
+    {
+        result = (*(uint16_t*)boxptr & 0x700) >> 8;
+    }
+
+    return result;
 }
 
 int YgSys_GetLang()
@@ -1136,6 +1155,8 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_SndPlaySE = (int (*)(int))(0x2D258 + base_addr);
     _YgSys_GetTrunkFromMRK = (uintptr_t(*)(int))(0x2B678 + base_addr);
     _YgSys_GetPersonalInfoPtr = (uintptr_t(*)())(0x8748 + base_addr);
+    _YgSys_GetBoxPtr = (uintptr_t(*)(int))(0x29C0C + base_addr);
+
 
     // window draw stuff
     _EhPckt_Open = (uintptr_t(*)(int, int))(0x0003A954 + base_addr);
@@ -1145,6 +1166,7 @@ void helpers_Init(uintptr_t base_addr)
     _YgFont_SetSize = (void(*)(int, int))(0x12A0 + base_addr);
     _YgFont_SetChColorFlg = (void(*)(int))(0x20D4 + base_addr);
     _YgFont_SetDefaultColor = (void(*)(uint32_t))(0x12F4 + base_addr);
+    
 
     // needed for analog sticks
     dummyPadBuf[0x10] = 0x80;

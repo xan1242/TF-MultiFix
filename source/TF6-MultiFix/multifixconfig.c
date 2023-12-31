@@ -18,6 +18,7 @@ MultiFixConfig mfconfig =
     0,		  // bCheatConstantControlPartner
     0,		  // bCheatDisableBanlist
     0,		  // bCheatUnlockAllCards
+    0,		  // bCheatUnlockAllBoxes
     0,		  // bCheatInfiniteDP
 };
 

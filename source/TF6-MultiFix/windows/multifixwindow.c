@@ -31,6 +31,14 @@ MenuWindowItem mfWindowSettings[MFWINDOW_ITEM_COUNT] =
     {NULL, NULL, 0, 0, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_NONE, 0, 1, 0, 0, MFWINDOW_ITEM_ABOUT, MFWINDOW_ITEM_NAME_ABOUT, MFWINDOW_ITEM_DESC_ABOUT, NULL},
 };
 
+int mfwindow_bModeHasLocalCheats()
+{
+    EhGameState state = GetGameState();
+
+    // TODO: add more modes here
+    return (state == EHSTATE_DUEL);
+}
+
 int mfwindow_IsActive()
 {
     return mfWindow != NULL;
@@ -83,10 +91,7 @@ void mfwindow_Create()
         mfWindowSettings[MFWINDOW_ITEM_CHEATSLOCAL].hidden = 0;
 
         // check if we have locals
-        EhGameState state = GetGameState();
-
-        if ((state == EHSTATE_DUEL) ||
-            (state == EHSTATE_SHOP))
+        if (mfwindow_bModeHasLocalCheats())
         {
             mfWindowSettings[MFWINDOW_ITEM_CHEATSLOCAL].greyedout = 0;
             mfWindowSettings[MFWINDOW_ITEM_CHEATSLOCAL].selectable = 1;

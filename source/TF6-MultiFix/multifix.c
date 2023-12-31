@@ -823,32 +823,18 @@ void YgSys_UpdateDuelPoint_Hook(int amount)
     return YgSys_UpdateDuelPoint(amount);
 }
 
-//int InstallDialogHook(pspUtilityMsgDialogParams* params)
-//{
-//    YgSys_strcpy(params->message, "The installation feature has been disabled.\nTo re-enable, please reconfigure the plugin.");
-//    YgSys_strcpy((char*)((uintptr_t)params + 0x284), "Back");
-//    params->options = 0;
-//
-//    return sceUtilityMsgDialogInitStart(params);
-//}
-
-// void HandlePreInit()
-// {
-// 
-// }
-
-//void HandlePostInit()
-//{
-//#ifdef TFMULTIFIX_DEBUG_PRINT
-//    sceKernelPrintf("After YgSys_InitApplication(), heap addr: 0x%X", helpers_GetMainEhHeap());
-//#endif
-//}
-
-//void YgSys_InitApplication_Hook()
-//{
-//    YgSys_InitApplication();
-//    HandlePostInit();
-//}
+int YgSys_GetBoxStatus_Hook(int box)
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->bCheatUnlockAllBoxes)
+    {
+        uintptr_t boxptr = YgSys_GetBoxPtr(box);
+        if (boxptr)
+            return 3;
+        return 0;
+    }
+    return YgSys_GetBoxStatus(box);
+}
 
 void TFFixesInject()
 {
@@ -947,6 +933,9 @@ void TFFixesInject()
     // infinite DP
     minj_MakeJMPwNOP(0x25D20, (uintptr_t)&YgSys_GetDuelPoint_Hook);
     minj_MakeJMPwNOP(0x25D58, (uintptr_t)&YgSys_UpdateDuelPoint_Hook);
+
+    // unlock boxes
+    minj_MakeJMPwNOP(0x29D44, (uintptr_t)&YgSys_GetBoxStatus_Hook);
 
 #ifdef YG_GETLANG_DEBUG
     minj_MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang);

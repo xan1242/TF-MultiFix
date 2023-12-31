@@ -127,6 +127,8 @@ int YgSys_GetDuelPoint();
 void YgSys_SetDuelPoint(int val);
 void YgSys_UpdateDuelPoint(int amount);
 uintptr_t YgSys_GetPersonalInfoPtr();
+uintptr_t YgSys_GetBoxPtr(int box);
+int YgSys_GetBoxStatus(int box);
 uint32_t ReturnZeroFunc();
 int loopAround(int value, int min, int max);
 void helpers_SetPPSSPP(int val);
