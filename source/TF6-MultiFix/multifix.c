@@ -797,6 +797,7 @@ int YgSys_GetTrunk_Hook(uint16_t cardID)
     {
         if (YgSys_GetTrunkFromMRK(cardID))
             return 9;
+        return 0;
     }
 
     return YgSys_GetTrunk(cardID);
