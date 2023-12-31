@@ -28,7 +28,7 @@ typedef enum _cheatmenu_duel_WindowItem
 #define CHEATMENU_DUEL_ITEM_DESC_SETOPPONENTLP   "Sets opponent's Life Points to a given value. Note that the internal LP differs from the displayed LP. (Takes effect after confirm)"
 #define CHEATMENU_DUEL_ITEM_DESC_SETPLAYERLP     "Sets player's Life Points to a given value. Note that the internal LP differs from the displayed LP. (Takes effect after confirm)"
 #define CHEATMENU_DUEL_ITEM_DESC_DRAWCARD        "Draw a card from the deck."
-#define CHEATMENU_DUEL_ITEM_DESC_TAKEAICONTROL   "Takes immediate control of AI partner."
+#define CHEATMENU_DUEL_ITEM_DESC_TAKEAICONTROL   "Takes immediate control of AI partner (or take back control from AI given by the option below)."
 #define CHEATMENU_DUEL_ITEM_DESC_GIVEAICONTROL   "Gives control to AI immediately. To take effect, you may need to enter the Phase Menu and then exit out of it."
 
 

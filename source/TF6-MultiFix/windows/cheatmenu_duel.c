@@ -14,6 +14,7 @@
 #include "../multifixconfig.h"
 #include "../MenuWindow.h"
 #include "../dueleng.h"
+#include "../dueldraw.h"
 #include "cheatmenu_duel.h"
 #include "../../../includes/psp/pspmallochelper.h"
 
@@ -91,6 +92,41 @@ int cheatmenu_duel_Draw()
     int menuRes = MenuWindow_Draw(chtwndDuel);
     if (menuRes)
     {
+        int idxItem = MENUWINDOW_RESULT_ITEM(menuRes);
+
+        if (MENUWINDOW_RESULT_DECIDESTATUS(menuRes) == YGSEL_DECIDESTATUS_CONFIRM)
+        {
+            switch (idxItem)
+            {
+                case CHEATMENU_DUEL_ITEM_GIVEAICONTROL:
+                {
+                    dueleng_chtSetPlayerControl(0, 1);
+                    break;
+                }
+                case CHEATMENU_DUEL_ITEM_TAKEAICONTROL:
+                {
+                    dueleng_chtSetPlayerControl(0, 0);
+                    break;
+                }
+                case CHEATMENU_DUEL_ITEM_SETPLAYERLP:
+                {
+                    dueldraw_SetPlayerLP(*cheatmenu_duel_Settings[idxItem].val);
+                    dueleng_chtSetPlayerLP(*cheatmenu_duel_Settings[idxItem].val);
+                    break;
+                }
+                case CHEATMENU_DUEL_ITEM_SETOPPONENTLP:
+                {
+                    dueldraw_SetOpponentLP(*cheatmenu_duel_Settings[idxItem].val);
+                    dueleng_chtSetOpponentLP(*cheatmenu_duel_Settings[idxItem].val);
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }
+
         cheatmenu_duel_Destroy();
         return menuRes;
     }

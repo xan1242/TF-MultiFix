@@ -34,6 +34,7 @@
 #include "story.h"
 #include "title.h"
 #include "YgWindow.h"
+#include "MenuWindow.h"
 #include <pspctrl.h>
 #include "multifixconfig.h"
 #include "windows/multifixwindow.h"
@@ -620,34 +621,6 @@ void HandleDialogs()
 {
     helpers_SetDialogBoxWantsIO(0);
 
-    if (bShowMfWindow)
-    {
-        int retval = mfwindow_Draw();
-        if (retval)
-        {
-            bShowMfWindow = 0;
-
-            int decideStatus = retval & 0xFF;
-            int currItem = (retval >> 8) & 0xFF;
-            int bValueChanged = (retval >> 16) & 0xFF;
-
-            if (decideStatus == YGSEL_DECIDESTATUS_CONFIRM)
-            {
-                if (currItem == MFWINDOW_ITEM_ABOUT)
-                {
-                    bShowAboutWindow = 1;
-                }
-
-                if ((currItem == MFWINDOW_ITEM_CHEATSLOCAL) && bCheatMenuEnabled)
-                {
-                    if (GetGameState() == EHSTATE_DUEL)
-                        bShowCheatMenuDuel = 1;
-                }
-            }
-
-        }
-    }
-
     if (bShowAboutWindow)
     {
         if (aboutwindow_Draw())
@@ -660,10 +633,61 @@ void HandleDialogs()
             bShowKonamiDialog = 0;
     }
 
+    if (bShowMfWindow)
+    {
+        int retval = mfwindow_Draw();
+        if (retval)
+        {
+            bShowMfWindow = 0;
+
+            int itemIdx = MENUWINDOW_RESULT_ITEM(retval);
+
+            //int decideStatus = retval & 0xFF;
+            //int currItem = (retval >> 8) & 0xFF;
+            //int bValueChanged = (retval >> 16) & 0xFF;
+
+            if (MENUWINDOW_RESULT_DECIDESTATUS(retval) == YGSEL_DECIDESTATUS_CONFIRM)
+            {
+                switch (itemIdx)
+                {
+                    case MFWINDOW_ITEM_ABOUT:
+                    {
+                        bShowAboutWindow = 1;
+                        break;
+                    }
+                    case MFWINDOW_ITEM_CHEATSLOCAL:
+                    {
+                        if (bCheatMenuEnabled && ((GetGameState() == EHSTATE_DUEL)))
+                        {
+                            bShowCheatMenuDuel = 1;
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                }
+
+                //if (itemIdx == MFWINDOW_ITEM_ABOUT)
+                //{
+                //    bShowAboutWindow = 1;
+                //}
+                //
+                //if ((itemIdx == MFWINDOW_ITEM_CHEATSLOCAL) && bCheatMenuEnabled)
+                //{
+                //    if (GetGameState() == EHSTATE_DUEL)
+                //        bShowCheatMenuDuel = 1;
+                //}
+            }
+
+        }
+    }
+
     if (bShowCheatMenuDuel)
     {
         if (cheatmenu_duel_Draw())
+        {
             bShowCheatMenuDuel = 0;
+        }
     }
 }
 

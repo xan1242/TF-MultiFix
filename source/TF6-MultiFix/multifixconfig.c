@@ -11,14 +11,11 @@
 MultiFixConfig mfconfig = 
 {
     1,		  // bSwapConfirmButtons
-    0,        // bInstaWinCheat
-    0,		  // CheatOpponentLP
-    8000,	  // CheatPlayerLP
     0,		  // bMatrixFont
     1,		  // bSeePartnerCards
-    0,		  // CheatControlPartner
     1,		  // bDisableInstall
     1,        // bDisableDuelHelpIcon
+    0,		  // bCheatConstantControlPartner
 };
 
 // accessors
@@ -42,39 +39,6 @@ int mfconfig_GetSwapConfirmButtons()
 int mfconfig_SetSwapConfirmButtons(int val)
 {
     mfconfig.bSwapConfirmButtons = (val == 1);
-    return val;
-}
-
-int mfconfig_GetInstaWinCheat()
-{
-    return mfconfig.bInstaWinCheat;
-}
-
-int mfconfig_SetInstaWinCheat(int val)
-{
-    mfconfig.bInstaWinCheat = (val == 1);
-    return val;
-}
-
-int mfconfig_GetCheatOpponentLP()
-{
-    return mfconfig.CheatOpponentLP;
-}
-
-int mfconfig_SetCheatOpponentLP(int val)
-{
-    mfconfig.CheatOpponentLP = val;
-    return val;
-}
-
-int mfconfig_GetCheatPlayerLP()
-{
-    return mfconfig.CheatPlayerLP;
-}
-
-int mfconfig_SetCheatPlayerLP(int val)
-{
-    mfconfig.CheatPlayerLP = val;
     return val;
 }
 
@@ -102,13 +66,13 @@ int mfconfig_SetSeePartnerCards(int val)
 
 int mfconfig_GetCheatControlPartner()
 {
-    return mfconfig.CheatControlPartner;
+    return mfconfig.bCheatConstantControlPartner;
 }
 
 int mfconfig_SetCheatControlPartner(int val)
 {
-    mfconfig.CheatControlPartner = val;
-    return mfconfig.CheatControlPartner;
+    mfconfig.bCheatConstantControlPartner = val;
+    return mfconfig.bCheatConstantControlPartner;
 }
 
 int mfconfig_GetDisableInstall()
@@ -138,8 +102,7 @@ void mfconfig_Init()
     // TODO: add config reading here
 
     // TEST
-    mfconfig_SetInstaWinCheat(1);
-    mfconfig_SetCheatControlPartner(1);
+    //mfconfig_SetCheatControlPartner(1);
 
     //mfconfig_SetSwapConfirmButtons(0);
 }

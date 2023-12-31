@@ -18,6 +18,10 @@
 #define MENUWINDOW_LABEL_BOOL_FALSE "<Off>"
 #define MENUWINDOW_SELWIDTH_DIFF 12
 
+#define MENUWINDOW_RESULT_DECIDESTATUS(x) ((x) & 0xFF)
+#define MENUWINDOW_RESULT_ITEM(x) ((x >> 8) & 0xFF)
+#define MENUWINDOW_RESULT_VALCHANGE(x) ((x >> 16) & 0xFF)
+
 typedef struct _MenuWindowItem
 {
     int* val;

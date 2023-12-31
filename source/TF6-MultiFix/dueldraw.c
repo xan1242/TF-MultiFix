@@ -20,6 +20,15 @@ int dueldraw_sub_262C0_Hook()
     return dueldraw_sub_262C0();
 }
 
+void dueldraw_SetPlayerLP(uint16_t val)
+{
+    *(uint16_t*)(PLAYER_LP_VAL_ADDR + _base_addr_dueldraw) = val;
+}
+
+void dueldraw_SetOpponentLP(uint16_t val)
+{
+    *(uint16_t*)(OPPONENT_LP_VAL_ADDR + _base_addr_dueldraw) = val;
+}
 
 void dueldraw_Patch(uintptr_t base_addr, uintptr_t base_size)
 {
