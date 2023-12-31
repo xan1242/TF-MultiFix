@@ -12,6 +12,8 @@ typedef enum _cheatmenu_global_WindowItem
     CHEATMENU_GLOBAL_ITEM_PARTNERCONTROL,
     CHEATMENU_GLOBAL_ITEM_DISABLEBANLIST,
     CHEATMENU_GLOBAL_ITEM_UNLOCKALLCARDS,
+    CHEATMENU_GLOBAL_ITEM_INFINITEDP,
+    CHEATMENU_GLOBAL_ITEM_SETDP,
     CHEATMENU_GLOBAL_ITEM_COUNT
 }cheatmenu_global_WindowItem;
 
@@ -20,10 +22,14 @@ typedef enum _cheatmenu_global_WindowItem
 #define CHEATMENU_GLOBAL_ITEM_NAME_PARTNERCONTROL  "Control partner"
 #define CHEATMENU_GLOBAL_ITEM_NAME_DISABLEBANLIST  "Disable banlist"
 #define CHEATMENU_GLOBAL_ITEM_NAME_UNLOCKALLCARDS  "Unlock all cards"
+#define CHEATMENU_GLOBAL_ITEM_NAME_INFINITEDP      "Infinite DP"
+#define CHEATMENU_GLOBAL_ITEM_NAME_SETDP           "Set DP"
 
 #define CHEATMENU_GLOBAL_DESC_NAME_PARTNERCONTROL  "Control the AI partner / CPU on player's side."
 #define CHEATMENU_GLOBAL_DESC_NAME_DISABLEBANLIST  "Disables the forbidden & limited list entirely."
 #define CHEATMENU_GLOBAL_DESC_NAME_UNLOCKALLCARDS  "Unlocks access to all cards."
+#define CHEATMENU_GLOBAL_DESC_NAME_INFINITEDP      "Locks Duel Points to maximum. This also prevents the DP in your save file from being affected."
+#define CHEATMENU_GLOBAL_DESC_NAME_SETDP           "Sets Duel Points in your save file to a given value."
 
 
 int cheatmenu_global_Draw();

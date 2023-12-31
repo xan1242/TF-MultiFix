@@ -802,6 +802,26 @@ int YgSys_GetTrunk_Hook(uint16_t cardID)
     return YgSys_GetTrunk(cardID);
 }
 
+int YgSys_GetDuelPoint_Hook()
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->bCheatInfiniteDP)
+    {
+        return INT32_MAX;
+    }
+    return YgSys_GetDuelPoint();
+}
+
+void YgSys_UpdateDuelPoint_Hook(int amount)
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->bCheatInfiniteDP)
+    {
+        return;
+    }
+    return YgSys_UpdateDuelPoint(amount);
+}
+
 //int InstallDialogHook(pspUtilityMsgDialogParams* params)
 //{
 //    YgSys_strcpy(params->message, "The installation feature has been disabled.\nTo re-enable, please reconfigure the plugin.");
@@ -923,6 +943,9 @@ void TFFixesInject()
     // card unlock
     minj_MakeJMPwNOP(0x2B700, (uintptr_t)&YgSys_GetTrunk_Hook);
 
+    // infinite DP
+    minj_MakeJMPwNOP(0x25D20, (uintptr_t)&YgSys_GetDuelPoint_Hook);
+    minj_MakeJMPwNOP(0x25D58, (uintptr_t)&YgSys_UpdateDuelPoint_Hook);
 
 #ifdef YG_GETLANG_DEBUG
     minj_MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang);

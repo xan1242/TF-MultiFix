@@ -28,6 +28,9 @@
 
 #define MAIN_EHHEAP_ADDR 0x314BD4
 #define EHPAD_ADDR 0x59D4BC
+#define DUELPOINT_OFFSET 0x24F4C
+#define DUELPOINT_OFFSET2 0x24F50
+#define DUELPOINT_MAX 999999999
 
 #define SOUND_ID_MENU_CURSOR 0xDA75
 #define SOUND_ID_MENU_DECIDE 0xDA76
@@ -120,6 +123,10 @@ uintptr_t YgSys_GetTrunkFromMRK(int mrk);
 int YgSys_GetLimitation(uint16_t cardID);
 int YgSys_GetLimitation_Default(uint16_t cardID);
 int YgSys_GetTrunk(uint16_t cardID);
+int YgSys_GetDuelPoint();
+void YgSys_SetDuelPoint(int val);
+void YgSys_UpdateDuelPoint(int amount);
+uintptr_t YgSys_GetPersonalInfoPtr();
 uint32_t ReturnZeroFunc();
 int loopAround(int value, int min, int max);
 void helpers_SetPPSSPP(int val);

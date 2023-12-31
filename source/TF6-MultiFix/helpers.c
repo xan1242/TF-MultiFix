@@ -53,6 +53,7 @@ int (*_sceCccUTF8toUTF16)(wchar_t* dest, size_t size, char* src) = (int (*)(wcha
 int (*_YgSys_sprintf)(char* str, const char* format, ...) = (int (*)(char*, const char*, ...))(0);
 int (*_YgSys_SndPlaySE)(int sound) = (int (*)(int))(0);
 uintptr_t(*_YgSys_GetTrunkFromMRK)(int mrk) = (uintptr_t(*)(int))(0);
+uintptr_t(*_YgSys_GetPersonalInfoPtr)() = (uintptr_t(*)())(0);
 
 // WINDOW DRAW STUFF
 uintptr_t(*_EhPckt_Open)(int zorder, int unk2) = (uintptr_t(*)(int, int))(0);
@@ -133,6 +134,11 @@ int YgSys_SndPlaySE(int sound)
     return _YgSys_SndPlaySE(sound);
 }
 
+uintptr_t YgSys_GetPersonalInfoPtr()
+{
+    return _YgSys_GetPersonalInfoPtr();
+}
+
 uintptr_t YgSys_GetTrunkFromMRK(int mrk)
 {
     return _YgSys_GetTrunkFromMRK(mrk);
@@ -169,6 +175,38 @@ int YgSys_GetTrunk(uint16_t cardID)
         result = *(uint8_t*)(trunk + 1) & 0x7F;
     }
     return result;
+}
+
+int YgSys_GetDuelPoint()
+{
+    return *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET);
+}
+
+void YgSys_SetDuelPoint(int val)
+{
+    *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET) = val;
+}
+
+void YgSys_UpdateDuelPoint(int amount)
+{
+    int newval = *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET) + amount;
+    if (newval > DUELPOINT_MAX)
+        newval = DUELPOINT_MAX;
+    if (newval < 0)
+        newval = 0;
+
+    *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET) = newval;
+
+    if (amount > 0)
+    {
+        int newval2 = *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET2) + amount;
+        if (newval2 > DUELPOINT_MAX)
+            newval2 = DUELPOINT_MAX;
+        if (newval2 < 0)
+            newval2 = 0;
+
+        *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET2) = newval2;
+    }
 }
 
 int YgSys_GetLang()
@@ -1097,6 +1135,7 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_sprintf = (int (*)(char*, const char*, ...))(0x48FB4 + base_addr);
     _YgSys_SndPlaySE = (int (*)(int))(0x2D258 + base_addr);
     _YgSys_GetTrunkFromMRK = (uintptr_t(*)(int))(0x2B678 + base_addr);
+    _YgSys_GetPersonalInfoPtr = (uintptr_t(*)())(0x8748 + base_addr);
 
     // window draw stuff
     _EhPckt_Open = (uintptr_t(*)(int, int))(0x0003A954 + base_addr);
