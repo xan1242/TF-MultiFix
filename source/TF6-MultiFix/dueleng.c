@@ -10,8 +10,11 @@
 uintptr_t _base_addr_dueleng = 0;
 uintptr_t _base_size_dueleng = 0;
 
+#define DUELENG_BASE_ENG_ADDR 0x38A980
+
 void (*dueleng_sub_5228)() = (void (*)())(0);
 int (*dueleng_uUpdatePlayerState)() = (int (*)())(0);
+void (*dueleng_uDrawCard)() = (void (*)())(0);
 
 void dueleng_chtSetOpponentLP(int16_t val)
 {
@@ -102,6 +105,37 @@ void dueleng_sub_A28C_Hook(int PlayerNum, int WhoIsInControl)
         *(uint32_t*)(4 * PlayerNum + (0x38E3DC + _base_addr_dueleng) + 8) = WhoIsInControl;
 }
 
+void dueleng_chtSetPhase(duelPhase phase)
+{
+    *(uint16_t*)(DUELENG_BASE_ENG_ADDR + _base_addr_dueleng) = (phase & 0xFFFF);
+    *(uint16_t*)(DUELENG_BASE_ENG_ADDR + 8 + _base_addr_dueleng) = (phase & 0xFFFF);
+    *(uint32_t*)(DUELENG_BASE_ENG_ADDR + 0x808 + _base_addr_dueleng) = 1;
+}
+
+void dueleng_chtDrawCard()
+{
+    // set command
+    *(int16_t*)(DUELENG_BASE_ENG_ADDR + _base_addr_dueleng) = 0x56;
+    *(int16_t*)(DUELENG_BASE_ENG_ADDR + 8 + _base_addr_dueleng) = 0x56;
+    dueleng_uDrawCard();
+
+    *(int16_t*)(DUELENG_BASE_ENG_ADDR + _base_addr_dueleng) = 0x56;
+    *(int16_t*)(DUELENG_BASE_ENG_ADDR + 8 + _base_addr_dueleng) = 0x56;
+    dueleng_uDrawCard();
+}
+
+void dueleng_chtOppDrawCard()
+{
+    // set command
+    *(int16_t*)(DUELENG_BASE_ENG_ADDR + _base_addr_dueleng) = -0x56;
+    *(int16_t*)(DUELENG_BASE_ENG_ADDR + 8 + _base_addr_dueleng) = -0x56;
+    dueleng_uDrawCard();
+
+    *(int16_t*)(DUELENG_BASE_ENG_ADDR + _base_addr_dueleng) = -0x56;
+    *(int16_t*)(DUELENG_BASE_ENG_ADDR + 8 + _base_addr_dueleng) = -0x56;
+    dueleng_uDrawCard();
+}
+
 void dueleng_Patch(uintptr_t base_addr, uintptr_t base_size)
 {
     _base_addr_dueleng = base_addr;
@@ -122,6 +156,7 @@ void dueleng_Patch(uintptr_t base_addr, uintptr_t base_size)
     //dueleng_sub_A28C = (void (*)(uintptr_t, int))(0xA28C + base_addr);
     dueleng_sub_5228 = (void (*)())(0x5228 + base_addr);
     dueleng_uUpdatePlayerState = (int (*)())(0x1EE320 + base_addr);
+    dueleng_uDrawCard = (void (*)())(0x311BA0 + base_addr);
 
     //if (mfconfig_GetCheatControlPartner() == 2)
     //{

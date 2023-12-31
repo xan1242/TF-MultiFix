@@ -38,6 +38,7 @@ typedef struct _MenuWindowItem
     int index;
     char* name;
     char* description;
+    const char** options;
 }MenuWindowItem;
 
 typedef enum _MenuWindowItemType

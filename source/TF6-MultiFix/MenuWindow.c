@@ -84,6 +84,14 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 
 	switch (currItem->type)
 	{
+		case MENUWINDOW_ITEM_TYPE_INTSTRING:
+		{
+			char sprintfbuf[32];
+			YgSys_sprintf(sprintfbuf, "<%s>", currItem->options[*(currItem->val)]);
+			txtlen = YgSys_strlen((char*)currItem->options[*(currItem->val)]) + 1 + 2;
+			sceCccUTF8toUTF16(convBuffer, txtlen * sizeof(wchar_t), sprintfbuf);
+			break;
+		}
 		case MENUWINDOW_ITEM_TYPE_BOOL:
 		{
 			if (*(currItem->val))
@@ -322,7 +330,7 @@ void MenuWindow_HandleExtraControls(MenuWindow* window, MenuWindowItem* item)
 		{
 			window->bValueChanged = 1;
 			YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
-			if ((item->type == MENUWINDOW_ITEM_TYPE_INT) || (item->type == MENUWINDOW_ITEM_TYPE_BOOL))
+			if ((item->type == MENUWINDOW_ITEM_TYPE_INT) || (item->type == MENUWINDOW_ITEM_TYPE_BOOL) || (item->type == MENUWINDOW_ITEM_TYPE_INTSTRING))
 				MenuWindow_AddInt(item, dec);
 		}
 
@@ -330,7 +338,7 @@ void MenuWindow_HandleExtraControls(MenuWindow* window, MenuWindowItem* item)
 		{
 			window->bValueChanged = 1;
 			YgSys_SndPlaySE(SOUND_ID_MENU_CURSOR);
-			if ((item->type == MENUWINDOW_ITEM_TYPE_INT) || (item->type == MENUWINDOW_ITEM_TYPE_BOOL))
+			if ((item->type == MENUWINDOW_ITEM_TYPE_INT) || (item->type == MENUWINDOW_ITEM_TYPE_BOOL) || (item->type == MENUWINDOW_ITEM_TYPE_INTSTRING))
 				MenuWindow_AddInt(item, inc);
 		}
 	}

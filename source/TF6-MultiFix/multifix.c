@@ -770,6 +770,26 @@ void YgFont_SetShadowFlg_Hook2(int val)
     return YgFont_SetShadowFlg(val & 1);
 }
 
+int YgSys_GetLimitation_Hook(uint16_t cardID)
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->bCheatDisableBanlist)
+    {
+        return 3;
+    }
+    return YgSys_GetLimitation(cardID);
+}
+
+int YgSys_GetLimitation_Default_Hook(uint16_t cardID)
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->bCheatDisableBanlist)
+    {
+        return 3;
+    }
+    return YgSys_GetLimitation_Default(cardID);
+}
+
 //int InstallDialogHook(pspUtilityMsgDialogParams* params)
 //{
 //    YgSys_strcpy(params->message, "The installation feature has been disabled.\nTo re-enable, please reconfigure the plugin.");
@@ -883,6 +903,10 @@ void TFFixesInject()
     minj_MakeJMPwNOP(0x2218, (uintptr_t)&YgFont_SetMatrixFontFlg_Hook);
     minj_MakeNOP(0xE698);
     minj_MakeNOP(0x18520);
+
+    // banlist stuff
+    minj_MakeJMPwNOP(0x29204, (uintptr_t)&YgSys_GetLimitation_Hook);
+    minj_MakeJMPwNOP(0x880C, (uintptr_t)&YgSys_GetLimitation_Default_Hook);
 
 #ifdef YG_GETLANG_DEBUG
     minj_MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang);

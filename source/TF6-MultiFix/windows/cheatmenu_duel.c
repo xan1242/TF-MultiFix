@@ -21,13 +21,46 @@ int cheatmenu_duel_SetPlayerLP = 8000;
 int cheatmenu_duel_last_item = 0;
 int cheatmenu_duel_last_page = 0;
 
+int cheatmenu_duel_SetPhase = 0;
+int cheatmenu_duel_DrawCardAmount = 1;
+int cheatmenu_duel_OppDrawCardAmount = 1;
+
+const char* cheatmenu_duel_Phases[] =
+{
+    "DP",
+    "SP",
+    "MP1",
+    "BP",
+    "MP2",
+    "EP",
+    //"Opp. DP",
+    //"Opp. SP",
+    //"Opp. MP1",
+    //"Opp. BP",
+    //"Opp. MP2",
+    //"Opp. EP",
+};
+
+#define CHEATMENU_DUEL_PHASES_COUNT sizeof(cheatmenu_duel_Phases) / sizeof(const char**)
+
+duelPhase cheatmenu_duel_MapIdxToPhase(int idx)
+{
+    if (idx < 6)
+    {
+        return (duelPhase)(idx + 0xA);
+    }
+    //return (duelPhase)(idx + 0x800A);
+}
+
 MenuWindowItem cheatmenu_duel_Settings[CHEATMENU_DUEL_ITEM_COUNT] =
 {
-	{&cheatmenu_duel_SetOppLP,      NULL, 0, UINT16_MAX, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_INT, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_SETOPPONENTLP, CHEATMENU_DUEL_ITEM_NAME_SETOPPONENTLP, CHEATMENU_DUEL_ITEM_DESC_SETOPPONENTLP},
-	{&cheatmenu_duel_SetPlayerLP,   NULL, 0, UINT16_MAX, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_INT, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_SETPLAYERLP, CHEATMENU_DUEL_ITEM_NAME_SETPLAYERLP, CHEATMENU_DUEL_ITEM_DESC_SETPLAYERLP},
-	{NULL,                          NULL, 0, 0,          0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_NONE, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_DRAWCARD, CHEATMENU_DUEL_ITEM_NAME_DRAWCARD, CHEATMENU_DUEL_ITEM_DESC_DRAWCARD},
-	{NULL,                          NULL, 0, 0,          0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_NONE, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_TAKEAICONTROL, CHEATMENU_DUEL_ITEM_NAME_TAKEAICONTROL, CHEATMENU_DUEL_ITEM_DESC_TAKEAICONTROL},
-	{NULL,                          NULL, 0, 0,          0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_NONE, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_GIVEAICONTROL, CHEATMENU_DUEL_ITEM_NAME_GIVEAICONTROL, CHEATMENU_DUEL_ITEM_DESC_GIVEAICONTROL},
+	{&cheatmenu_duel_SetOppLP,      NULL, 0, UINT16_MAX, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_INT, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_SETOPPONENTLP, CHEATMENU_DUEL_ITEM_NAME_SETOPPONENTLP, CHEATMENU_DUEL_ITEM_DESC_SETOPPONENTLP, NULL},
+	{&cheatmenu_duel_SetPlayerLP,   NULL, 0, UINT16_MAX, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_INT, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_SETPLAYERLP, CHEATMENU_DUEL_ITEM_NAME_SETPLAYERLP, CHEATMENU_DUEL_ITEM_DESC_SETPLAYERLP, NULL},
+	{&cheatmenu_duel_DrawCardAmount, NULL, 1, INT32_MAX, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_INT, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_DRAWCARD, CHEATMENU_DUEL_ITEM_NAME_DRAWCARD, CHEATMENU_DUEL_ITEM_DESC_DRAWCARD, NULL},
+	{&cheatmenu_duel_OppDrawCardAmount, NULL, 1, INT32_MAX, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_INT, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_OPPDRAWCARD, CHEATMENU_DUEL_ITEM_NAME_OPPDRAWCARD, CHEATMENU_DUEL_ITEM_DESC_OPPDRAWCARD, NULL},
+	{&cheatmenu_duel_SetPhase,      NULL, 0, CHEATMENU_DUEL_PHASES_COUNT - 1, 0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_INTSTRING, 0, 1, 0, 1, CHEATMENU_DUEL_ITEM_SETPHASE, CHEATMENU_DUEL_ITEM_NAME_SETPHASE, CHEATMENU_DUEL_ITEM_DESC_SETPHASE, cheatmenu_duel_Phases},
+	{NULL,                          NULL, 0, 0,          0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_NONE, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_TAKEAICONTROL, CHEATMENU_DUEL_ITEM_NAME_TAKEAICONTROL, CHEATMENU_DUEL_ITEM_DESC_TAKEAICONTROL, NULL},
+	{NULL,                          NULL, 0, 0,          0.0f, 0.0f, MENUWINDOW_ITEM_TYPE_NONE, 0, 1, 0, 0, CHEATMENU_DUEL_ITEM_GIVEAICONTROL, CHEATMENU_DUEL_ITEM_NAME_GIVEAICONTROL, CHEATMENU_DUEL_ITEM_DESC_GIVEAICONTROL, NULL},
 };
 
 int cheatmenu_duel_IsActive()
@@ -101,6 +134,27 @@ int cheatmenu_duel_Draw()
         {
             switch (idxItem)
             {
+                case CHEATMENU_DUEL_ITEM_OPPDRAWCARD:
+                {
+                    for (int i = 0; i < cheatmenu_duel_OppDrawCardAmount; i++)
+                    {
+                        dueleng_chtOppDrawCard();
+                    }
+                    break;
+                }
+                case CHEATMENU_DUEL_ITEM_DRAWCARD:
+                {
+                    for (int i = 0; i < cheatmenu_duel_DrawCardAmount; i++)
+                    {
+                        dueleng_chtDrawCard();
+                    }
+                    break;
+                }
+                case CHEATMENU_DUEL_ITEM_SETPHASE:
+                {
+                    dueleng_chtSetPhase(cheatmenu_duel_MapIdxToPhase(cheatmenu_duel_SetPhase));
+                    break;
+                }
                 case CHEATMENU_DUEL_ITEM_GIVEAICONTROL:
                 {
                     dueleng_chtSetPlayerControl(0, 1);

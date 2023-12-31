@@ -52,6 +52,7 @@ void (*_FirstLoopFunc)(int) = (void (*)(int))(0);
 int (*_sceCccUTF8toUTF16)(wchar_t* dest, size_t size, char* src) = (int (*)(wchar_t*, size_t, char*))(0);
 int (*_YgSys_sprintf)(char* str, const char* format, ...) = (int (*)(char*, const char*, ...))(0);
 int (*_YgSys_SndPlaySE)(int sound) = (int (*)(int))(0);
+uintptr_t(*_YgSys_GetTrunkFromMRK)(int mrk) = (uintptr_t(*)(int))(0);
 
 // WINDOW DRAW STUFF
 uintptr_t(*_EhPckt_Open)(int zorder, int unk2) = (uintptr_t(*)(int, int))(0);
@@ -117,8 +118,6 @@ void YgSys_InitApplication()
     return _YgSys_InitApplication();
 }
 
-
-
 void YgAdh_Update()
 {
     return _YgAdh_Update();
@@ -132,6 +131,33 @@ void FirstLoopFunc(int unk)
 int YgSys_SndPlaySE(int sound)
 {
     return _YgSys_SndPlaySE(sound);
+}
+
+uintptr_t YgSys_GetTrunkFromMRK(int mrk)
+{
+    return _YgSys_GetTrunkFromMRK(mrk);
+}
+
+int YgSys_GetLimitation(uint16_t cardID)
+{
+    int result = 3;
+    uintptr_t trunk = YgSys_GetTrunkFromMRK(cardID);
+    if (trunk)
+    {
+        result = *(uint8_t*)(trunk + 2) & 3;
+    }
+    return result;
+}
+
+int YgSys_GetLimitation_Default(uint16_t cardID)
+{
+    for (int i = 0; i < DEFAULT_LIMITLIST_COUNT; i++)
+    {
+        uint16_t id = *(uint16_t*)(DEFAULT_LIMITLIST_ADDR + helper_base + (i * (sizeof(uint16_t) * 2)));
+        if (id == cardID)
+            return *(uint16_t*)(DEFAULT_LIMITLIST_ADDR + helper_base + (i * (sizeof(uint16_t) * 2)) + sizeof(uint16_t));
+    }
+    return 3;
 }
 
 int YgSys_GetLang()
@@ -1059,6 +1085,7 @@ void helpers_Init(uintptr_t base_addr)
     _sceCccUTF8toUTF16 = (int (*)(wchar_t*, size_t, char*))(0x640DC + base_addr);
     _YgSys_sprintf = (int (*)(char*, const char*, ...))(0x48FB4 + base_addr);
     _YgSys_SndPlaySE = (int (*)(int))(0x2D258 + base_addr);
+    _YgSys_GetTrunkFromMRK = (uintptr_t(*)(int))(0x2B678 + base_addr);
 
     // window draw stuff
     _EhPckt_Open = (uintptr_t(*)(int, int))(0x0003A954 + base_addr);

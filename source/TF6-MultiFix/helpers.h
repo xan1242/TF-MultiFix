@@ -39,6 +39,8 @@
 #define KONAMI_CODE_LENGTH 10
 #define KONAMI_CODE {PSP_CTRL_UP, PSP_CTRL_UP, PSP_CTRL_DOWN, PSP_CTRL_DOWN, PSP_CTRL_LEFT, PSP_CTRL_RIGHT, PSP_CTRL_LEFT, PSP_CTRL_RIGHT, PSP_CTRL_CIRCLE, PSP_CTRL_CROSS}
 
+#define DEFAULT_LIMITLIST_ADDR 0x6C770
+#define DEFAULT_LIMITLIST_COUNT 280
 
 typedef enum _EhGameState
 {
@@ -114,6 +116,9 @@ int PatchButtonStrings_Text_SJIS(uintptr_t ptrFolder, const char* filename);
 //void tf_ReplaceFirstChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
 //void tf_ReplaceLastChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
 int YgSys_SndPlaySE(int sound);
+uintptr_t YgSys_GetTrunkFromMRK(int mrk);
+int YgSys_GetLimitation(uint16_t cardID);
+int YgSys_GetLimitation_Default(uint16_t cardID);
 uint32_t ReturnZeroFunc();
 int loopAround(int value, int min, int max);
 void helpers_SetPPSSPP(int val);
