@@ -31,6 +31,7 @@ OBJS = main.o \
        windows/aboutwindow.o \
        windows/konamidialog.o \
        windows/cheatmenu_duel.o \
+       windows/cheatmenu_global.o \
        exports.o \
        ../../includes/psp/pspmallochelper.o \
        ../../includes/psp/stringhash.o \

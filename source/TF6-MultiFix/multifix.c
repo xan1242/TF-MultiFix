@@ -40,6 +40,7 @@
 #include "windows/multifixwindow.h"
 #include "windows/aboutwindow.h"
 #include "windows/konamidialog.h"
+#include "windows/cheatmenu_global.h"
 #include "windows/cheatmenu_duel.h"
 
 #include <psputility.h>
@@ -52,6 +53,7 @@ int bCheatMenuEnabled = 0;
 int bShowMfWindow = 0;
 int bShowAboutWindow = 0;
 int bShowKonamiDialog = 0;
+int bShowCheatMenuGlobal = 0;
 int bShowCheatMenuDuel = 0;
 
 int bIsOnPPSSPP = 0;
@@ -70,6 +72,7 @@ void DestroyAllWindows()
     bShowMfWindow = 0;
     bShowAboutWindow = 0;
     bShowKonamiDialog = 0;
+    bShowCheatMenuGlobal = 0;
     bShowCheatMenuDuel = 0;
 
     if (aboutwindow_IsActive())
@@ -78,13 +81,15 @@ void DestroyAllWindows()
         konamidialog_Destroy();
     if (mfwindow_IsActive())
         mfwindow_Destroy();
+    if (cheatmenu_global_IsActive())
+        cheatmenu_global_Destroy();
     if (cheatmenu_duel_IsActive())
         cheatmenu_duel_Destroy();
 }
 
 int bIsAnyWindowShown()
 {
-    return bShowMfWindow || bShowAboutWindow || bShowKonamiDialog || bShowCheatMenuDuel;
+    return bShowMfWindow || bShowAboutWindow || bShowKonamiDialog || bShowCheatMenuDuel || bShowCheatMenuGlobal;
 }
 
 int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
@@ -568,6 +573,12 @@ void HandleButtonInputs()
 
         if (bCheatMenuEnabled)
         {
+            if (buttons & PSP_CTRL_CIRCLE)
+            {
+                if (!bIsAnyWindowShown())
+                    bShowCheatMenuGlobal = 1;
+            }
+
             // duel cheats
             if (GetGameState() == EHSTATE_DUEL)
             {
@@ -655,6 +666,14 @@ void HandleDialogs()
                         bShowAboutWindow = 1;
                         break;
                     }
+                    case MFWINDOW_ITEM_CHEATSGLOBAL:
+                    {
+                        if (bCheatMenuEnabled)
+                        {
+                            bShowCheatMenuGlobal = 1;
+                        }
+                        break;
+                    }
                     case MFWINDOW_ITEM_CHEATSLOCAL:
                     {
                         if (bCheatMenuEnabled && ((GetGameState() == EHSTATE_DUEL)))
@@ -679,6 +698,14 @@ void HandleDialogs()
                 //}
             }
 
+        }
+    }
+
+    if (bShowCheatMenuGlobal)
+    {
+        if (cheatmenu_global_Draw())
+        {
+            bShowCheatMenuGlobal = 0;
         }
     }
 

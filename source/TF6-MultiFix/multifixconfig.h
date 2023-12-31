@@ -14,6 +14,8 @@ typedef struct _MultiFixConfig
 	int bDisableInstall;
 	int bDisableDuelHelpIcon;
 	int bCheatConstantControlPartner;
+	int bCheatDisableBanlist;
+	int bCheatUnlockAllCards;
 
 }MultiFixConfig;
 

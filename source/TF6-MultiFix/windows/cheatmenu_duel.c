@@ -3,11 +3,6 @@
 // by xan1242 / Tenjoin
 //
 
-//
-// TODO: this is mostly a clone of multifixwindow!!! find a way to abstract it!
-// The only things that are specific are the settings and the callback!
-//
-
 #include <stdio.h>
 #include "../helpers.h"
 #include "../multifix.h"
@@ -23,6 +18,8 @@ MenuWindow* chtwndDuel;
 int cheatmenu_duel_SetOppLP = 0;
 int cheatmenu_duel_SetPlayerLP = 8000;
 
+int cheatmenu_duel_last_item = 0;
+int cheatmenu_duel_last_page = 0;
 
 MenuWindowItem cheatmenu_duel_Settings[CHEATMENU_DUEL_ITEM_COUNT] =
 {
@@ -75,14 +72,17 @@ void cheatmenu_duel_Create()
 
     
     MenuWindow_Create(chtwndDuel);
+
+    chtwndDuel->selwnd->currentItemPage = cheatmenu_duel_last_page;
+    chtwndDuel->selwnd->currentItem = cheatmenu_duel_last_item;
 }
 
 int cheatmenu_duel_Draw()
 {
     if (!chtwndDuel)
     {
-        cheatmenu_duel_SetOppLP = 0;
-        cheatmenu_duel_SetPlayerLP = 8000;
+        //cheatmenu_duel_SetOppLP = 0;
+        //cheatmenu_duel_SetPlayerLP = 8000;
 
         YgSys_SndPlaySE(SOUND_ID_MENU_WINDOWPOPUP_1);
         cheatmenu_duel_Create();
@@ -92,6 +92,9 @@ int cheatmenu_duel_Draw()
     int menuRes = MenuWindow_Draw(chtwndDuel);
     if (menuRes)
     {
+        cheatmenu_duel_last_item = chtwndDuel->selwnd->currentItem;
+        cheatmenu_duel_last_page = chtwndDuel->selwnd->currentItemPage;
+
         int idxItem = MENUWINDOW_RESULT_ITEM(menuRes);
 
         if (MENUWINDOW_RESULT_DECIDESTATUS(menuRes) == YGSEL_DECIDESTATUS_CONFIRM)
