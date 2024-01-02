@@ -7,7 +7,7 @@
 #define CHEATMENUTRUST_H
 
 #define CHEATMENU_TRUST_CAPTION L"Character Trust Adjust"
-#define CHEATMENU_TRUST_DESC "Adjust the trust points for the highlighted character. 1000 = 1 heart"
+#define CHEATMENU_TRUST_DESC "Adjust the trust points for the highlighted character.\n1000 = 1 heart"
 
 #define CHEATMENU_TRUST_SKIP_TOP 2
 #define CHEATMENU_TRUST_SKIP_BOTTOM 57
