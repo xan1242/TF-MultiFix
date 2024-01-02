@@ -34,6 +34,7 @@ int (*_YgFont_GetRubyCharFlg)() = (int (*)())(0);
 int (*_YgFont_GetStrWidth)(wchar_t* str) = (int (*)(wchar_t*))(0);
 wchar_t* (*_YgSys_wcscat)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 wchar_t* (*_YgSys_wcscpy)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
+wchar_t* (*_YgSys_wcscmp)(const wchar_t* wcs1, const wchar_t* wcs2) = (wchar_t* (*)(const wchar_t*, const wchar_t*))(0);
 size_t(*_YgSys_wcslen)(const wchar_t* str) = (size_t(*)(const wchar_t*))(0);
 void* (*_YgSys_memset)(void* ptr, int value, size_t num) = (void* (*)(void*, int, size_t))(0);
 void* (*_YgSys_memcpy)(void* dst, const void* src, size_t num) = (void* (*)(void*, const void*, size_t))(0);
@@ -55,6 +56,10 @@ int (*_YgSys_SndPlaySE)(int sound) = (int (*)(int))(0);
 uintptr_t(*_YgSys_GetTrunkFromMRK)(int mrk) = (uintptr_t(*)(int))(0);
 uintptr_t(*_YgSys_GetPersonalInfoPtr)() = (uintptr_t(*)())(0);
 uintptr_t(*_YgSys_GetBoxPtr)(int box) = (uintptr_t(*)(int))(0);
+int(*_YgSys_GetTrust)(int charaID) = (int(*)(int))(0);
+int(*_YgSys_SetTrust)(int charaID, int val) = (int(*)(int, int))(0);
+wchar_t*(*_YgSys_GetChrNameFromID)(int charaID, int unk) = (wchar_t*(*)(int, int))(0);
+uintptr_t(*_YgSys_GetUnlockNpcInfo)(int charaID) = (uintptr_t(*)(int))(0);
 
 // WINDOW DRAW STUFF
 uintptr_t(*_EhPckt_Open)(int zorder, int unk2) = (uintptr_t(*)(int, int))(0);
@@ -228,6 +233,28 @@ int YgSys_GetBoxStatus(int box)
     return result;
 }
 
+int YgSys_GetTrust(int charaID)
+{
+    return _YgSys_GetTrust(charaID);
+}
+
+
+int YgSys_SetTrust(int charaID, int val)
+{
+    return _YgSys_SetTrust(charaID, val);
+}
+
+wchar_t* YgSys_GetChrNameFromID(int charaID, int unk)
+{
+    return _YgSys_GetChrNameFromID(charaID, unk);
+}
+
+uintptr_t YgSys_GetUnlockNpcInfo(int charaID)
+{
+    return _YgSys_GetUnlockNpcInfo(charaID);
+}
+
+
 int YgSys_GetLang()
 {
 #ifdef YG_GETLANG_DEBUG
@@ -290,6 +317,13 @@ wchar_t* YgSys_wcscpy(wchar_t* dest, const wchar_t* src)
     if (!_YgSys_wcscpy)
         return NULL;
     return _YgSys_wcscpy(dest, src);
+}
+
+wchar_t* YgSys_wcscmp(const wchar_t* wcs1, const wchar_t* wcs2)
+{
+    if (!_YgSys_wcscmp)
+        return NULL;
+    return _YgSys_wcscmp(wcs1, wcs2);
 }
 
 wchar_t* YgSys_wcscat(wchar_t* dest, const wchar_t* src)
@@ -1138,6 +1172,7 @@ void helpers_Init(uintptr_t base_addr)
     _YgFont_GetStrWidth = (int (*)(wchar_t*))(0x1360 + base_addr);
     _YgSys_wcscat = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BFA0 + base_addr);
     _YgSys_wcscpy = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BF10 + base_addr);
+    _YgSys_wcscmp = (wchar_t* (*)(const wchar_t*, const wchar_t*))(0x2BE74 + base_addr);
     _YgSys_wcslen = (size_t(*)(const wchar_t*))(0x0002BEB0 + base_addr);
     _YgSys_memset = (void* (*)(void*, int, size_t))(0x4A4E0 + base_addr);
     _YgSys_memcpy = (void* (*)(void*, const void*, size_t))(0x4A1DC + base_addr);
@@ -1156,6 +1191,10 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_GetTrunkFromMRK = (uintptr_t(*)(int))(0x2B678 + base_addr);
     _YgSys_GetPersonalInfoPtr = (uintptr_t(*)())(0x8748 + base_addr);
     _YgSys_GetBoxPtr = (uintptr_t(*)(int))(0x29C0C + base_addr);
+    _YgSys_GetTrust = (int(*)(int))(0x2A29C + base_addr);
+    _YgSys_SetTrust = (int(*)(int, int))(0x2A2D4 + base_addr);
+    _YgSys_GetChrNameFromID = (wchar_t*(*)(int, int))(0x23074 + base_addr);
+    _YgSys_GetUnlockNpcInfo = (uintptr_t(*)(int))(0x2A268 + base_addr);
 
 
     // window draw stuff

@@ -31,6 +31,8 @@
 #define DUELPOINT_OFFSET 0x24F4C
 #define DUELPOINT_OFFSET2 0x24F50
 #define DUELPOINT_MAX 999999999
+#define YG_CHARACTER_COUNT 180
+#define YG_CHARACTER_MAXTRUST 4000
 
 #define SOUND_ID_MENU_CURSOR 0xDA75
 #define SOUND_ID_MENU_DECIDE 0xDA76
@@ -85,6 +87,7 @@ void* YgSys_memcpy(void* dst, const void* src, size_t num);
 size_t YgSys_wcslen(const wchar_t* str);
 wchar_t* YgSys_wcscpy(wchar_t* dest, const wchar_t* src);
 wchar_t* YgSys_wcscat(wchar_t* dest, const wchar_t* src);
+wchar_t* YgSys_wcscmp(const wchar_t* wcs1, const wchar_t* wcs2);
 char* YgSys_strcpy(char* dest, const char* src);
 char* YgSys_strcat(char* dest, const char* src);
 int YgSys_strcmp(const char* str1, const char* str2);
@@ -129,6 +132,12 @@ void YgSys_UpdateDuelPoint(int amount);
 uintptr_t YgSys_GetPersonalInfoPtr();
 uintptr_t YgSys_GetBoxPtr(int box);
 int YgSys_GetBoxStatus(int box);
+int YgSys_GetTrust(int charaID);
+int YgSys_SetTrust(int charaID, int val);
+wchar_t* YgSys_GetChrNameFromID(int charaID, int unk);
+uintptr_t YgSys_GetUnlockNpcInfo(int charaID);
+
+
 uint32_t ReturnZeroFunc();
 int loopAround(int value, int min, int max);
 void helpers_SetPPSSPP(int val);

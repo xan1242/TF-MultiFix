@@ -11,10 +11,9 @@
 #include "windows/konamidialog.h"
 #include "windows/cheatmenu_global.h"
 #include "windows/cheatmenu_duel.h"
+#include "windows/cheatmenu_trust.h"
 
 unsigned int WM_WindowDisplayMask = 0;
-
-int WM_bCheatMenuEnabled = 0;
 
 unsigned int WM_GetDispMask()
 {
@@ -24,11 +23,6 @@ unsigned int WM_GetDispMask()
 void WM_SetDispMask(unsigned int mask)
 {
     WM_WindowDisplayMask = mask;
-}
-
-void WM_SetCheatMenuEnable(int val)
-{
-    WM_bCheatMenuEnabled = val;
 }
 
 void WM_DestroyAllWindows()
@@ -45,6 +39,8 @@ void WM_DestroyAllWindows()
         cheatmenu_global_Destroy();
     if (cheatmenu_duel_IsActive())
         cheatmenu_duel_Destroy();
+    if (cheatmenu_trust_IsActive())
+        cheatmenu_trust_Destroy();
 }
 
 int WM_bIsAnyWindowShown()
@@ -52,61 +48,44 @@ int WM_bIsAnyWindowShown()
     return WM_WindowDisplayMask != 0;
 }
 
+void WM_ShowWindow(unsigned int windowMask)
+{
+    WM_WindowDisplayMask |= windowMask;
+}
+
+void WM_SwitchToWindow(unsigned int windowMask)
+{
+    if (WM_bIsAnyWindowShown())
+        WM_DestroyAllWindows();
+    else 
+        WM_WindowDisplayMask = 0;
+
+    WM_ShowWindow(windowMask);
+}
+
 void WM_Draw()
 {
-    //helpers_SetDialogBoxWantsIO(0);
-
     if (WM_WindowDisplayMask & WINDOWMANAGER_DISP_ABOUT)
     {
         if (aboutwindow_Draw())
+        {
             WM_WindowDisplayMask &= ~WINDOWMANAGER_DISP_ABOUT;
+        }
     }
 
     if (WM_WindowDisplayMask & WINDOWMANAGER_DISP_KONAMI)
     {
         if (konamidialog_Draw())
+        {
             WM_WindowDisplayMask &= ~WINDOWMANAGER_DISP_KONAMI;
+        }
     }
 
     if (WM_WindowDisplayMask & WINDOWMANAGER_DISP_MFWINDOW)
     {
-        int retval = mfwindow_Draw();
-        if (retval)
+        if (mfwindow_Draw())
         {
             WM_WindowDisplayMask &= ~WINDOWMANAGER_DISP_MFWINDOW;
-
-            int itemIdx = MENUWINDOW_RESULT_ITEM(retval);
-
-            if (MENUWINDOW_RESULT_DECIDESTATUS(retval) == YGSEL_DECIDESTATUS_CONFIRM)
-            {
-                switch (itemIdx)
-                {
-                case MFWINDOW_ITEM_ABOUT:
-                {
-                    WM_WindowDisplayMask |= WINDOWMANAGER_DISP_ABOUT;
-                    break;
-                }
-                case MFWINDOW_ITEM_CHEATSGLOBAL:
-                {
-                    if (WM_bCheatMenuEnabled)
-                    {
-                        WM_WindowDisplayMask |= WINDOWMANAGER_DISP_CHEATGLOBAL;
-                    }
-                    break;
-                }
-                case MFWINDOW_ITEM_CHEATSLOCAL:
-                {
-                    if (WM_bCheatMenuEnabled && ((GetGameState() == EHSTATE_DUEL)))
-                    {
-                        WM_WindowDisplayMask |= WINDOWMANAGER_DISP_CHEATDUEL;
-                    }
-                    break;
-                }
-                default:
-                    break;
-                }
-            }
-
         }
     }
 
@@ -123,6 +102,14 @@ void WM_Draw()
         if (cheatmenu_duel_Draw())
         {
             WM_WindowDisplayMask &= ~WINDOWMANAGER_DISP_CHEATDUEL;
+        }
+    }
+
+    if (WM_WindowDisplayMask & WINDOWMANAGER_DISP_TRUSTMENU)
+    {
+        if (cheatmenu_trust_Draw())
+        {
+            WM_WindowDisplayMask &= ~WINDOWMANAGER_DISP_TRUSTMENU;
         }
     }
 }

@@ -33,12 +33,13 @@ OBJS = main.o \
        windows/konamidialog.o \
        windows/cheatmenu_duel.o \
        windows/cheatmenu_global.o \
+       windows/cheatmenu_trust.o \
        exports.o \
        ../../includes/psp/pspmallochelper.o \
        ../../includes/psp/stringhash.o \
        ../../includes/psp/minjector.o
 
-DEFINES = -DMINJECTOR_MINIMAL
+DEFINES = -DMINJECTOR_MINIMAL -DYGWINDOW_ESSENTIALS_ONLY
 
 CFLAGS = -O2 -Os -G0 -Wall -fshort-wchar -fwide-exec-charset=wchar_t -fno-pic -mno-check-zero-division -fpack-struct=16 $(DEFINES)
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti

@@ -25,20 +25,22 @@
 typedef struct _MenuWindowItem
 {
     int* val;
-    float* fval;
     int min;
     int max;
-    float fmin;
-    float fmax;
-    int type;
-    int hidden;
-    int selectable;
-    int greyedout;
-    int loopable;
-    int index;
+    unsigned int type : 4;
+    unsigned int hidden : 1;
+    unsigned int selectable : 1;
+    unsigned int greyedout : 1;
+    unsigned int loopable : 1;
+    unsigned int bWideCharName : 1;
+    unsigned int bWideCharDesc : 1;
+    unsigned int index : 8;
     char* name;
     char* description;
     const char** options;
+    uintptr_t cbValRead;
+    uintptr_t cbValWrite;
+    uintptr_t cbData;
 }MenuWindowItem;
 
 typedef enum _MenuWindowItemType
@@ -56,13 +58,13 @@ typedef struct _MenuWindow
 {
 	YgSelWnd* selwnd;
 	ygBasicWindowPack* descwnd;
-	int bInited;
-	int bInitedDesc;
-	int bNotifyDestroy;
-	int bBlockGameControl;
-    int bValueChanged;
-	int zOrder;
-    int itemCount;
+	int bInited : 1;
+	int bInitedDesc : 1;
+	int bNotifyDestroy : 1;
+	int bBlockGameControl : 1;
+    int bValueChanged : 1;
+	int zOrder : 11;
+    int itemCount : 16;
     MenuWindowItem* items;
     MenuWindowItem** itemDrawList;
     uintptr_t itemDrawCallback;

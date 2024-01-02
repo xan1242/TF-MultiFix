@@ -523,8 +523,7 @@ void HandleButtonInputs()
         {
             bCheatMenuEnabled = 1;
             mfwindow_SetCheatsEnabled(1);
-            WM_SetCheatMenuEnable(1);
-            WM_SetDispMask(WM_GetDispMask() | WINDOWMANAGER_DISP_KONAMI);
+            WM_ShowWindow(WINDOWMANAGER_DISP_KONAMI);
         }
     }
 
@@ -533,16 +532,14 @@ void HandleButtonInputs()
         helpers_SetBlockNextInputPoll(1);
         if (buttons & PSP_CTRL_TRIANGLE)
         {
-            if (!WM_bIsAnyWindowShown())
-                WM_SetDispMask(WM_GetDispMask() | WINDOWMANAGER_DISP_MFWINDOW);
+            WM_SwitchToWindow(WINDOWMANAGER_DISP_MFWINDOW);
         }
 
         if (bCheatMenuEnabled)
         {
             if (buttons & PSP_CTRL_CIRCLE)
             {
-                if (!WM_bIsAnyWindowShown())
-                    WM_SetDispMask(WM_GetDispMask() | WINDOWMANAGER_DISP_CHEATGLOBAL);
+                WM_SwitchToWindow(WINDOWMANAGER_DISP_CHEATGLOBAL);
             }
 
             // duel cheats
@@ -550,8 +547,7 @@ void HandleButtonInputs()
             {
                 if (buttons & PSP_CTRL_SQUARE)
                 {
-                    if (!WM_bIsAnyWindowShown())
-                        WM_SetDispMask(WM_GetDispMask() | WINDOWMANAGER_DISP_CHEATDUEL);
+                    WM_SwitchToWindow(WINDOWMANAGER_DISP_CHEATDUEL);
                 }
             }
         }

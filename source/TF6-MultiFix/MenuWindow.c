@@ -59,6 +59,17 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 
 	int oldshadow = YgFont_GetShadowFlg();
 
+	int currVal = 0;
+	if (currItem->cbValRead)
+	{
+		int (*ReadCallback)(uintptr_t data) = (int (*)(uintptr_t))(currItem->cbValRead);
+		currVal = ReadCallback(currItem->cbData);
+	}
+	else if (currItem->val)
+	{
+		currVal = *currItem->val;
+	}
+
 	YgFont_SetEhPckt(ehpacket);
 
 	YgFont_SetSize(MENUWINDOW_ITEM_FONTSIZE, MENUWINDOW_ITEM_FONTSIZE);
@@ -77,26 +88,33 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 		YgFont_SetDefaultColor(0xFF000000);
 	}
 
-	size_t txtlen = YgSys_strlen(currItem->name) + 1;
+	size_t txtlen = 0;
 	wchar_t convBuffer[MENUWINDOW_ITEM_MAXTEXT];
 
-	sceCccUTF8toUTF16(convBuffer, txtlen * sizeof(wchar_t), currItem->name);
-	YgFont_PrintLine64(X << 6, Y_corrected << 6, (480 - X) << 6, convBuffer);
-
+	if (currItem->bWideCharName)
+	{
+		YgFont_PrintLine64(X << 6, Y_corrected << 6, (480 - X) << 6, (wchar_t*)currItem->name);
+	}
+	else
+	{
+		txtlen = YgSys_strlen(currItem->name) + 1;
+		sceCccUTF8toUTF16(convBuffer, txtlen * sizeof(wchar_t), currItem->name);
+		YgFont_PrintLine64(X << 6, Y_corrected << 6, (480 - X) << 6, convBuffer);
+	}
 
 	switch (currItem->type)
 	{
 		case MENUWINDOW_ITEM_TYPE_INTSTRING:
 		{
 			char sprintfbuf[32];
-			YgSys_sprintf(sprintfbuf, "<%s>", currItem->options[*(currItem->val)]);
-			txtlen = YgSys_strlen((char*)currItem->options[*(currItem->val)]) + 1 + 2;
+			YgSys_sprintf(sprintfbuf, "<%s>", currItem->options[currVal]);
+			txtlen = YgSys_strlen((char*)currItem->options[currVal]) + 1 + 2;
 			sceCccUTF8toUTF16(convBuffer, txtlen * sizeof(wchar_t), sprintfbuf);
 			break;
 		}
 		case MENUWINDOW_ITEM_TYPE_BOOL:
 		{
-			if (*(currItem->val))
+			if (currVal)
 			{
 				sceCccUTF8toUTF16(convBuffer, (sizeof(MENUWINDOW_LABEL_BOOL_TRUE)) * sizeof(wchar_t), MENUWINDOW_LABEL_BOOL_TRUE);
 			}
@@ -111,7 +129,7 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 		case MENUWINDOW_ITEM_TYPE_FLOAT:
 		{
 			char sprintfbuf[32];
-			YgSys_sprintf(sprintfbuf, "<%.2f>", *(currItem->fval));
+			YgSys_sprintf(sprintfbuf, "<%.2f>", *(float*)(&currVal));
 			sprintfbuf[sizeof(sprintfbuf) - 1] = 0;
 			sceCccUTF8toUTF16(convBuffer, (sizeof(sprintfbuf)) * sizeof(wchar_t), sprintfbuf);
 			break;
@@ -119,7 +137,7 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 		case MENUWINDOW_ITEM_TYPE_INT:
 		{
 			char sprintfbuf[32];
-			YgSys_sprintf(sprintfbuf, "<%d>", *(currItem->val));
+			YgSys_sprintf(sprintfbuf, "<%d>", currVal);
 			sprintfbuf[sizeof(sprintfbuf) - 1] = 0;
 			sceCccUTF8toUTF16(convBuffer, (sizeof(sprintfbuf)) * sizeof(wchar_t), sprintfbuf);
 			break;
@@ -267,16 +285,37 @@ void MenuWindow_Create(MenuWindow* window)
 
 void MenuWindow_AddInt(MenuWindowItem* item, int addval)
 {
-	int* val = item->val;
-	*val += addval;
+	int val = 0;
+	
+	if (item->cbValRead)
+	{
+		int (*ReadCallback)(uintptr_t data) = (int (*)(uintptr_t))(item->cbValRead);
+		val = ReadCallback(item->cbData);
+	}
+	else if (item->val)
+	{
+		val = *item->val;
+	}
+
+	val += addval;
 	if (item->loopable)
-		*val = loopAround(*val, item->min, item->max);
+		val = loopAround(val, item->min, item->max);
 	else
 	{
-		if (*val > item->max)
-			*val = item->max;
-		if (*val < item->min)
-			*val = item->min;
+		if (val > item->max)
+			val = item->max;
+		if (val < item->min)
+			val = item->min;
+	}
+
+	if (item->cbValWrite)
+	{
+		int (*WriteCallback)(int value, uintptr_t data) = (int (*)(int, uintptr_t))(item->cbValWrite);
+		WriteCallback(val, item->cbData);
+	}
+	else if (item->val)
+	{
+		*item->val = val;
 	}
 }
 
@@ -288,9 +327,7 @@ void MenuWindow_HandleExtraControls(MenuWindow* window, MenuWindowItem* item)
 	uint32_t buttons = GetPadButtons(1);
 	uint32_t buttons_fast = GetPadButtons(0);
 
-	int* val = item->val;
-
-	if (val)
+	if (item->val || (item->cbValRead && item->cbValWrite))
 	{
 		int bCheckLeft = 0;
 		int bCheckRight = 0;
@@ -356,11 +393,17 @@ int MenuWindow_DrawDesc(MenuWindow* window)
 	int idx = window->selwnd->currentItem + window->selwnd->currentItemPage;
 	MenuWindowItem* currItem = window->itemDrawList[idx];
 	
-	sceCccUTF8toUTF16(window->descwindowtext, (MENUWINDOW_DESC_MAXTEXT * sizeof(wchar_t)), currItem->description);
+	if (currItem->description)
+	{
+		if (currItem->bWideCharDesc)
+			YgSys_wcscpy(window->descwindowtext, (wchar_t*)currItem->description);
+		else
+			sceCccUTF8toUTF16(window->descwindowtext, (MENUWINDOW_DESC_MAXTEXT * sizeof(wchar_t)), currItem->description);
 
-	uintptr_t packet = EhPckt_Open(window->zOrder, 0);
-	ygBasicWindow_Draw((uintptr_t)&packet, &window->descwnd->res);
-	EhPckt_Close(packet);
+		uintptr_t packet = EhPckt_Open(window->zOrder, 0);
+		ygBasicWindow_Draw((uintptr_t)&packet, &window->descwnd->res);
+		EhPckt_Close(packet);
+	}
 
 	return 0;
 }

@@ -192,6 +192,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\windows\aboutwindow.c" />
     <ClCompile Include="source\TF6-MultiFix\windows\cheatmenu_duel.c" />
     <ClCompile Include="source\TF6-MultiFix\windows\cheatmenu_global.c" />
+    <ClCompile Include="source\TF6-MultiFix\windows\cheatmenu_trust.c" />
     <ClCompile Include="source\TF6-MultiFix\windows\installdisabledialog.c" />
     <ClCompile Include="source\TF6-MultiFix\windows\konamidialog.c" />
     <ClCompile Include="source\TF6-MultiFix\windows\multifixwindow.c" />
@@ -234,6 +235,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClInclude Include="source\TF6-MultiFix\windows\aboutwindow.h" />
     <ClInclude Include="source\TF6-MultiFix\windows\cheatmenu_duel.h" />
     <ClInclude Include="source\TF6-MultiFix\windows\cheatmenu_global.h" />
+    <ClInclude Include="source\TF6-MultiFix\windows\cheatmenu_trust.h" />
     <ClInclude Include="source\TF6-MultiFix\windows\installdisabledialog.h" />
     <ClInclude Include="source\TF6-MultiFix\windows\konamidialog.h" />
     <ClInclude Include="source\TF6-MultiFix\windows\multifixwindow.h" />

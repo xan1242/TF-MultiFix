@@ -164,10 +164,10 @@ uintptr_t ygBasicWindow_Init(ygWindowResource* res, uintptr_t heap);
 uintptr_t ygBasicWindow_Create(ygWindowResource* res, ygBasicWindow* window);
 uintptr_t ygBasicWindow_Term(ygWindowResource* res);
 uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygWindowResource* window);
+uintptr_t ygBasicWindow_ReqestOpenAnim(ygWindowResource* res, ygBasicWindow* window);
 
 #ifndef YGWINDOW_ESSENTIALS_ONLY
 uintptr_t ygBasicWindow_DeleteWindow(ygWindowResource* res, ygBasicWindow* window);
-uintptr_t ygBasicWindow_ReqestOpenAnim(ygWindowResource* res, ygBasicWindow* window);
 uintptr_t ygBasicWindow_ReqestCloseAnim(ygWindowResource* res, ygBasicWindow* window);
 uintptr_t ygBasicWindow_IsFinishAnim(ygWindowResource* res, ygBasicWindow* window);
 int ygBasicWindow_GetWndStringBottom(ygWindowResource* res, ygBasicWindow* window);

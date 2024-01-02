@@ -25,10 +25,10 @@ uintptr_t(*_ygBasicWindow_Init)(ygWindowResource* res, uintptr_t heap) = (uintpt
 uintptr_t(*_ygBasicWindow_Create)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
 uintptr_t(*_ygBasicWindow_Term)(ygWindowResource* res) = (uintptr_t(*)(ygWindowResource*))(0);
 uintptr_t(*_ygBasicWindow_Draw)(uintptr_t ehpacket, ygWindowResource* window) = (uintptr_t(*)(uintptr_t, ygWindowResource*))(0);
+uintptr_t(*_ygBasicWindow_ReqestOpenAnim)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
 
 #ifndef YGWINDOW_ESSENTIALS_ONLY
 uintptr_t(*_ygBasicWindow_DeleteWindow)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
-uintptr_t(*_ygBasicWindow_ReqestOpenAnim)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
 uintptr_t(*_ygBasicWindow_ReqestCloseAnim)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
 uintptr_t(*_ygBasicWindow_IsFinishAnim)(ygWindowResource* res, ygBasicWindow* window) = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0);
 int(*_ygBasicWindow_GetWndStringBottom)(ygWindowResource* res, ygBasicWindow* window) = (int(*)(ygWindowResource*, ygBasicWindow*))(0);
@@ -118,15 +118,15 @@ uintptr_t ygBasicWindow_Draw(uintptr_t ehpacket, ygWindowResource* window)
     return _ygBasicWindow_Draw(ehpacket, window);
 }
 
+uintptr_t ygBasicWindow_ReqestOpenAnim(ygWindowResource* res, ygBasicWindow* window)
+{
+    return _ygBasicWindow_ReqestOpenAnim(res, window);
+}
+
 #ifndef YGWINDOW_ESSENTIALS_ONLY
 uintptr_t ygBasicWindow_DeleteWindow(ygWindowResource* res, ygBasicWindow* window)
 {
     return _ygBasicWindow_DeleteWindow(res, window);
-}
-
-uintptr_t ygBasicWindow_ReqestOpenAnim(ygWindowResource* res, ygBasicWindow* window)
-{
-    return _ygBasicWindow_ReqestOpenAnim(res, window);
 }
 
 uintptr_t ygBasicWindow_ReqestCloseAnim(ygWindowResource* res, ygBasicWindow* window)
@@ -174,12 +174,12 @@ void YgWindow_Init(uintptr_t base_addr)
 
     _ygBasicWindow_Init = (uintptr_t(*)(ygWindowResource*, uintptr_t))(0x00043D68 + base_addr);
     _ygBasicWindow_Create = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0x00043DC4 + base_addr);
-    _ygBasicWindow_Term = (uintptr_t(*)(ygBasicWindow*))(0x00043F14 + base_addr);
+    _ygBasicWindow_Term = (uintptr_t(*)(ygWindowResource*))(0x00043F14 + base_addr);
     _ygBasicWindow_Draw = (uintptr_t(*)(uintptr_t, ygWindowResource*))(0x00043F7C + base_addr);
+    _ygBasicWindow_ReqestOpenAnim = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0x44194 + base_addr);
 
 #ifndef YGWINDOW_ESSENTIALS_ONLY
     _ygBasicWindow_DeleteWindow = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0x44130 + base_addr);
-    _ygBasicWindow_ReqestOpenAnim = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0x44194 + base_addr);
     _ygBasicWindow_ReqestCloseAnim = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0x441F0 + base_addr);
     _ygBasicWindow_IsFinishAnim = (uintptr_t(*)(ygWindowResource*, ygBasicWindow*))(0x44250 + base_addr);
     _ygBasicWindow_GetWndStringBottom = (int(*)(ygWindowResource*, ygBasicWindow*))(0x442C8 + base_addr);
