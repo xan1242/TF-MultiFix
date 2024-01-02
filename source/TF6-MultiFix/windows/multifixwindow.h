@@ -47,7 +47,7 @@ typedef enum _mfWindowItem
 #define MFWINDOW_LABEL_BOOL_FALSE "<Off>"
 
 int mfwindow_Draw();
-int mfwindow_GetItemCount();
+//int mfwindow_GetItemCount();
 void mfwindow_SetCheatsEnabled(int val);
 //void mfwindow_SetCheatLocals(int val);
 int mfwindow_IsActive();

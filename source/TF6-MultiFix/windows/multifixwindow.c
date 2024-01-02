@@ -108,10 +108,10 @@ void mfwindow_Create()
     MenuWindow_Create(mfWindow);
 }
 
-int mfwindow_GetItemCount()
-{
-    return MFWINDOW_ITEM_COUNT;
-}
+//int mfwindow_GetItemCount()
+//{
+//    return MFWINDOW_ITEM_COUNT;
+//}
 
 void mfwindow_SetCheatsEnabled(int val)
 {

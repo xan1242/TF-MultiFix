@@ -15,15 +15,15 @@
 
 unsigned int WM_WindowDisplayMask = 0;
 
-unsigned int WM_GetDispMask()
-{
-    return WM_WindowDisplayMask;
-}
-
-void WM_SetDispMask(unsigned int mask)
-{
-    WM_WindowDisplayMask = mask;
-}
+//unsigned int WM_GetDispMask()
+//{
+//    return WM_WindowDisplayMask;
+//}
+//
+//void WM_SetDispMask(unsigned int mask)
+//{
+//    WM_WindowDisplayMask = mask;
+//}
 
 void WM_DestroyAllWindows()
 {

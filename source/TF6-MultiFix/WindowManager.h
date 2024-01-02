@@ -13,8 +13,8 @@
 #define WINDOWMANAGER_DISP_CHEATDUEL (1 << 4)
 #define WINDOWMANAGER_DISP_TRUSTMENU (1 << 5)
 
-unsigned int WM_GetDispMask();
-void WM_SetDispMask(unsigned int mask);
+//unsigned int WM_GetDispMask();
+//void WM_SetDispMask(unsigned int mask);
 void WM_DestroyAllWindows();
 int WM_bIsAnyWindowShown();
 void WM_Draw();

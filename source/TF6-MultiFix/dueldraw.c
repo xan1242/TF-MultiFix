@@ -15,7 +15,8 @@ int (*dueldraw_sub_262C0)() = (int (*)())(0);
 
 int dueldraw_sub_262C0_Hook()
 {
-    if (mfconfig_GetDisableDuelHelpIcon())
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->bDisableDuelHelpIcon)
         return 0;
     return dueldraw_sub_262C0();
 }

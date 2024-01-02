@@ -126,14 +126,14 @@ uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, 
 			}
 			break;
 		}
-		case MENUWINDOW_ITEM_TYPE_FLOAT:
-		{
-			char sprintfbuf[32];
-			YgSys_sprintf(sprintfbuf, "<%.2f>", *(float*)(&currVal));
-			sprintfbuf[sizeof(sprintfbuf) - 1] = 0;
-			sceCccUTF8toUTF16(convBuffer, (sizeof(sprintfbuf)) * sizeof(wchar_t), sprintfbuf);
-			break;
-		}
+		//case MENUWINDOW_ITEM_TYPE_FLOAT:
+		//{
+		//	char sprintfbuf[32];
+		//	YgSys_sprintf(sprintfbuf, "<%.2f>", *(float*)(&currVal));
+		//	sprintfbuf[sizeof(sprintfbuf) - 1] = 0;
+		//	sceCccUTF8toUTF16(convBuffer, (sizeof(sprintfbuf)) * sizeof(wchar_t), sprintfbuf);
+		//	break;
+		//}
 		case MENUWINDOW_ITEM_TYPE_INT:
 		{
 			char sprintfbuf[32];

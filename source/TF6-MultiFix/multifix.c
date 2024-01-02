@@ -503,7 +503,8 @@ int YgSys_GetAssignButton_Hook(int isDeclineButton)
 
 void YgFont_SetMatrixFontFlg_Hook(int val)
 {
-    if (val && mfconfig_GetMatrixFont())
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (val && config->bMatrixFont)
     {
         *(uint32_t*)(YGFONT_FLAGS_ADDR + base_addr) |= 0x4000;
     }

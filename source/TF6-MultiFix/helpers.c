@@ -18,15 +18,15 @@ int _bIsOnPPSSPP = 0;
 //uintptr_t (*_EhPad_Get)() = (uintptr_t(*)())(0);
 EhGameState helper_GameState = EHSTATE_UNKNOWN;
 
-unsigned char dummyPadBuf[0x40];
+//unsigned char dummyPadBuf[0x40];
+unsigned char* dummyPadBuf;
 unsigned int konamiCodeSequence[KONAMI_CODE_LENGTH] = KONAMI_CODE;
 int konamiCodeIndex = 0;
 uint32_t konamiCodeLastButtons = 0;
 
 uintptr_t (*_YgFont_PrintLine64)(int, int, uintptr_t, wchar_t*) = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0);
 uintptr_t (*_YgFont_PrintLineFit64)(int, int, uintptr_t, wchar_t*, int32_t) = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0);
-void (*_YgFont_SetWordSeparateFlg)(int) = (void (*)(int))(0);
-int (*_YgFont_GetWordSeparateFlg)() = (int (*)())(0);
+
 void (*_YgFont_SetShadowFlg)(int) = (void (*)(int))(0);
 void (*_YgFont_SetRubyCharFlg)(int) = (void (*)(int))(0);
 int (*_YgFont_GetShadowFlg)() = (int (*)())(0);
@@ -34,7 +34,6 @@ int (*_YgFont_GetRubyCharFlg)() = (int (*)())(0);
 int (*_YgFont_GetStrWidth)(wchar_t* str) = (int (*)(wchar_t*))(0);
 wchar_t* (*_YgSys_wcscat)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 wchar_t* (*_YgSys_wcscpy)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
-wchar_t* (*_YgSys_wcscmp)(const wchar_t* wcs1, const wchar_t* wcs2) = (wchar_t* (*)(const wchar_t*, const wchar_t*))(0);
 size_t(*_YgSys_wcslen)(const wchar_t* str) = (size_t(*)(const wchar_t*))(0);
 void* (*_YgSys_memset)(void* ptr, int value, size_t num) = (void* (*)(void*, int, size_t))(0);
 void* (*_YgSys_memcpy)(void* dst, const void* src, size_t num) = (void* (*)(void*, const void*, size_t))(0);
@@ -48,7 +47,7 @@ wchar_t* (*_YgSys_uGetPartnerName)(int, int, int) = (wchar_t* (*)(int, int, int)
 wchar_t* (*_YgSys_GetStrFromResource)(uintptr_t, int) = (wchar_t* (*)(uintptr_t, int))(0);
 uintptr_t (*_EhFolder_SearchFile)(uintptr_t, const char*, uintptr_t) = (uintptr_t (*)(uintptr_t, const char*, uintptr_t))(0);
 void (*_YgSys_InitApplication)() = (void (*)())(0);
-void (*_YgAdh_Update)() = (void (*)())(0);
+
 void (*_FirstLoopFunc)(int) = (void (*)(int))(0);
 int (*_sceCccUTF8toUTF16)(wchar_t* dest, size_t size, char* src) = (int (*)(wchar_t*, size_t, char*))(0);
 int (*_YgSys_sprintf)(char* str, const char* format, ...) = (int (*)(char*, const char*, ...))(0);
@@ -59,7 +58,13 @@ uintptr_t(*_YgSys_GetBoxPtr)(int box) = (uintptr_t(*)(int))(0);
 int(*_YgSys_GetTrust)(int charaID) = (int(*)(int))(0);
 int(*_YgSys_SetTrust)(int charaID, int val) = (int(*)(int, int))(0);
 wchar_t*(*_YgSys_GetChrNameFromID)(int charaID, int unk) = (wchar_t*(*)(int, int))(0);
-uintptr_t(*_YgSys_GetUnlockNpcInfo)(int charaID) = (uintptr_t(*)(int))(0);
+void (*_YgFont_SetWordSeparateFlg)(int) = (void (*)(int))(0);
+int (*_YgFont_GetWordSeparateFlg)() = (int (*)())(0);
+
+// optional functions
+//uintptr_t(*_YgSys_GetUnlockNpcInfo)(int charaID) = (uintptr_t(*)(int))(0);
+//wchar_t* (*_YgSys_wcscmp)(const wchar_t* wcs1, const wchar_t* wcs2) = (wchar_t* (*)(const wchar_t*, const wchar_t*))(0);
+//void (*_YgAdh_Update)() = (void (*)())(0);
 
 // WINDOW DRAW STUFF
 uintptr_t(*_EhPckt_Open)(int zorder, int unk2) = (uintptr_t(*)(int, int))(0);
@@ -125,10 +130,10 @@ void YgSys_InitApplication()
     return _YgSys_InitApplication();
 }
 
-void YgAdh_Update()
-{
-    return _YgAdh_Update();
-}
+//void YgAdh_Update()
+//{
+//    return _YgAdh_Update();
+//}
 
 void FirstLoopFunc(int unk)
 {
@@ -249,10 +254,10 @@ wchar_t* YgSys_GetChrNameFromID(int charaID, int unk)
     return _YgSys_GetChrNameFromID(charaID, unk);
 }
 
-uintptr_t YgSys_GetUnlockNpcInfo(int charaID)
-{
-    return _YgSys_GetUnlockNpcInfo(charaID);
-}
+//uintptr_t YgSys_GetUnlockNpcInfo(int charaID)
+//{
+//    return _YgSys_GetUnlockNpcInfo(charaID);
+//}
 
 
 int YgSys_GetLang()
@@ -319,12 +324,12 @@ wchar_t* YgSys_wcscpy(wchar_t* dest, const wchar_t* src)
     return _YgSys_wcscpy(dest, src);
 }
 
-wchar_t* YgSys_wcscmp(const wchar_t* wcs1, const wchar_t* wcs2)
-{
-    if (!_YgSys_wcscmp)
-        return NULL;
-    return _YgSys_wcscmp(wcs1, wcs2);
-}
+//wchar_t* YgSys_wcscmp(const wchar_t* wcs1, const wchar_t* wcs2)
+//{
+//    if (!_YgSys_wcscmp)
+//        return NULL;
+//    return _YgSys_wcscmp(wcs1, wcs2);
+//}
 
 wchar_t* YgSys_wcscat(wchar_t* dest, const wchar_t* src)
 {
@@ -694,12 +699,12 @@ void YgFont_SetRubyCharFlg(int val)
     _YgFont_SetRubyCharFlg(val);
 }
 
-int YgFont_GetRubyCharFlg()
-{
-    if (!_YgFont_GetRubyCharFlg)
-        return 0;
-    return _YgFont_GetRubyCharFlg();
-}
+//int YgFont_GetRubyCharFlg()
+//{
+//    if (!_YgFont_GetRubyCharFlg)
+//        return 0;
+//    return _YgFont_GetRubyCharFlg();
+//}
 
 int YgFont_GetStrWidth(wchar_t* str)
 {
@@ -787,26 +792,26 @@ int PatchButtonStrings(uintptr_t ptrFolder, const char* filename)
 
     int strCount = GetStrResourceCount(strfile);
 
-    uintptr_t patchedList[32];
-    int patchCount = 0;
+    //uintptr_t patchedList[32];
+    //int patchCount = 0;
 
     for (int i = 0; i < strCount; i++)
     {
         wchar_t* str = YgSys_GetStrFromResource(strfile, i);
         uintptr_t strPtr = (uintptr_t)str;
-        int bPatchMe = 1;
+        //int bPatchMe = 1;
 
 
-        for (int j = 0; j < 32; j++)
-        {
-            if (patchedList[j] == strPtr)
-            {
-                bPatchMe = 0;
-                break;
-            }
-        }
+        //for (int j = 0; j < 32; j++)
+        //{
+        //    if (patchedList[j] == strPtr)
+        //    {
+        //        bPatchMe = 0;
+        //        break;
+        //    }
+        //}
 
-        if (bPatchMe)
+        //if (bPatchMe)
         {
             if (tf_wcschr(str, WCHAR_CIRCLE) || tf_wcschr(str, WCHAR_CROSS))
             {
@@ -814,9 +819,9 @@ int PatchButtonStrings(uintptr_t ptrFolder, const char* filename)
                 sceKernelPrintf("Patching str: 0x%X", str);
 #endif
                 tf_SwapButtonIcons(str);
-                patchedList[patchCount] = strPtr;
-                patchCount++;
-                patchCount %= 32;
+                //patchedList[patchCount] = strPtr;
+                //patchCount++;
+                //patchCount %= 32;
             }
         }
     }
@@ -848,26 +853,26 @@ int PatchButtonStrings_Text(uintptr_t ptrFolder, const char* filename)
 
     int strCount = GetTxtResourceCount(strfile);
 
-    uintptr_t patchedList[16];
-    int patchCount = 0;
+    //uintptr_t patchedList[16];
+    //int patchCount = 0;
 
     for (int i = 0; i < strCount; i++)
     {
         wchar_t* str = (wchar_t*)GetTxtResourceStrPtr(strfile, i);
         uintptr_t strPtr = (uintptr_t)str;
-        int bPatchMe = 1;
+        //int bPatchMe = 1;
 
 
-        for (int j = 0; j < 16; j++)
-        {
-            if (patchedList[j] == strPtr)
-            {
-                bPatchMe = 0;
-                break;
-            }
-        }
+        //for (int j = 0; j < 16; j++)
+        //{
+        //    if (patchedList[j] == strPtr)
+        //    {
+        //        bPatchMe = 0;
+        //        break;
+        //    }
+        //}
 
-        if (bPatchMe)
+       // if (bPatchMe)
         {
             if (tf_wcschr(str, WCHAR_CIRCLE) || tf_wcschr(str, WCHAR_CROSS))
             {
@@ -875,9 +880,9 @@ int PatchButtonStrings_Text(uintptr_t ptrFolder, const char* filename)
                 sceKernelPrintf("Patching str: 0x%X", str);
 #endif
                 tf_SwapButtonIcons(str);
-                patchedList[patchCount] = strPtr;
-                patchCount++;
-                patchCount %= 16;
+                //patchedList[patchCount] = strPtr;
+                //patchCount++;
+                //patchCount %= 16;
             }
         }
     }
@@ -899,25 +904,25 @@ int PatchButtonStrings_Text_SJIS(uintptr_t ptrFolder, const char* filename)
     }
 
     int strCount = GetTxtResourceCount(strfile);
-    uintptr_t patchedList[16];
-    int patchCount = 0;
+    //uintptr_t patchedList[16];
+    //int patchCount = 0;
 
     for (int i = 0; i < strCount; i++)
     {
         uintptr_t strPtr = GetTxtResourceStrPtr(strfile, i);
         char* str = (char*)strPtr;
-        int bPatchMe = 1;
+        //int bPatchMe = 1;
 
-        for (int j = 0; j < 16; j++)
-        {
-            if (patchedList[j] == strPtr)
-            {
-                bPatchMe = 0;
-                break;
-            }
-        }
+        //for (int j = 0; j < 16; j++)
+        //{
+        //    if (patchedList[j] == strPtr)
+        //    {
+        //        bPatchMe = 0;
+        //        break;
+        //    }
+        //}
 
-        if (bPatchMe)
+        //if (bPatchMe)
         {
             if (bContainsSJISSymbol(str))
             {
@@ -925,9 +930,9 @@ int PatchButtonStrings_Text_SJIS(uintptr_t ptrFolder, const char* filename)
                 sceKernelPrintf("Patching str: 0x%X", str);
 #endif
                 tf_SwapButtonIcons_SJIS(str);
-                patchedList[patchCount] = strPtr;
-                patchCount++;
-                patchCount %= 16;
+                //patchedList[patchCount] = strPtr;
+                //patchCount++;
+                //patchCount %= 16;
             }
         }
     }
@@ -977,31 +982,31 @@ void tf_SwapButtonIcons_SJIS(char* str)
     }
 }
 
-char* tf_strstr(register char* string, char* substring)
-{
-    register char* a, * b;
-
-    b = substring;
-    if (*b == 0) {
-        return string;
-    }
-    for (; *string != 0; string += 1) {
-        if (*string != *b) {
-            continue;
-        }
-        a = string;
-        while (1) {
-            if (*b == 0) {
-                return string;
-            }
-            if (*a++ != *b++) {
-                break;
-            }
-        }
-        b = substring;
-    }
-    return NULL;
-}
+//char* tf_strstr(register char* string, char* substring)
+//{
+//    register char* a, * b;
+//
+//    b = substring;
+//    if (*b == 0) {
+//        return string;
+//    }
+//    for (; *string != 0; string += 1) {
+//        if (*string != *b) {
+//            continue;
+//        }
+//        a = string;
+//        while (1) {
+//            if (*b == 0) {
+//                return string;
+//            }
+//            if (*a++ != *b++) {
+//                break;
+//            }
+//        }
+//        b = substring;
+//    }
+//    return NULL;
+//}
 
 int tf_strcmp(const char* s1, const char* s2)
 {
@@ -1073,10 +1078,10 @@ void YgFont_SetDefaultColor(uint32_t color_argb)
     return _YgFont_SetDefaultColor(color_argb);
 }
 
-uint32_t ReturnZeroFunc()
-{
-    return 0;
-}
+//uint32_t ReturnZeroFunc()
+//{
+//    return 0;
+//}
 
 #ifdef YG_PRINTLINE_DEBUG
 void helpers_SetYgFontHookBase(uintptr_t base_addr)
@@ -1158,21 +1163,20 @@ void helpers_SetPPSSPP(int val)
 void helpers_Init(uintptr_t base_addr)
 {
     _YgSys_InitApplication = (void (*)())(0x84F8 + base_addr);
-    _YgAdh_Update = (void (*)())(0x1D75C + base_addr);
     _FirstLoopFunc = (void (*)(int))(0x2B064 + base_addr);
     //_EhPad_Get = (uintptr_t(*)())(0x3A428 + base_addr);
     _YgFont_PrintLine64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*))(0x17F0 + base_addr);
     _YgFont_PrintLineFit64 = (uintptr_t(*)(int, int, uintptr_t, wchar_t*, int32_t))(0x4410 + base_addr);
-    _YgFont_SetWordSeparateFlg = (void (*)(int))(0x21AC + base_addr);
-    _YgFont_GetWordSeparateFlg = (int (*)())(0x21E8 + base_addr);
+    
+    
     _YgFont_SetShadowFlg = (void (*)(int))(0x2140 + base_addr);
     _YgFont_SetRubyCharFlg = (void (*)(int))(0x2284 + base_addr);
     _YgFont_GetShadowFlg = (int (*)())(0x217C + base_addr);
-    _YgFont_GetRubyCharFlg = (int (*)())(0x22C4 + base_addr);
+    
     _YgFont_GetStrWidth = (int (*)(wchar_t*))(0x1360 + base_addr);
     _YgSys_wcscat = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BFA0 + base_addr);
     _YgSys_wcscpy = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BF10 + base_addr);
-    _YgSys_wcscmp = (wchar_t* (*)(const wchar_t*, const wchar_t*))(0x2BE74 + base_addr);
+    
     _YgSys_wcslen = (size_t(*)(const wchar_t*))(0x0002BEB0 + base_addr);
     _YgSys_memset = (void* (*)(void*, int, size_t))(0x4A4E0 + base_addr);
     _YgSys_memcpy = (void* (*)(void*, const void*, size_t))(0x4A1DC + base_addr);
@@ -1194,7 +1198,15 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_GetTrust = (int(*)(int))(0x2A29C + base_addr);
     _YgSys_SetTrust = (int(*)(int, int))(0x2A2D4 + base_addr);
     _YgSys_GetChrNameFromID = (wchar_t*(*)(int, int))(0x23074 + base_addr);
-    _YgSys_GetUnlockNpcInfo = (uintptr_t(*)(int))(0x2A268 + base_addr);
+    _YgFont_GetWordSeparateFlg = (int (*)())(0x21E8 + base_addr);
+    _YgFont_SetWordSeparateFlg = (void (*)(int))(0x21AC + base_addr);
+
+    // optional functions
+    //_YgSys_GetUnlockNpcInfo = (uintptr_t(*)(int))(0x2A268 + base_addr);
+    //_YgSys_wcscmp = (wchar_t* (*)(const wchar_t*, const wchar_t*))(0x2BE74 + base_addr);
+    //_YgFont_GetRubyCharFlg = (int (*)())(0x22C4 + base_addr);
+    //_YgAdh_Update = (void (*)())(0x1D75C + base_addr);
+
 
 
     // window draw stuff
@@ -1208,6 +1220,9 @@ void helpers_Init(uintptr_t base_addr)
     
 
     // needed for analog sticks
+    dummyPadBuf = (unsigned char*)psp_malloc(0x40);
+    YgSys_memset(dummyPadBuf, 0, 0x40);
+
     dummyPadBuf[0x10] = 0x80;
     dummyPadBuf[0x14] = 0x80;
 

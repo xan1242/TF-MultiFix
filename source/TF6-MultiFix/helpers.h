@@ -61,12 +61,8 @@ typedef enum _EhGameState
 int PPSSPP_FindModuleByName(const char* name, SceKernelModuleInfo* outInfo);
 void str_tocase(char* str, int bToUpper);
 int tfFindModuleByName(const char* name, uintptr_t* outAddr, uintptr_t* outSize);
-size_t tf_wcstombs(char* dest, const wchar_t* src, size_t n);
-//size_t tf_wcstombs2(char* dest, const wchar_t* src, size_t n);
 wchar_t* tf_wcschr(wchar_t* ws, wchar_t wc);
-char* tf_strstr(register char* string, char* substring);
 int tf_strcmp(const char* s1, const char* s2);
-//wchar_t* tf_wcsrchr(wchar_t* ws, wchar_t wc);
 uintptr_t EhPad_Get();
 uintptr_t EhPad_GetAlways();
 uint32_t GetPadButtons(int bGiveOneShot);
@@ -74,20 +70,15 @@ EhGameState GetGameState();
 EhGameState SetGameState(EhGameState newState);
 uintptr_t YgFont_PrintLine64(int X, int Y, uintptr_t unk_a2, wchar_t* string);
 uintptr_t YgFont_PrintLineFit64(int X, int Y, uintptr_t unk_a2, wchar_t* string, int32_t unk_t0);
-void YgFont_SetWordSeparateFlg(int val);
-int YgFont_GetWordSeparateFlg();
 void YgFont_SetShadowFlg(int val);
 int YgFont_GetShadowFlg();
 void YgFont_SetRubyCharFlg(int val);
-int YgFont_GetRubyCharFlg();
 int YgFont_GetStrWidth(wchar_t* str);
-//void YgFont_SetMatrixFontFlg(int val);
 void* YgSys_memset(void* ptr, int value, size_t num);
 void* YgSys_memcpy(void* dst, const void* src, size_t num);
 size_t YgSys_wcslen(const wchar_t* str);
 wchar_t* YgSys_wcscpy(wchar_t* dest, const wchar_t* src);
 wchar_t* YgSys_wcscat(wchar_t* dest, const wchar_t* src);
-wchar_t* YgSys_wcscmp(const wchar_t* wcs1, const wchar_t* wcs2);
 char* YgSys_strcpy(char* dest, const char* src);
 char* YgSys_strcat(char* dest, const char* src);
 int YgSys_strcmp(const char* str1, const char* str2);
@@ -100,7 +91,6 @@ int YgSys_GetLang();
 int YgSys_GetLang_Hook();
 int YgSys_GetLang_Hook2();
 void YgSys_InitApplication();
-void YgAdh_Update();
 void FirstLoopFunc(int unk);
 int YgSys_sprintf(char* str, const char* format, ...);
 int sceCccUTF8toUTF16(wchar_t* dest, size_t size, char* src);
@@ -119,8 +109,6 @@ int PatchButtonStrings(uintptr_t ptrFolder, const char* filename);
 int PatchButtonStringsLang(uintptr_t ptrFolder);
 int PatchButtonStrings_Text(uintptr_t ptrFolder, const char* filename);
 int PatchButtonStrings_Text_SJIS(uintptr_t ptrFolder, const char* filename);
-//void tf_ReplaceFirstChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
-//void tf_ReplaceLastChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
 int YgSys_SndPlaySE(int sound);
 uintptr_t YgSys_GetTrunkFromMRK(int mrk);
 int YgSys_GetLimitation(uint16_t cardID);
@@ -136,9 +124,26 @@ int YgSys_GetTrust(int charaID);
 int YgSys_SetTrust(int charaID, int val);
 wchar_t* YgSys_GetChrNameFromID(int charaID, int unk);
 uintptr_t YgSys_GetUnlockNpcInfo(int charaID);
+void YgFont_SetWordSeparateFlg(int val);
+int YgFont_GetWordSeparateFlg();
+
+// optional functions
+//uintptr_t YgSys_GetUnlockNpcInfo(int charaID);
+//
+//wchar_t* YgSys_wcscmp(const wchar_t* wcs1, const wchar_t* wcs2);
+//void YgFont_SetMatrixFontFlg(int val);
+//int YgFont_GetRubyCharFlg();
+
+//void YgAdh_Update();
+//void tf_ReplaceFirstChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
+//void tf_ReplaceLastChar(wchar_t* str, wchar_t target_chr, wchar_t new_chr);
+//size_t tf_wcstombs2(char* dest, const wchar_t* src, size_t n);
+//char* tf_strstr(register char* string, char* substring);
+//wchar_t* tf_wcsrchr(wchar_t* ws, wchar_t wc);
+//size_t tf_wcstombs(char* dest, const wchar_t* src, size_t n);
 
 
-uint32_t ReturnZeroFunc();
+//uint32_t ReturnZeroFunc();
 int loopAround(int value, int min, int max);
 void helpers_SetPPSSPP(int val);
 void helpers_Init(uintptr_t base_addr);
