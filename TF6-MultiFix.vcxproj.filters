@@ -125,6 +125,9 @@
     <ClCompile Include="source\TF6-MultiFix\windows\cheatmenu_global.c">
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClCompile>
+    <ClCompile Include="source\TF6-MultiFix\WindowManager.c">
+      <Filter>source\TF6-MultiFix</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -222,6 +225,9 @@
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\windows\cheatmenu_global.h">
       <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TF6-MultiFix\WindowManager.h">
+      <Filter>source\TF6-MultiFix</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

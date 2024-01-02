@@ -34,14 +34,15 @@
 #include "story.h"
 #include "title.h"
 #include "YgWindow.h"
-#include "MenuWindow.h"
+//#include "MenuWindow.h"
 #include <pspctrl.h>
 #include "multifixconfig.h"
+#include "WindowManager.h"
 #include "windows/multifixwindow.h"
-#include "windows/aboutwindow.h"
-#include "windows/konamidialog.h"
-#include "windows/cheatmenu_global.h"
-#include "windows/cheatmenu_duel.h"
+//#include "windows/aboutwindow.h"
+//#include "windows/konamidialog.h"
+//#include "windows/cheatmenu_global.h"
+//#include "windows/cheatmenu_duel.h"
 
 #include <psputility.h>
 #include <psputility_msgdialog.h>
@@ -50,11 +51,11 @@ uintptr_t base_addr = 0;
 
 int bCheatMenuEnabled = 0;
 
-int bShowMfWindow = 0;
-int bShowAboutWindow = 0;
-int bShowKonamiDialog = 0;
-int bShowCheatMenuGlobal = 0;
-int bShowCheatMenuDuel = 0;
+//int bShowMfWindow = 0;
+//int bShowAboutWindow = 0;
+//int bShowKonamiDialog = 0;
+//int bShowCheatMenuGlobal = 0;
+//int bShowCheatMenuDuel = 0;
 
 int bIsOnPPSSPP = 0;
 void SetPPSSPP(int val)
@@ -67,30 +68,30 @@ int (*ptr_lEhScript_ModuleRead_FinishCB)(uintptr_t unk1, uintptr_t unk2) = (int(
 int (*lEhModule_Load_EndCallback)(uintptr_t unk1, uintptr_t unk2) = (int(*)(uintptr_t, uintptr_t))0;
 void (*lSoftReset)() = (void(*)())0;
 
-void DestroyAllWindows()
-{
-    bShowMfWindow = 0;
-    bShowAboutWindow = 0;
-    bShowKonamiDialog = 0;
-    bShowCheatMenuGlobal = 0;
-    bShowCheatMenuDuel = 0;
+//void DestroyAllWindows()
+//{
+//    bShowMfWindow = 0;
+//    bShowAboutWindow = 0;
+//    bShowKonamiDialog = 0;
+//    bShowCheatMenuGlobal = 0;
+//    bShowCheatMenuDuel = 0;
+//
+//    if (aboutwindow_IsActive())
+//        aboutwindow_Destroy();
+//    if (konamidialog_IsActive())
+//        konamidialog_Destroy();
+//    if (mfwindow_IsActive())
+//        mfwindow_Destroy();
+//    if (cheatmenu_global_IsActive())
+//        cheatmenu_global_Destroy();
+//    if (cheatmenu_duel_IsActive())
+//        cheatmenu_duel_Destroy();
+//}
 
-    if (aboutwindow_IsActive())
-        aboutwindow_Destroy();
-    if (konamidialog_IsActive())
-        konamidialog_Destroy();
-    if (mfwindow_IsActive())
-        mfwindow_Destroy();
-    if (cheatmenu_global_IsActive())
-        cheatmenu_global_Destroy();
-    if (cheatmenu_duel_IsActive())
-        cheatmenu_duel_Destroy();
-}
-
-int bIsAnyWindowShown()
-{
-    return bShowMfWindow || bShowAboutWindow || bShowKonamiDialog || bShowCheatMenuDuel || bShowCheatMenuGlobal;
-}
+//int bIsAnyWindowShown()
+//{
+//    return bShowMfWindow || bShowAboutWindow || bShowKonamiDialog || bShowCheatMenuDuel || bShowCheatMenuGlobal;
+//}
 
 int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
 {
@@ -116,7 +117,7 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
 
     SetGameState(EHSTATE_UNKNOWN);
 
-    DestroyAllWindows();
+    WM_DestroyAllWindows();
 
     if (nameHash == REL_TITLE_PRX_STRHASH)
     {
@@ -242,7 +243,7 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
     }
 
     SetGameState(EHSTATE_UNKNOWN);
-    DestroyAllWindows();
+    WM_DestroyAllWindows();
    
     if (nameHash == REL_FIELD_PRX_STRHASH)
     {
@@ -558,7 +559,8 @@ void HandleButtonInputs()
         {
             bCheatMenuEnabled = 1;
             mfwindow_SetCheatsEnabled(1);
-            bShowKonamiDialog = 1;
+            WM_SetCheatMenuEnable(1);
+            WM_SetDispMask(WM_GetDispMask() | WINDOWMANAGER_DISP_KONAMI);
         }
     }
 
@@ -567,16 +569,16 @@ void HandleButtonInputs()
         helpers_SetBlockNextInputPoll(1);
         if (buttons & PSP_CTRL_TRIANGLE)
         {
-            if (!bIsAnyWindowShown())
-                bShowMfWindow = 1;
+            if (!WM_bIsAnyWindowShown())
+                WM_SetDispMask(WM_GetDispMask() | WINDOWMANAGER_DISP_MFWINDOW);
         }
 
         if (bCheatMenuEnabled)
         {
             if (buttons & PSP_CTRL_CIRCLE)
             {
-                if (!bIsAnyWindowShown())
-                    bShowCheatMenuGlobal = 1;
+                if (!WM_bIsAnyWindowShown())
+                    WM_SetDispMask(WM_GetDispMask() | WINDOWMANAGER_DISP_CHEATGLOBAL);
             }
 
             // duel cheats
@@ -584,45 +586,9 @@ void HandleButtonInputs()
             {
                 if (buttons & PSP_CTRL_SQUARE)
                 {
-                    if (!bIsAnyWindowShown())
-                        bShowCheatMenuDuel = 1;
+                    if (!WM_bIsAnyWindowShown())
+                        WM_SetDispMask(WM_GetDispMask() | WINDOWMANAGER_DISP_CHEATDUEL);
                 }
-
-                //            if (mfconfig_GetInstaWinCheat())
-                //            {
-                //                if (buttons & PSP_CTRL_SQUARE)
-                //                {
-                //#ifdef TFMULTIFIX_DEBUG_PRINT
-                //                    sceKernelPrintf("Player Cheat on !!!");
-                //#endif
-                //                    dueleng_chtSetPlayerLP(mfconfig_GetCheatPlayerLP());
-                //                }
-                //
-                //                if (buttons & PSP_CTRL_SELECT)
-                //                {
-                //#ifdef TFMULTIFIX_DEBUG_PRINT
-                //                    sceKernelPrintf("Opponent LP Cheat on !!!");
-                //#endif
-                //                    dueleng_chtSetOpponentLP(mfconfig_GetCheatOpponentLP());
-                //                }
-                //            }
-                //
-                //            if (mfconfig_GetCheatControlPartner() == 1)
-                //            {
-                //                if (buttons & PSP_CTRL_LEFT)
-                //                {
-                //#ifdef TFMULTIFIX_DEBUG_PRINT
-                //                    sceKernelPrintf("Player control cheat: AI off !!!");
-                //#endif
-                //                    dueleng_chtSetPlayerControl(0, 0);
-                //                }
-                //                else if (buttons & PSP_CTRL_RIGHT)
-                //                {
-                //#ifdef TFMULTIFIX_DEBUG_PRINT
-                //                    sceKernelPrintf("Player control cheat: AI on !!!");
-                //#endif
-                //                    dueleng_chtSetPlayerControl(0, 1);
-                //                }
             }
         }
    }
@@ -631,91 +597,92 @@ void HandleButtonInputs()
 void HandleDialogs()
 {
     helpers_SetDialogBoxWantsIO(0);
+    WM_Draw();
 
-    if (bShowAboutWindow)
-    {
-        if (aboutwindow_Draw())
-            bShowAboutWindow = 0;
-    }
-
-    if (bShowKonamiDialog)
-    {
-        if (konamidialog_Draw())
-            bShowKonamiDialog = 0;
-    }
-
-    if (bShowMfWindow)
-    {
-        int retval = mfwindow_Draw();
-        if (retval)
-        {
-            bShowMfWindow = 0;
-
-            int itemIdx = MENUWINDOW_RESULT_ITEM(retval);
-
-            //int decideStatus = retval & 0xFF;
-            //int currItem = (retval >> 8) & 0xFF;
-            //int bValueChanged = (retval >> 16) & 0xFF;
-
-            if (MENUWINDOW_RESULT_DECIDESTATUS(retval) == YGSEL_DECIDESTATUS_CONFIRM)
-            {
-                switch (itemIdx)
-                {
-                    case MFWINDOW_ITEM_ABOUT:
-                    {
-                        bShowAboutWindow = 1;
-                        break;
-                    }
-                    case MFWINDOW_ITEM_CHEATSGLOBAL:
-                    {
-                        if (bCheatMenuEnabled)
-                        {
-                            bShowCheatMenuGlobal = 1;
-                        }
-                        break;
-                    }
-                    case MFWINDOW_ITEM_CHEATSLOCAL:
-                    {
-                        if (bCheatMenuEnabled && ((GetGameState() == EHSTATE_DUEL)))
-                        {
-                            bShowCheatMenuDuel = 1;
-                        }
-                        break;
-                    }
-                    default:
-                        break;
-                }
-
-                //if (itemIdx == MFWINDOW_ITEM_ABOUT)
-                //{
-                //    bShowAboutWindow = 1;
-                //}
-                //
-                //if ((itemIdx == MFWINDOW_ITEM_CHEATSLOCAL) && bCheatMenuEnabled)
-                //{
-                //    if (GetGameState() == EHSTATE_DUEL)
-                //        bShowCheatMenuDuel = 1;
-                //}
-            }
-
-        }
-    }
-
-    if (bShowCheatMenuGlobal)
-    {
-        if (cheatmenu_global_Draw())
-        {
-            bShowCheatMenuGlobal = 0;
-        }
-    }
-
-    if (bShowCheatMenuDuel)
-    {
-        if (cheatmenu_duel_Draw())
-        {
-            bShowCheatMenuDuel = 0;
-        }
-    }
+    //if (bShowAboutWindow)
+    //{
+    //    if (aboutwindow_Draw())
+    //        bShowAboutWindow = 0;
+    //}
+    //
+    //if (bShowKonamiDialog)
+    //{
+    //    if (konamidialog_Draw())
+    //        bShowKonamiDialog = 0;
+    //}
+    //
+    //if (bShowMfWindow)
+    //{
+    //    int retval = mfwindow_Draw();
+    //    if (retval)
+    //    {
+    //        bShowMfWindow = 0;
+    //
+    //        int itemIdx = MENUWINDOW_RESULT_ITEM(retval);
+    //
+    //        //int decideStatus = retval & 0xFF;
+    //        //int currItem = (retval >> 8) & 0xFF;
+    //        //int bValueChanged = (retval >> 16) & 0xFF;
+    //
+    //        if (MENUWINDOW_RESULT_DECIDESTATUS(retval) == YGSEL_DECIDESTATUS_CONFIRM)
+    //        {
+    //            switch (itemIdx)
+    //            {
+    //                case MFWINDOW_ITEM_ABOUT:
+    //                {
+    //                    bShowAboutWindow = 1;
+    //                    break;
+    //                }
+    //                case MFWINDOW_ITEM_CHEATSGLOBAL:
+    //                {
+    //                    if (bCheatMenuEnabled)
+    //                    {
+    //                        bShowCheatMenuGlobal = 1;
+    //                    }
+    //                    break;
+    //                }
+    //                case MFWINDOW_ITEM_CHEATSLOCAL:
+    //                {
+    //                    if (bCheatMenuEnabled && ((GetGameState() == EHSTATE_DUEL)))
+    //                    {
+    //                        bShowCheatMenuDuel = 1;
+    //                    }
+    //                    break;
+    //                }
+    //                default:
+    //                    break;
+    //            }
+    //
+    //            //if (itemIdx == MFWINDOW_ITEM_ABOUT)
+    //            //{
+    //            //    bShowAboutWindow = 1;
+    //            //}
+    //            //
+    //            //if ((itemIdx == MFWINDOW_ITEM_CHEATSLOCAL) && bCheatMenuEnabled)
+    //            //{
+    //            //    if (GetGameState() == EHSTATE_DUEL)
+    //            //        bShowCheatMenuDuel = 1;
+    //            //}
+    //        }
+    //
+    //    }
+    //}
+    //
+    //if (bShowCheatMenuGlobal)
+    //{
+    //    if (cheatmenu_global_Draw())
+    //    {
+    //        bShowCheatMenuGlobal = 0;
+    //    }
+    //}
+    //
+    //if (bShowCheatMenuDuel)
+    //{
+    //    if (cheatmenu_duel_Draw())
+    //    {
+    //        bShowCheatMenuDuel = 0;
+    //    }
+    //}
 }
 
 // do stuff at the end of main loop
