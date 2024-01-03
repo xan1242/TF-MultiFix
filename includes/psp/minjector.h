@@ -8,9 +8,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#ifndef MINJECTOR_H
-#define MINJECTOR_H
-
 typedef enum _MIPSRegister {
     MIPSR_r0 = 0,
     MIPSR_r1,
@@ -88,34 +85,11 @@ size_t minj_GetBaseSize();
 void minj_SetGameBaseAddress(uintptr_t addr, size_t size);
 uintptr_t minj_adjustAddress(uintptr_t addr);
 
-__attribute__((always_inline)) inline void minj_WriteMemory8(uintptr_t addr, uint8_t value)
-{
-    *(uint8_t*)(minj_adjustAddress(addr)) = value;
-}
-
-__attribute__((always_inline)) inline void minj_WriteMemory16(uintptr_t addr, uint16_t value)
-{
-    *(uint16_t*)(minj_adjustAddress(addr)) = value;
-}
-
-__attribute__((always_inline)) inline void minj_WriteMemory32(uintptr_t addr, uint32_t value)
-{
-    *(uint32_t*)(minj_adjustAddress(addr)) = value;
-}
-
-__attribute__((always_inline)) inline void minj_MakeNOP(uintptr_t at)
-{
-    minj_WriteMemory32(at, 0);
-}
-
-__attribute__((always_inline)) inline void minj_MakeNOPCount(uintptr_t at, uint32_t count)
-{
-    for (int i = 0; i < count; i++)
-    {
-        minj_WriteMemory32(at + (sizeof(uint32_t) * i), 0);
-    }
-}
-
+void minj_WriteMemory8(uintptr_t addr, uint8_t value);
+void minj_WriteMemory16(uintptr_t addr, uint16_t value);
+void minj_WriteMemory32(uintptr_t addr, uint32_t value);
+void minj_MakeNOP(uintptr_t at);
+void minj_MakeNOPCount(uintptr_t at, uint32_t count);
 void minj_MakeJMP(uintptr_t at, uintptr_t dest);
 void minj_MakeJMPwNOP(uintptr_t at, uintptr_t dest);
 void minj_MakeCALL(uintptr_t at, uintptr_t dest);
@@ -139,6 +113,4 @@ uint32_t minj_ReadMemory32(uintptr_t addr);
 uint64_t minj_ReadMemory64(uintptr_t addr);
 float minj_ReadMemoryFloat(uintptr_t addr);
 double minj_ReadMemoryDouble(uintptr_t addr);
-#endif
-
 #endif
