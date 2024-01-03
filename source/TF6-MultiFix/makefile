@@ -1,5 +1,6 @@
 TARGET = ../../build/TF6-MultiFix
-OBJS = main.o \
+OBJS = ../../includes/psp/minjector.o \
+       main.o \
        helpers.o \
        multifix.o \
        multifixconfig.o \
@@ -36,8 +37,8 @@ OBJS = main.o \
        windows/cheatmenu_trust.o \
        exports.o \
        ../../includes/psp/pspmallochelper.o \
-       ../../includes/psp/stringhash.o \
-       ../../includes/psp/minjector.o
+       ../../includes/psp/stringhash.o
+       
 
 DEFINES = -DMINJECTOR_MINIMAL -DYGWINDOW_ESSENTIALS_ONLY
 

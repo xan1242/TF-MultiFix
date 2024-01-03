@@ -113,20 +113,7 @@ void minj_MemoryFill(uintptr_t addr, uint8_t value, size_t size)
     minj_memset(minj_adjustAddress(addr), value, size);
 }
 #endif
-void minj_WriteMemory8(uintptr_t addr, uint8_t value)
-{
-    *(uint8_t*)(minj_adjustAddress(addr)) = value;
-}
 
-void minj_WriteMemory16(uintptr_t addr, uint16_t value)
-{
-    *(uint16_t*)(minj_adjustAddress(addr)) = value;
-}
-
-void minj_WriteMemory32(uintptr_t addr, uint32_t value)
-{
-    *(uint32_t*)(minj_adjustAddress(addr)) = value;
-}
 #ifndef MINJECTOR_MINIMAL
 void minj_WriteMemory64(uintptr_t addr, uint64_t value)
 {
@@ -173,30 +160,12 @@ double minj_ReadMemoryDouble(uintptr_t addr)
     return *(double*)(minj_adjustAddress(addr));
 }
 #endif
-void minj_MakeNOP(uintptr_t at)
-{
-#ifndef MINJECTOR_MINIMAL
-    minj_MemoryFill(minj_adjustAddress(at), 0x00, 4);
-#else
-    minj_WriteMemory32(at, 0);
-#endif
-}
-
-void minj_MakeNOPCount(uintptr_t at, uint32_t count)
-{
-#ifndef MINJECTOR_MINIMAL
-    minj_MemoryFill(minj_adjustAddress(at), 0x00, sizeof(uint32_t) * count);
-#else
-    for (int i = 0; i < count; i++)
-    {
-        minj_WriteMemory32(at + (sizeof(uint32_t) * i), 0);
-    }
-#endif
-}
 
 void minj_MakeJMP(uintptr_t at, uintptr_t dest)
 {
-    minj_WriteMemory32(at, (0x08000000 | ((minj_adjustAddress(dest) & 0x0FFFFFFC) >> 2)));
+    uintptr_t _at = minj_adjustAddress(at);
+    uintptr_t _dest = minj_adjustAddress(dest);
+    *(uint32_t*)(_at) = (0x08000000 | ((_dest & 0x0FFFFFFC) >> 2));
 }
 
 void minj_MakeJMPwNOP(uintptr_t at, uintptr_t dest)
@@ -207,7 +176,9 @@ void minj_MakeJMPwNOP(uintptr_t at, uintptr_t dest)
 
 void minj_MakeCALL(uintptr_t at, uintptr_t dest)
 {
-    minj_WriteMemory32(minj_adjustAddress(at), (0x0C000000 | (((minj_adjustAddress(dest)) >> 2) & 0x03FFFFFF)));
+    uintptr_t _at = minj_adjustAddress(at);
+    uintptr_t _dest = minj_adjustAddress(dest);
+    *(uint32_t*)(_at) = (0x0C000000 | (((_dest) >> 2) & 0x03FFFFFF));
 }
 
 uintptr_t minj_GetBranchDestination(uintptr_t at)
