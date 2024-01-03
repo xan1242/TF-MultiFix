@@ -22,6 +22,7 @@
 #define MENUWINDOW_RESULT_ITEM(x) ((x >> 8) & 0xFF)
 #define MENUWINDOW_RESULT_VALCHANGE(x) ((x >> 16) & 0xFF)
 
+#pragma pack(4)
 typedef struct _MenuWindowItem
 {
     int* val;
@@ -42,6 +43,7 @@ typedef struct _MenuWindowItem
     uintptr_t cbValWrite;
     uintptr_t cbData;
 }MenuWindowItem;
+#pragma pack()
 
 typedef enum _MenuWindowItemType
 {
@@ -54,6 +56,7 @@ typedef enum _MenuWindowItemType
     MENUWINDOW_ITEM_TYPE_COUNT
 }MenuWindowItemType;
 
+#pragma pack(4)
 typedef struct _MenuWindow
 {
 	YgSelWnd* selwnd;
@@ -71,6 +74,7 @@ typedef struct _MenuWindow
 	wchar_t* caption;
     wchar_t* descwindowtext;
 }MenuWindow;
+#pragma pack()
 
 uintptr_t MenuWindow_Callback(uintptr_t ehpacket, int item_index, int X, int Y, MenuWindow* window);
 int MenuWindow_IsActive(MenuWindow* window);

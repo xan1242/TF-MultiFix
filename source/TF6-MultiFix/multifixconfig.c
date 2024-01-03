@@ -101,6 +101,11 @@ int mfconfig_GetDisableInstall()
 //    return val;
 //}
 
+int mfconfig_GetCheatInfiniteDP()
+{
+    return mfconfig.bCheatInfiniteDP;
+}
+
 void mfconfig_Init()
 {
     // TODO: add config reading here

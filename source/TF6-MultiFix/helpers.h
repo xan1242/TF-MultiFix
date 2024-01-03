@@ -116,7 +116,7 @@ int YgSys_GetLimitation_Default(uint16_t cardID);
 int YgSys_GetTrunk(uint16_t cardID);
 int YgSys_GetDuelPoint();
 void YgSys_SetDuelPoint(int val);
-void YgSys_UpdateDuelPoint(int amount);
+//void YgSys_UpdateDuelPoint(int amount);
 uintptr_t YgSys_GetPersonalInfoPtr();
 uintptr_t YgSys_GetBoxPtr(int box);
 int YgSys_GetBoxStatus(int box);

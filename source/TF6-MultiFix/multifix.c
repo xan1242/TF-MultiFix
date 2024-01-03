@@ -638,16 +638,6 @@ int YgSys_GetDuelPoint_Hook()
     return YgSys_GetDuelPoint();
 }
 
-void YgSys_UpdateDuelPoint_Hook(int amount)
-{
-    MultiFixConfig* config = mfconfig_GetConfig();
-    if (config->bCheatInfiniteDP)
-    {
-        return;
-    }
-    return YgSys_UpdateDuelPoint(amount);
-}
-
 int YgSys_GetBoxStatus_Hook(int box)
 {
     MultiFixConfig* config = mfconfig_GetConfig();
@@ -660,6 +650,31 @@ int YgSys_GetBoxStatus_Hook(int box)
     }
     return YgSys_GetBoxStatus(box);
 }
+
+uintptr_t YgSys_UpdateDuelPoint_Hook_ExitNoInf = 0;
+uintptr_t YgSys_UpdateDuelPoint_Hook_ExitInf = 0;
+void YgSys_UpdateDuelPoint_Hook(int amount);
+#ifndef __INTELLISENSE__
+asm
+(
+    ".global YgSys_UpdateDuelPoint_Hook\n"
+    "YgSys_UpdateDuelPoint_Hook:\n"
+    "jal mfconfig_GetCheatInfiniteDP\n"
+    // nop
+    "lui $v1, %hi(YgSys_UpdateDuelPoint_Hook_ExitInf)\n" // this is below the beqz in the delay slot
+    "beqz $v0, noinfiniteDP\n"
+    "addiu $v1, $v1, %lo(YgSys_UpdateDuelPoint_Hook_ExitInf)\n"
+    "b duelpoint_exit\n"
+    "noinfiniteDP:\n"
+    "jal YgSys_GetPersonalInfoPtr\n"
+    "lui $v1, %hi(YgSys_UpdateDuelPoint_Hook_ExitNoInf)\n"
+    "addiu $v1, $v1, %lo(YgSys_UpdateDuelPoint_Hook_ExitNoInf)\n"
+    "duelpoint_exit:\n"
+    "lw $v1, 0($v1)\n"
+    "jr $v1\n"
+    "nop\n"
+);
+#endif
 
 void TFFixesInject()
 {
@@ -757,7 +772,10 @@ void TFFixesInject()
 
     // infinite DP
     minj_MakeJMPwNOP(0x25D20, (uintptr_t)&YgSys_GetDuelPoint_Hook);
-    minj_MakeJMPwNOP(0x25D58, (uintptr_t)&YgSys_UpdateDuelPoint_Hook);
+    // inline hook to reduce size
+    minj_MakeJMP(0x25D64, (uintptr_t)&YgSys_UpdateDuelPoint_Hook);
+    YgSys_UpdateDuelPoint_Hook_ExitNoInf = 0x25D6C + base_addr;
+    YgSys_UpdateDuelPoint_Hook_ExitInf = 0x25DDC + base_addr;
 
     // unlock boxes
     minj_MakeJMPwNOP(0x29D44, (uintptr_t)&YgSys_GetBoxStatus_Hook);
@@ -770,5 +788,4 @@ void TFFixesInject()
     minj_MakeCALL(0xCF38, (uintptr_t)&YgFont_GetShadowFlg_Hook);
     minj_MakeCALL(0xCF44, (uintptr_t)&YgFont_SetShadowFlg_Hook1);
     minj_MakeCALL(0xCF6C, (uintptr_t)&YgFont_SetShadowFlg_Hook2);
-
 }

@@ -198,27 +198,27 @@ void YgSys_SetDuelPoint(int val)
     *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET) = val;
 }
 
-void YgSys_UpdateDuelPoint(int amount)
-{
-    int newval = *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET) + amount;
-    if (newval > DUELPOINT_MAX)
-        newval = DUELPOINT_MAX;
-    if (newval < 0)
-        newval = 0;
-
-    *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET) = newval;
-
-    if (amount > 0)
-    {
-        int newval2 = *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET2) + amount;
-        if (newval2 > DUELPOINT_MAX)
-            newval2 = DUELPOINT_MAX;
-        if (newval2 < 0)
-            newval2 = 0;
-
-        *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET2) = newval2;
-    }
-}
+// void YgSys_UpdateDuelPoint(int amount)
+// {
+//     int newval = *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET) + amount;
+//     if (newval > DUELPOINT_MAX)
+//         newval = DUELPOINT_MAX;
+//     if (newval < 0)
+//         newval = 0;
+// 
+//     *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET) = newval;
+// 
+//     if (amount > 0)
+//     {
+//         int newval2 = *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET2) + amount;
+//         if (newval2 > DUELPOINT_MAX)
+//             newval2 = DUELPOINT_MAX;
+//         if (newval2 < 0)
+//             newval2 = 0;
+// 
+//         *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET2) = newval2;
+//     }
+// }
 
 uintptr_t YgSys_GetBoxPtr(int box)
 {

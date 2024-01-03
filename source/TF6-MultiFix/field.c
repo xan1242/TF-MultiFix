@@ -99,25 +99,30 @@ uintptr_t field_YgFont_PrintLineFit64_StatusHook_PartnerName(int X, int Y, uintp
     return retval;
 }
 
+void field_hkYgFont_PrintLineFit64();
 #ifndef __INTELLISENSE__
-__attribute__((naked)) void field_hkYgFont_PrintLineFit64()
-{
-    asm volatile (
-        "move $t1, $s7\n"
-        "b field_YgFont_PrintLineFit64_QuizHook\n"
-        "nop"
-        );
-}
-
-__attribute__((naked)) void field_hkYgFont_PrintLineFit64_PartnerName()
-{
-    asm volatile (
-        "move $t1, $s1\n"
-        "b field_YgFont_PrintLineFit64_StatusHook_PartnerName\n"
-        "nop"
-        );
-}
+asm
+(
+    ".global field_hkYgFont_PrintLineFit64\n"
+    "field_hkYgFont_PrintLineFit64:\n"
+    "move $t1, $s7\n"
+    "b field_YgFont_PrintLineFit64_QuizHook\n"
+    //"nop\n"
+);
 #endif
+
+void field_hkYgFont_PrintLineFit64_PartnerName();
+#ifndef __INTELLISENSE__
+asm
+(
+    ".global field_hkYgFont_PrintLineFit64_PartnerName\n"
+    "field_hkYgFont_PrintLineFit64_PartnerName:\n"
+    "move $t1, $s1\n"
+    "b field_YgFont_PrintLineFit64_StatusHook_PartnerName\n"
+    //"nop\n"
+);
+#endif
+
 
 int (*lField_Always_Callback)(uintptr_t ptrFile, uintptr_t filesize) = (int(*)(uintptr_t, uintptr_t))0;
 int lField_Always_Callback_Hook(uintptr_t ptrFolder, size_t filesize)
