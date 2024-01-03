@@ -441,32 +441,32 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
     return 0;
 }
 
+void hkPrintLineFontYOffset();
 #ifndef __INTELLISENSE__
-__attribute__((naked)) void hkPrintLineFontYOffset()
-{
-    asm volatile
-    (
-        "addiu $a1, $a1, -0x40\n"
-        "sw $a1, 0x98($sp)\n"
-        "addu $s4, $s1, $s4\n"
-        "jr $ra\n"
-        "lui $s5, 5\n"
-    );
-}
+asm
+(
+    ".global hkPrintLineFontYOffset\n"
+    "hkPrintLineFontYOffset:\n"
+    "addiu $a1, $a1, -0x40\n"
+    "sw $a1, 0x98($sp)\n"
+    "addu $s4, $s1, $s4\n"
+    "lui $s5, 5\n"
+    "jr $ra\n"
+);
+#endif
 
-__attribute__((naked)) void hkPrintBoxFontYOffset()
-{
-    asm volatile
-    (
-            "addiu $fp, $fp, -0x40\n"
-            "addu $s3, $a3, $fp\n"
-            "lui $a1, 5\n"
-            "addu $a1, $s2, $a1\n"
-            "jr $ra\n"
-            "nop\n"
-            
-    );
-}
+void hkPrintBoxFontYOffset();
+#ifndef __INTELLISENSE__
+asm
+(
+    ".global hkPrintBoxFontYOffset\n"
+    "hkPrintBoxFontYOffset:\n"
+    "addiu $fp, $fp, -0x40\n"
+    "addu $s3, $a3, $fp\n"
+    "lui $a1, 5\n"
+    "addu $a1, $s2, $a1\n"
+    "jr $ra\n"
+);
 #endif
 
 // swap cross and circle for accept
