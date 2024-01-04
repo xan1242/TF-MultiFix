@@ -51,9 +51,14 @@ int lTitle_CallBack_Hook(uintptr_t ptrFolder, size_t filesize)
     if (!result)
         return result;
 
-    char strFilename[20];
+    char strFilename[32];
     YgSys_strcpy(strFilename, "tushin_msg_j.bin");
     strFilename[11] = GetLangChar();
+
+    PatchButtonStrings(ptrFolder, strFilename);
+
+    YgSys_strcpy(strFilename, "title_msg_j.bin");
+    strFilename[10] = GetLangChar();
 
     PatchButtonStrings(ptrFolder, strFilename);
 
