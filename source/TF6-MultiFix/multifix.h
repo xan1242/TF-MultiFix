@@ -31,6 +31,8 @@ Created by Xan / Tenjoin\
 //#define YG_PRINTLINE_DEBUG
 // define for debug printing of the return address of YgFont_PrintBox64
 //#define YG_PRINTBOX_DEBUG
+// define for memory free prints after module loads
+//#define TFMULTIFIX_DEBUG_MEMORY
 
 // define for debug printing of the return address of YgSys_GetLang
 //#define YG_GETLANG_DEBUG

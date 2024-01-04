@@ -39,8 +39,14 @@
 #include "WindowManager.h"
 #include "windows/multifixwindow.h"
 
-#include <psputility.h>
-#include <psputility_msgdialog.h>
+//#include <psputility.h>
+//#include <psputility_msgdialog.h>
+
+#ifdef TFMULTIFIX_DEBUG_MEMORY
+#ifdef TFMULTIFIX_DEBUG_PRINT
+#include <pspsysmem_kernel.h>
+#endif
+#endif
 
 uintptr_t base_addr = 0;
 
@@ -64,6 +70,20 @@ int lEhScript_ModuleRead_FinishCB_Hook(uintptr_t unk1, uintptr_t unk2)
 #ifdef TFMULTIFIX_DEBUG_PRINT
     sceKernelPrintf("lEhScript_ModuleRead_FinishCB hooked, args: 0x%X 0x%X", unk1, unk2);
     sceKernelPrintf("LOADED MODULE: %s", modName);
+
+#ifdef TFMULTIFIX_DEBUG_MEMORY
+    SceSize freesize = sceKernelPartitionTotalFreeMemSize(PSP_MEMORY_PARTITION_USER);
+    SceSize largest = sceKernelPartitionMaxFreeMemSize(PSP_MEMORY_PARTITION_USER);
+
+    sceKernelPrintf("free: 0x%08X | largest: 0x%08X", freesize, largest);
+
+    freesize = sceKernelPartitionTotalFreeMemSize(PSP_MEMORY_PARTITION_KERNEL);
+    largest = sceKernelPartitionMaxFreeMemSize(PSP_MEMORY_PARTITION_KERNEL);
+    sceKernelPrintf("kfree: 0x%08X | klargest: 0x%08X", freesize, largest);
+
+    sceKernelSysMemDump();
+#endif
+
 #endif
 
     char modNameUpper[16];
@@ -192,6 +212,20 @@ int lEhModule_Load_EndCallback_Hook(uintptr_t unk1, uintptr_t unk2)
 #ifdef TFMULTIFIX_DEBUG_PRINT
     sceKernelPrintf("lEhModule_Load_EndCallback hooked, args: 0x%X 0x%X", unk1, unk2);
     sceKernelPrintf("LOADED MODULE: %s", modName);
+
+#ifdef TFMULTIFIX_DEBUG_MEMORY
+    SceSize freesize = sceKernelPartitionTotalFreeMemSize(PSP_MEMORY_PARTITION_USER);
+    SceSize largest = sceKernelPartitionMaxFreeMemSize(PSP_MEMORY_PARTITION_USER);
+
+    sceKernelPrintf("free: 0x%08X | largest: 0x%08X", freesize, largest);
+
+    freesize = sceKernelPartitionTotalFreeMemSize(PSP_MEMORY_PARTITION_KERNEL);
+    largest = sceKernelPartitionMaxFreeMemSize(PSP_MEMORY_PARTITION_KERNEL);
+    sceKernelPrintf("kfree: 0x%08X | klargest: 0x%08X", freesize, largest);
+
+    sceKernelSysMemDump();
+#endif
+
 #endif
 
     char modNameUpper[16];
