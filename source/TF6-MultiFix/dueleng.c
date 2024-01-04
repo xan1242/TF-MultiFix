@@ -107,12 +107,12 @@ void dueleng_sub_A28C_Hook(int PlayerNum, int WhoIsInControl)
         *(uint32_t*)(4 * PlayerNum + (0x38E3DC + _base_addr_dueleng) + 8) = WhoIsInControl;
 }
 
-void dueleng_chtSetPhase(duelPhase phase)
-{
-    *(uint16_t*)(DUELENG_BASE_ENG_ADDR + _base_addr_dueleng) = (phase & 0xFFFF);
-    *(uint16_t*)(DUELENG_BASE_ENG_ADDR + 8 + _base_addr_dueleng) = (phase & 0xFFFF);
-    *(uint32_t*)(DUELENG_BASE_ENG_ADDR + 0x808 + _base_addr_dueleng) = 1;
-}
+// void dueleng_chtSetPhase(duelPhase phase)
+// {
+//     *(uint16_t*)(DUELENG_BASE_ENG_ADDR + _base_addr_dueleng) = (phase & 0xFFFF);
+//     *(uint16_t*)(DUELENG_BASE_ENG_ADDR + 8 + _base_addr_dueleng) = (phase & 0xFFFF);
+//     *(uint32_t*)(DUELENG_BASE_ENG_ADDR + 0x808 + _base_addr_dueleng) = 1;
+// }
 
 void dueleng_chtDrawCard()
 {

@@ -15,6 +15,7 @@ MultiFixConfig mfconfig =
     1,		  // bSeePartnerCards
     1,		  // bDisableInstall
     1,        // bDisableDuelHelpIcon
+    0,        // bUTF8Story
     0,		  // bCheatConstantControlPartner
     0,		  // bCheatDisableBanlist
     0,		  // bCheatUnlockAllCards
