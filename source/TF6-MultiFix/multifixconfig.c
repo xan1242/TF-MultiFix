@@ -107,6 +107,11 @@ int mfconfig_GetCheatInfiniteDP()
     return mfconfig.bCheatInfiniteDP;
 }
 
+int mfconfig_GetCheatDisableBanlist()
+{
+    return mfconfig.bCheatDisableBanlist;
+}
+
 void mfconfig_Init()
 {
     // TODO: add config reading here

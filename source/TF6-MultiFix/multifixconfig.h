@@ -38,6 +38,7 @@ int mfconfig_GetDisableInstall();
 //int mfconfig_GetDisableDuelHelpIcon();
 //int mfconfig_SetDisableDuelHelpIcon(int val);
 int mfconfig_GetCheatInfiniteDP();
+int mfconfig_GetCheatDisableBanlist();
 
 void mfconfig_Init();
 

@@ -631,8 +631,7 @@ void YgFont_SetShadowFlg_Hook2(int val)
 
 int YgSys_GetLimitation_Hook(uint16_t cardID)
 {
-    MultiFixConfig* config = mfconfig_GetConfig();
-    if (config->bCheatDisableBanlist)
+    if (mfconfig_GetCheatDisableBanlist())
     {
         return 3;
     }
@@ -641,8 +640,7 @@ int YgSys_GetLimitation_Hook(uint16_t cardID)
 
 int YgSys_GetLimitation_Default_Hook(uint16_t cardID)
 {
-    MultiFixConfig* config = mfconfig_GetConfig();
-    if (config->bCheatDisableBanlist)
+    if (mfconfig_GetCheatDisableBanlist())
     {
         return 3;
     }
