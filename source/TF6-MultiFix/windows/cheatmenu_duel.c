@@ -72,6 +72,9 @@ void cheatmenu_duel_Destroy()
 {
     if (chtwndDuel)
     {
+        cheatmenu_duel_last_item = chtwndDuel->selwnd->currentItem;
+        cheatmenu_duel_last_page = chtwndDuel->selwnd->currentItemPage;
+
         if (MenuWindow_IsActive(chtwndDuel))
         {
             MenuWindow_Destroy(chtwndDuel);
@@ -125,9 +128,6 @@ int cheatmenu_duel_Draw()
     int menuRes = MenuWindow_Draw(chtwndDuel);
     if (menuRes)
     {
-        cheatmenu_duel_last_item = chtwndDuel->selwnd->currentItem;
-        cheatmenu_duel_last_page = chtwndDuel->selwnd->currentItemPage;
-
         int idxItem = MENUWINDOW_RESULT_ITEM(menuRes);
 
         if (MENUWINDOW_RESULT_DECIDESTATUS(menuRes) == YGSEL_DECIDESTATUS_CONFIRM)

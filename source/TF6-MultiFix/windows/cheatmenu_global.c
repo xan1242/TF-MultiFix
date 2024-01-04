@@ -14,6 +14,9 @@
 
 MenuWindow* chtwndGlobal;
 
+int cheatmenu_global_last_item = 0;
+int cheatmenu_global_last_page = 0;
+
 __attribute__((always_inline)) inline void cheatmenu_global_RecieveAllRecipes()
 {
     //char RecipeRecievedMarkers[RECIPE_COUNT];
@@ -96,6 +99,9 @@ void cheatmenu_global_Destroy()
 {
     if (chtwndGlobal)
     {
+        cheatmenu_global_last_item = chtwndGlobal->selwnd->currentItem;
+        cheatmenu_global_last_page = chtwndGlobal->selwnd->currentItemPage;
+
         if (MenuWindow_IsActive(chtwndGlobal))
         {
             MenuWindow_Destroy(chtwndGlobal);
@@ -135,6 +141,9 @@ void cheatmenu_global_Create()
     cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_INFINITEDP].val = &config->bCheatInfiniteDP;
 
     MenuWindow_Create(chtwndGlobal);
+
+    chtwndGlobal->selwnd->currentItemPage = cheatmenu_global_last_page;
+    chtwndGlobal->selwnd->currentItem = cheatmenu_global_last_item;
 }
 
 int cheatmenu_global_Draw()

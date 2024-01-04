@@ -13,6 +13,9 @@
 
 MenuWindow* chtwndTrust;
 
+int cheatmenu_trust_last_item = 0;
+int cheatmenu_trust_last_page = 0;
+
 MenuWindowItem* cheatmenu_trust_charaList;
 
 int cheatmenu_trust_cbReadTrust(uintptr_t charaID)
@@ -35,6 +38,9 @@ void cheatmenu_trust_Destroy()
 {
     if (chtwndTrust)
     {
+        cheatmenu_trust_last_item = chtwndTrust->selwnd->currentItem;
+        cheatmenu_trust_last_page = chtwndTrust->selwnd->currentItemPage;
+
         if (MenuWindow_IsActive(chtwndTrust))
         {
             MenuWindow_Destroy(chtwndTrust);
@@ -169,6 +175,9 @@ void cheatmenu_trust_Create()
     }
 
     MenuWindow_Create(chtwndTrust);
+
+    chtwndTrust->selwnd->currentItemPage = cheatmenu_trust_last_page;
+    chtwndTrust->selwnd->currentItem = cheatmenu_trust_last_item;
 }
 
 int cheatmenu_trust_Draw()
