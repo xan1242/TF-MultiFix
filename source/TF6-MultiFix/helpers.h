@@ -21,6 +21,9 @@
 #define PSP_SCREEN_HALF_WIDTH_FLOAT 240.0f
 #define PSP_SCREEN_HALF_HEIGHT_FLOAT 136.0f
 
+#define LINE_SPACING_VAL 0x40
+#define YGFONT_FLAGS_ADDR 0x1EF99C
+
 #define WCHAR_CIRCLE L'\x25CB'
 #define WCHAR_CROSS L'\xD7'
 #define WCHAR_SQUARE L'\x25A1'
@@ -33,6 +36,11 @@
 #define DUELPOINT_MAX 999999999
 #define YG_CHARACTER_COUNT 180
 #define YG_CHARACTER_MAXTRUST 4000
+#define YG_CHARACTER_SKIP_TOP 2
+#define YG_CHARACTER_SKIP_BOTTOM 57
+
+#define YG_CARD_ID_START 3459
+#define YG_CARD_ID_END 9840
 
 #define SOUND_ID_MENU_CURSOR 0xDA75
 #define SOUND_ID_MENU_DECIDE 0xDA76
@@ -46,6 +54,8 @@
 
 #define DEFAULT_LIMITLIST_ADDR 0x6C770
 #define DEFAULT_LIMITLIST_COUNT 280
+
+#define RECIPE_COUNT 497
 
 typedef enum _EhGameState
 {
@@ -122,6 +132,10 @@ uintptr_t YgSys_GetBoxPtr(int box);
 int YgSys_GetBoxStatus(int box);
 int YgSys_GetTrust(int charaID);
 int YgSys_SetTrust(int charaID, int val);
+int YgSys_AddNpcRecipe(int charaID, int val);
+int YgSys_ReciveRecipeFromNpc(int rcpID, int charaID);
+//void YgSys_Recipe_Id2Deck(int id, void* out);
+int uYgSys_Recipe_ChrId2DeckId(int id, int rcpNum);
 wchar_t* YgSys_GetChrNameFromID(int charaID, int unk);
 uintptr_t YgSys_GetUnlockNpcInfo(int charaID);
 void YgFont_SetWordSeparateFlg(int val);
@@ -156,6 +170,10 @@ int helpers_GetDialogBoxWantsIO();
 int helpers_KonamiCodeCheck(uint32_t buttons);
 void helpers_SetLastTwoKonamiButtons(uint32_t decline, uint32_t accept);
 uintptr_t helpers_GetMainEhHeap();
+
+#ifdef TFMULTIFIX_DEBUG_PRINT
+void helpers_PrintMemDump(void* buf, size_t size);
+#endif
 
 // WINDOW DRAW STUFF
 uintptr_t EhPckt_Open(int zorder, int unk2);

@@ -58,8 +58,13 @@ uintptr_t(*_YgSys_GetBoxPtr)(int box) = (uintptr_t(*)(int))(0);
 int(*_YgSys_GetTrust)(int charaID) = (int(*)(int))(0);
 int(*_YgSys_SetTrust)(int charaID, int val) = (int(*)(int, int))(0);
 wchar_t*(*_YgSys_GetChrNameFromID)(int charaID, int unk) = (wchar_t*(*)(int, int))(0);
+int(*_YgSys_AddNpcRecipe)(int charaID, int val) = (int(*)(int, int))(0);
+int(*_YgSys_ReciveRecipeFromNpc)(int rcpID, int charaID) = (int(*)(int, int))(0);
 void (*_YgFont_SetWordSeparateFlg)(int) = (void (*)(int))(0);
 int (*_YgFont_GetWordSeparateFlg)() = (int (*)())(0);
+//void (*_YgSys_Recipe_Id2Deck)(int id, void* out) = (void (*)(int, void*))(0);
+int (*_uYgSys_Recipe_ChrId2DeckId)(int charaId, int rcpNum) = (int (*)(int, int))(0);
+
 
 // optional functions
 //uintptr_t(*_YgSys_GetUnlockNpcInfo)(int charaID) = (uintptr_t(*)(int))(0);
@@ -259,6 +264,25 @@ wchar_t* YgSys_GetChrNameFromID(int charaID, int unk)
 //    return _YgSys_GetUnlockNpcInfo(charaID);
 //}
 
+int YgSys_AddNpcRecipe(int charaID, int val)
+{
+    return _YgSys_AddNpcRecipe(charaID, val);
+}
+
+int YgSys_ReciveRecipeFromNpc(int rcpID, int charaID)
+{
+    return _YgSys_ReciveRecipeFromNpc(rcpID, charaID);
+}
+
+//void YgSys_Recipe_Id2Deck(int id, void* out)
+//{
+//    return _YgSys_Recipe_Id2Deck(id, out);
+//}
+
+int uYgSys_Recipe_ChrId2DeckId(int id, int rcpNum)
+{
+    return _uYgSys_Recipe_ChrId2DeckId(id, rcpNum);
+}
 
 int YgSys_GetLang()
 {
@@ -798,7 +822,7 @@ int PatchButtonStrings(uintptr_t ptrFolder, const char* filename)
     for (int i = 0; i < strCount; i++)
     {
         wchar_t* str = YgSys_GetStrFromResource(strfile, i);
-        uintptr_t strPtr = (uintptr_t)str;
+        //uintptr_t strPtr = (uintptr_t)str;
         //int bPatchMe = 1;
 
 
@@ -859,7 +883,7 @@ int PatchButtonStrings_Text(uintptr_t ptrFolder, const char* filename)
     for (int i = 0; i < strCount; i++)
     {
         wchar_t* str = (wchar_t*)GetTxtResourceStrPtr(strfile, i);
-        uintptr_t strPtr = (uintptr_t)str;
+        //uintptr_t strPtr = (uintptr_t)str;
         //int bPatchMe = 1;
 
 
@@ -1097,6 +1121,20 @@ void helpers_SetYgLangHookBase(uintptr_t base_addr)
 }
 #endif
 
+#ifdef TFMULTIFIX_DEBUG_PRINT
+void helpers_PrintMemDump(void* buf, size_t size)
+{
+    char* printBuf = (char*)psp_malloc(size * 3);
+    for (int i = 0; i < size; i++)
+    {
+        YgSys_sprintf(&printBuf[i * 3], "%02X ", (((char*)buf)[i] & 0xFF));
+    }
+    sceKernelPrintf(printBuf);
+
+    psp_free(printBuf);
+}
+#endif
+
 int helpers_KonamiCodeCheck(uint32_t buttons) 
 {
     helpers_SetLastTwoKonamiButtons(YgSys_GetAssignButton_Hook(1), YgSys_GetAssignButton_Hook(0));
@@ -1200,6 +1238,11 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_GetChrNameFromID = (wchar_t*(*)(int, int))(0x23074 + base_addr);
     _YgFont_GetWordSeparateFlg = (int (*)())(0x21E8 + base_addr);
     _YgFont_SetWordSeparateFlg = (void (*)(int))(0x21AC + base_addr);
+
+    _YgSys_AddNpcRecipe = (int(*)(int, int))(0x2A1DC + base_addr);
+    _YgSys_ReciveRecipeFromNpc = (int(*)(int, int))(0x2A820 + base_addr);
+    //_YgSys_Recipe_Id2Deck = (void(*)(int, void*))(0x23CF8 + base_addr);
+    _uYgSys_Recipe_ChrId2DeckId = (int(*)(int, int))(0x24114 + base_addr);
 
     // optional functions
     //_YgSys_GetUnlockNpcInfo = (uintptr_t(*)(int))(0x2A268 + base_addr);

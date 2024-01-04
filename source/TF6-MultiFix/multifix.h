@@ -38,9 +38,6 @@ Created by Xan / Tenjoin\
 
 #include "../../includes/psp/minjector.h"
 
-#define LINE_SPACING_VAL 0x40
-#define YGFONT_FLAGS_ADDR 0x1EF99C
-
 void TFFixesInject();
 void SetPPSSPP(int val);
 int YgSys_GetAssignButton_Hook(int isDeclineButton);
