@@ -86,6 +86,7 @@ void mfwindow_Create()
     mfWindowSettings[MFWINDOW_ITEM_PARTNERCARD].val = &config->bSeePartnerCards;
     mfWindowSettings[MFWINDOW_ITEM_DUELHELP].val = &config->bDisableDuelHelpIcon;
     mfWindowSettings[MFWINDOW_ITEM_INSTALLDISABLE].val = &config->bDisableInstall;
+    mfWindowSettings[MFWINDOW_ITEM_UTF8STORY].val = &config->bUTF8Story;
 
     if (mfwindow_bCheatsEnabled)
     {

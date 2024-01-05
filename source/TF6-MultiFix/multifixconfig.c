@@ -112,6 +112,11 @@ int mfconfig_GetCheatDisableBanlist()
     return mfconfig.bCheatDisableBanlist;
 }
 
+int mfconfig_GetCheatUTF8Story()
+{
+    return mfconfig.bUTF8Story;
+}
+
 void mfconfig_Init()
 {
     // TODO: add config reading here

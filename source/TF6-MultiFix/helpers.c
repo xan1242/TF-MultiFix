@@ -34,10 +34,13 @@ int (*_YgFont_GetRubyCharFlg)() = (int (*)())(0);
 int (*_YgFont_GetStrWidth)(wchar_t* str) = (int (*)(wchar_t*))(0);
 wchar_t* (*_YgSys_wcscat)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
 wchar_t* (*_YgSys_wcscpy)(wchar_t* dest, const wchar_t* src) = (wchar_t* (*)(wchar_t*, const wchar_t*))(0);
+wchar_t* (*_YgSys_wcsncpy)(wchar_t* dest, const wchar_t* src, size_t num) = (wchar_t* (*)(wchar_t*, const wchar_t*, size_t))(0);
 size_t(*_YgSys_wcslen)(const wchar_t* str) = (size_t(*)(const wchar_t*))(0);
+int(*_YgSys_wcsfind)(const wchar_t* str, wchar_t wc) = (int(*)(const wchar_t*, wchar_t))(0);
 void* (*_YgSys_memset)(void* ptr, int value, size_t num) = (void* (*)(void*, int, size_t))(0);
 void* (*_YgSys_memcpy)(void* dst, const void* src, size_t num) = (void* (*)(void*, const void*, size_t))(0);
 char* (*_YgSys_strcpy)(char* dst, const char* src) = (char* (*)(char*, const char*))(0);
+char* (*_YgSys_strncpy)(char* dst, const char* src, size_t num) = (char* (*)(char*, const char*, size_t))(0);
 char* (*_YgSys_strcat)(char* dst, const char* src) = (char* (*)(char*, const char*))(0);
 int (*_YgSys_strcmp)(const char*, const char*) = (int (*)(const char*, const char*))(0);
 size_t(*_YgSys_strlen)(const char* str) = (size_t(*)(const char*))(0);
@@ -321,31 +324,38 @@ wchar_t* YgSys_uGetPartnerName(int unk1, int unk2, int unk3)
 void* YgSys_memset(void* ptr, int value, size_t num)
 {
     //sceKernelPrintf("debugme");
-    if (!_YgSys_memset)
-        return NULL;
+    //if (!_YgSys_memset)
+    //    return NULL;
     return _YgSys_memset(ptr, value, num);
 }
 
 void* YgSys_memcpy(void* dst, const void* src, size_t num)
 {
     //sceKernelPrintf("debugme");
-    if (!_YgSys_memcpy)
-        return NULL;
+    //if (!_YgSys_memcpy)
+    //    return NULL;
     return _YgSys_memcpy(dst, src, num);
 }
 
 size_t YgSys_wcslen(const wchar_t* str)
 {
-    if (!_YgSys_wcslen)
-        return 0;
+    //if (!_YgSys_wcslen)
+    //    return 0;
     return _YgSys_wcslen(str);
 }
 
 wchar_t* YgSys_wcscpy(wchar_t* dest, const wchar_t* src)
 {
-    if (!_YgSys_wcscpy)
-        return NULL;
+    //if (!_YgSys_wcscpy)
+    //    return NULL;
     return _YgSys_wcscpy(dest, src);
+}
+
+wchar_t* YgSys_wcsncpy(wchar_t* dest, const wchar_t* src, size_t num)
+{
+    //if (!_YgSys_wcscpy)
+    //    return NULL;
+    return _YgSys_wcsncpy(dest, src, num);
 }
 
 //wchar_t* YgSys_wcscmp(const wchar_t* wcs1, const wchar_t* wcs2)
@@ -357,50 +367,60 @@ wchar_t* YgSys_wcscpy(wchar_t* dest, const wchar_t* src)
 
 wchar_t* YgSys_wcscat(wchar_t* dest, const wchar_t* src)
 {
-    if (!_YgSys_wcscat)
-        return NULL;
+    //if (!_YgSys_wcscat)
+    //    return NULL;
     return _YgSys_wcscat(dest, src);
+}
+
+int YgSys_wcsfind(const wchar_t* str, wchar_t wc)
+{
+    return _YgSys_wcsfind(str, wc);
 }
 
 char* YgSys_strcpy(char* dest, const char* src)
 {
-    if (!_YgSys_strcpy)
-        return NULL;
+    //if (!_YgSys_strcpy)
+    //    return NULL;
     return _YgSys_strcpy(dest, src);
+}
+
+char* YgSys_strncpy(char* dest, const char* src, size_t num)
+{
+    return _YgSys_strncpy(dest, src, num);
 }
 
 char* YgSys_strcat(char* dest, const char* src)
 {
-    if (!_YgSys_strcat)
-        return NULL;
+    //if (!_YgSys_strcat)
+    //    return NULL;
     return _YgSys_strcat(dest, src);
 }
 
 int YgSys_strcmp(const char* str1, const char* str2)
 {
-    if (!_YgSys_strcmp)
-        return 1;
+    //if (!_YgSys_strcmp)
+    //    return 1;
     return _YgSys_strcmp(str1, str2);
 }
 
 size_t YgSys_strlen(const char* str)
 {
-    if (!_YgSys_strlen)
-        return 0;
+    //if (!_YgSys_strlen)
+    //    return 0;
     return _YgSys_strlen(str);
 }
 
 wchar_t* YgSys_GetStrFromResource(uintptr_t ptrRes, int index)
 {
-    if (!_YgSys_GetStrFromResource)
-        return NULL;
+    //if (!_YgSys_GetStrFromResource)
+    //    return NULL;
     return _YgSys_GetStrFromResource(ptrRes, index);
 }
 
 uintptr_t EhFolder_SearchFile(uintptr_t ptrMemEhFolder, const char* filename, uintptr_t unk)
 {
-    if (!_EhFolder_SearchFile)
-        return NULL;
+    //if (!_EhFolder_SearchFile)
+    //    return NULL;
     return _EhFolder_SearchFile(ptrMemEhFolder, filename, unk);
 }
 
@@ -627,6 +647,19 @@ wchar_t* tf_wcschr(wchar_t* ws, wchar_t wc)
 //     return NULL;
 // }
 
+int tf_strfind(const char* str, char c)
+{
+    if (!*str)
+        return -1;
+
+    for (int i = 0; str[i] != 0; i++)
+    {
+        if (c == str[i])
+            return i;
+    }
+
+    return -1;
+}
 
 uintptr_t YgFont_PrintLine64(int X, int Y, uintptr_t unk_a2, wchar_t* string)
 {
@@ -687,38 +720,38 @@ asm
 
 void YgFont_SetWordSeparateFlg(int val)
 {
-    if (!_YgFont_SetWordSeparateFlg)
-        return;
+    //if (!_YgFont_SetWordSeparateFlg)
+    //    return;
 
     _YgFont_SetWordSeparateFlg(val);
 }
 
 int YgFont_GetWordSeparateFlg()
 {
-    if (!_YgFont_GetWordSeparateFlg)
-        return 0;
+    //if (!_YgFont_GetWordSeparateFlg)
+    //    return 0;
     return _YgFont_GetWordSeparateFlg();
 }
 
 void YgFont_SetShadowFlg(int val)
 {
-    if (!_YgFont_SetShadowFlg)
-        return;
+    //if (!_YgFont_SetShadowFlg)
+    //    return;
 
     _YgFont_SetShadowFlg(val);
 }
 
 int YgFont_GetShadowFlg()
 {
-    if (!_YgFont_GetShadowFlg)
-        return 0;
+    //if (!_YgFont_GetShadowFlg)
+    //    return 0;
     return _YgFont_GetShadowFlg();
 }
 
 void YgFont_SetRubyCharFlg(int val)
 {
-    if (!_YgFont_SetRubyCharFlg)
-        return;
+    //if (!_YgFont_SetRubyCharFlg)
+    //    return;
 
     _YgFont_SetRubyCharFlg(val);
 }
@@ -1214,6 +1247,8 @@ void helpers_Init(uintptr_t base_addr)
     _YgFont_GetStrWidth = (int (*)(wchar_t*))(0x1360 + base_addr);
     _YgSys_wcscat = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BFA0 + base_addr);
     _YgSys_wcscpy = (wchar_t* (*)(wchar_t*, const wchar_t*))(0x0002BF10 + base_addr);
+    _YgSys_wcsncpy = (wchar_t* (*)(wchar_t*, const wchar_t*, size_t))(0x2BF50 + base_addr);
+    _YgSys_wcsfind = (int (*)(const wchar_t*, wchar_t))(0x2BED4 + base_addr);
     
     _YgSys_wcslen = (size_t(*)(const wchar_t*))(0x0002BEB0 + base_addr);
     _YgSys_memset = (void* (*)(void*, int, size_t))(0x4A4E0 + base_addr);
@@ -1225,6 +1260,7 @@ void helpers_Init(uintptr_t base_addr)
     _EhFolder_SearchFile = (uintptr_t(*)(uintptr_t, const char*, uintptr_t))(0x33EB0 + base_addr);
     _YgSys_strcmp = (int (*)(const char*, const char*))(0x4A628 + base_addr);
     _YgSys_strcpy = (char* (*)(char*, const char*))(0x4A65C + base_addr);
+    _YgSys_strncpy = (char* (*)(char*, const char*, size_t))(0x4A788 + base_addr);
     _YgSys_strcat = (char* (*)(char*, const char*))(0x4A5CC + base_addr);
     _YgSys_strlen = (size_t(*)(const char*))(0x4A6A0 + base_addr);
     _sceCccUTF8toUTF16 = (int (*)(wchar_t*, size_t, char*))(0x640DC + base_addr);
@@ -1249,8 +1285,6 @@ void helpers_Init(uintptr_t base_addr)
     //_YgSys_wcscmp = (wchar_t* (*)(const wchar_t*, const wchar_t*))(0x2BE74 + base_addr);
     //_YgFont_GetRubyCharFlg = (int (*)())(0x22C4 + base_addr);
     //_YgAdh_Update = (void (*)())(0x1D75C + base_addr);
-
-
 
     // window draw stuff
     _EhPckt_Open = (uintptr_t(*)(int, int))(0x0003A954 + base_addr);
