@@ -13,6 +13,12 @@
     <Filter Include="source\TF6-MultiFix\windows">
       <UniqueIdentifier>{26f3828f-c7f5-4642-9e86-0ad595d2e538}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\includes">
+      <UniqueIdentifier>{b001d008-bdce-4b95-86d2-c066fe0e80c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\includes\psp">
+      <UniqueIdentifier>{bdbdeac4-7e03-4eee-8811-4d0b72bc91ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include=".\data\plugin.ini">
@@ -131,6 +137,15 @@
     <ClCompile Include="source\TF6-MultiFix\windows\cheatmenu_trust.c">
       <Filter>source\TF6-MultiFix\windows</Filter>
     </ClCompile>
+    <ClCompile Include="includes\psp\minjector.c">
+      <Filter>source\includes\psp</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\psp\pspmallochelper.c">
+      <Filter>source\includes\psp</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\psp\stringhash.c">
+      <Filter>source\includes\psp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TF6-MultiFix\multifix.h">
@@ -234,6 +249,15 @@
     </ClInclude>
     <ClInclude Include="source\TF6-MultiFix\windows\cheatmenu_trust.h">
       <Filter>source\TF6-MultiFix\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\psp\minjector.h">
+      <Filter>source\includes\psp</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\psp\pspmallochelper.h">
+      <Filter>source\includes\psp</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\psp\stringhash.h">
+      <Filter>source\includes\psp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

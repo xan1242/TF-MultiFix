@@ -163,6 +163,9 @@ if !errorlevel! neq 0 exit /b !errorlevel!
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include=".\source\TF6-MultiFix\main.c" />
+    <ClCompile Include="includes\psp\minjector.c" />
+    <ClCompile Include="includes\psp\pspmallochelper.c" />
+    <ClCompile Include="includes\psp\stringhash.c" />
     <ClCompile Include="source\TF6-MultiFix\cardalbum.c" />
     <ClCompile Include="source\TF6-MultiFix\charalist.c" />
     <ClCompile Include="source\TF6-MultiFix\deck.c" />
@@ -206,6 +209,9 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <None Include="data\TF6-MultiFix.ini" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\psp\minjector.h" />
+    <ClInclude Include="includes\psp\pspmallochelper.h" />
+    <ClInclude Include="includes\psp\stringhash.h" />
     <ClInclude Include="source\TF6-MultiFix\cardalbum.h" />
     <ClInclude Include="source\TF6-MultiFix\charalist.h" />
     <ClInclude Include="source\TF6-MultiFix\deck.h" />
