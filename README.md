@@ -42,6 +42,8 @@ This could be remedied by splitting the mod into separate modules.
 
 ### IMPORTANT NOTES
 
+- IF USING PPSSPP - DISABLE FAST MEMORY - this will cause crashes!
+
 - It is highly recommended to use a stock EBOOT file (and stock gmodule prx files) and then use [TF-EhpLoader](https://github.com/xan1242/TFEhpLoader) to load modified files. This is due to old translations doing a bad job at fixing the game, so the results might not be as expected!
 
 - Disable all cheats! They will NOT work and may break the game!
