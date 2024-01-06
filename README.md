@@ -1,115 +1,81 @@
-# PSP Mod Base
+# Tag Force MultiFix
 
-This is a pair of plugins and a collection of basic libraries for making game modding and code injection easier.
+This is a multi-purpose fix and enhancement kit for Yu-Gi-Oh! Tag Force games.
 
-The goal is simple - make game modding with custom code easier on PSP!
+The goal is to mainly fix the JP releases of the games to run with non-JP assets, while also providing other goodies.
 
-You may freely use this as a basis for a plugin to build mods for PSP games and apps.
+## Features
+
+- Fixes all UI bugs for the JP release
+
+- Allows swapping of X (cross) and O (circle) buttons as confirm and back buttons respectively
+
+- Matrix font on cards regardless of region/language
+
+- See partner's cards like in the older Tag Force games
+
+- Disable the "Help" icon in the lower right corner during duels
+
+- Disable the "Installation" feature
+
+- Allow for using UTF-8 encoded story script files
+
+- Enable/disable all of these features, and more, via a configuration window
+
+- Cheats that actually work
+
+## Compatibility
+
+Currently only compatible with Tag Force 6 (ULJM05940).
+
+It will be ported to all other games in the near future.
+
+### PSP note
+
+Tag Force 6 currently runs out of memory with 32MB RAM when loading up the Story Mode. 
+
+You need at least 64MB to run the script as it is now.
+
+This could be remedied by splitting the mod into separate modules.
 
 ## Usage
 
-Intended usage is either as a Visual Studio solution or as a regular makefile project.
+### IMPORTANT NOTES
 
-In case you're using `make`, please make sure to set up the [PSPDEV Toolchain!](https://pspdev.github.io/)
+- It is highly recommended to use a stock EBOOT file (and stock gmodule prx files) and then use [TF-EhpLoader](https://github.com/xan1242/TFEhpLoader) to load modified files. This is due to old translations doing a bad job at fixing the game, so the results might not be as expected!
 
-### PSPDEV side-note
+- Disable all cheats! They will NOT work and may break the game!
 
-(TODO: write a shell script to automate this!)
+### PPSSPP
 
-(You may skip this step it you're using Visual Studio and/or the pspsdk submodule)
+First, download the PPSSPP release file.
 
-Be sure to get the CFW API libraries and headers. You'll need this regardless of if you use CFW or not. PSPSDK does not come with this pre-included.
+Extract the TFx-MultiFix folder to: `memstick/PSP/PLUGINS` (where x is the game number)
 
-The easiest place to acquire them currently is from the uofw/uofwinst repository:
+You can open the memstick folder in PPSSPP by opening the following: `File -> Open Memory Stick`.
 
-https://github.com/uofw/uofwinst/tree/master/include
+### PSP hardware
 
-https://github.com/uofw/uofwinst/tree/master/libs
+1. Extract the plugins `TF-MultiFixBoot.prx` and `TF-MultiFix.prx` to the seplugins folder
 
-From that repository, place include headers (all the .h files) into `$PSPDEV/psp/sdk/include` and libraries (all the .a files) into `$PSPDEV/psp/sdk/lib`
+2. Enable `TF-MultiFixBoot.prx` as a plugin in your CFW
 
-### Windows
+3. (TF6 only) Enable 64MB memory extension. NOTE: This is only available for newer PSP models (PSP Go and Street).
 
-- Clone the repository with `--recurse-submodules`
+Once you have the files installed, run the game. You shouldn't notice anything obvious immediately.
 
-- Open PSPModBase.sln in Visual Studio
+## Configuration window
 
-- Open source/PSPModBase/main.c of the PSPModBase project
+To open the MultiFix Configuration window, press R + Triangle while the WLAN switch is ON.
 
-- Build as per usual
+On PPSSPP you can usually find this in the button mapping configuration menu.
 
-### Make
+On a real PSP, it's a switch you have to engage physically.
 
-- Clone the repository without submodules
+The configuration is saved inside the game save directory as a file `TF-Multifix.cfg`
 
-- Install and set up [PSPDEV Toolchain](https://pspdev.github.io/) if you hadn't already!
+## Cheats
 
-- Try to do: `make -C source/PSPModBase`
+Cheats are disabled by default. 
 
-If all is well, you should end up with an elf and a prx in the `build` folder!
-
-Now you can modify the code to your needs and liking.
-
-## PSP CFW usage
-
-In case you wish to run the userspace module (PSPModBase.prx), you will need to use the bootstrap.
-
-Included is code for a kernel plugin called `PSPModBaseBoot`.
-
-You have to modify its code to match your needs.
-
-### Modifications for bootstrapper
-
-The minimal modifications that are required are:
-
-1. Make sure `MODULE_NAME_INTERNAL` definition matches the one in PSPModBase!
-
-2. Make sure to name `MODULE_BOOT_TARGET` the same as your PRX filename!
-
-By default this is already set up for `PSPModBase` but as you rename your project, you have to address these 2 things to get it working.
-
-### Runtime
-
-In order to actually run your plugin, copy both your main plugin (PSPModBase.prx) and the bootstrapper (PSPModBaseBoot.prx) to the PSP. 
-
-**NOTE** - these files must be placed next to each other!
-
-Then, in your CFW use PSPModBaseBoot.prx as the plugin for GAME (or your specific GameID if you're using a CFW such as ARK-4).
-
-### Recommended plugins for PSP debugging
-
-- [PSPLINK](http://pspdev.github.io/psplinkusb/) - required for runtime debugging. Enable it by adding "psplink.prx" to the plugins list. Also make sure that USB Charging is NOT enabled.
-
-- [libkprintf](https://github.com/Linblow/libkprintf) - an addon which hooks kernel printf functions to restore its functionality via sio and psplink. Use this in combination with psplink to get print output via pspsh. Keep in mind that it may take it a bit to hook in so you might not catch early prints.
-
-## PPSSPP usage
-
-Simply copy the files to: `memstick/PSP/PLUGINS/(plugin_name)`
-
-You also need to create a plugin.ini (example included in the data folder).
-
-
-
-Optionally, if you want the build script to automatically copy files for each new build, define the `PPSSPPMemstick` environment variable in your system and the build script should automatically copy new builds directly into your emulator memstick folder.
-
-## Additional Info
-
-This code is highly based on the [Widescreen Fixes Pack](https://github.com/ThirteenAG/WidescreenFixesPack) PSP plugins. 
-
-For more examples on what you can do with this base, you may explore the code for PPSSPP plugins such as [GTA Vice City Stories](https://github.com/ThirteenAG/WidescreenFixesPack/blob/master/source/GTAVCS.PPSSPP.WidescreenFix/main.c).
-
-### PSPSDK cygwin toolchain
-
-Included as a submodule (`external/pspsdk`) is a PSPDEV toolchain built under cygwin. This is mainly intended for Windows users. 
-
-It is a minimal configuration that can run only the toolchain, but you may also launch bash by running `launch-bash.ps1` from Powershell. Certain things are currently broken (such as `psp-pacman`) due to cygwin's inherent incompatibilites.
-
-If you want to invoke `make` standalone in a Windows environment, you may do so by running `external/pspsdk/vsmake.ps1` from Powershell.
-
-And this should go without saying - if you're not building directly under Windows, you do not need to clone this submodule.
-
-## Credits
-
-- Portions of code based on [pspdev/psplinkusb](https://github.com/pspdev/psplinkusb) and [pspdev/pspsdk](https://github.com/pspdev/pspsdk) samples.
-
-- ThirteenAG for [Widescreen Fixes Pack](https://github.com/ThirteenAG/WidescreenFixesPack)
+Now, I won't tell you what how to enable them, but since this is a Konami game, I think it should be pretty obvious ;)
