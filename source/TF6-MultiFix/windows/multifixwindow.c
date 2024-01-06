@@ -164,6 +164,12 @@ int mfwindow_Draw()
             }
         }
 
+
+        if (MENUWINDOW_RESULT_VALCHANGE(menuRes))
+        {
+            mfconfig_Update();
+        }
+
         mfwindow_Destroy();
         return menuRes;
     }

@@ -50,6 +50,8 @@ wchar_t* (*_YgSys_uGetPartnerName)(int, int, int) = (wchar_t* (*)(int, int, int)
 wchar_t* (*_YgSys_GetStrFromResource)(uintptr_t, int) = (wchar_t* (*)(uintptr_t, int))(0);
 uintptr_t (*_EhFolder_SearchFile)(uintptr_t, const char*, uintptr_t) = (uintptr_t (*)(uintptr_t, const char*, uintptr_t))(0);
 void (*_YgSys_InitApplication)() = (void (*)())(0);
+void (*_YgSys_Ms_GetDirPath)(char* outStr) = (void (*)(char*))(0);
+//void (*_YgSys_Ms_GetDirName)(char* outStr) = (void (*)(char*))(0);
 
 void (*_FirstLoopFunc)(int) = (void (*)(int))(0);
 int (*_sceCccUTF8toUTF16)(wchar_t* dest, size_t size, char* src) = (int (*)(wchar_t*, size_t, char*))(0);
@@ -152,6 +154,16 @@ int YgSys_SndPlaySE(int sound)
 {
     return _YgSys_SndPlaySE(sound);
 }
+
+void YgSys_Ms_GetDirPath(char* outStr)
+{
+    return _YgSys_Ms_GetDirPath(outStr);
+}
+
+//void YgSys_Ms_GetDirName(char* outStr)
+//{
+//    return _YgSys_Ms_GetDirName(outStr);
+//}
 
 uintptr_t YgSys_GetPersonalInfoPtr()
 {
@@ -1279,6 +1291,9 @@ void helpers_Init(uintptr_t base_addr)
     _YgSys_ReciveRecipeFromNpc = (int(*)(int, int))(0x2A820 + base_addr);
     //_YgSys_Recipe_Id2Deck = (void(*)(int, void*))(0x23CF8 + base_addr);
     _uYgSys_Recipe_ChrId2DeckId = (int(*)(int, int))(0x24114 + base_addr);
+
+    _YgSys_Ms_GetDirPath = (void (*)(char*))(0x11564 + base_addr);
+    //_YgSys_Ms_GetDirName = (void (*)(char*))(0x11528 + base_addr);
 
     // optional functions
     //_YgSys_GetUnlockNpcInfo = (uintptr_t(*)(int))(0x2A268 + base_addr);

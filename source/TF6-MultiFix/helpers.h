@@ -144,6 +144,8 @@ wchar_t* YgSys_GetChrNameFromID(int charaID, int unk);
 uintptr_t YgSys_GetUnlockNpcInfo(int charaID);
 void YgFont_SetWordSeparateFlg(int val);
 int YgFont_GetWordSeparateFlg();
+void YgSys_Ms_GetDirPath(char* outStr);
+void YgSys_Ms_GetDirName(char* outStr);
 
 // optional functions
 //uintptr_t YgSys_GetUnlockNpcInfo(int charaID);

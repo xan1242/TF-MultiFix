@@ -3,8 +3,14 @@
 // by xan1242 / Tenjoin
 //
 
+#include "multifix.h"
+
 #ifndef MULTIFIXCONFIG_H
 #define MULTIFIXCONFIG_H
+
+#define MULTIFIXCONFIG_FILENAME "TF-Multifix.cfg"
+#define MULTIFIXCONFIG_MAGIC 0x4643464D
+#define MULTIFIXCONFIG_VERSION ((MODULE_VERSION_MAJOR) | ((MODULE_VERSION_MINOR & 0xFF) << 8))
 
 typedef struct _MultiFixBasicConfig
 {
@@ -14,6 +20,7 @@ typedef struct _MultiFixBasicConfig
 	int bDisableInstall;
 	int bDisableDuelHelpIcon;
 	int bUTF8Story;
+	int bConstantCheats;
 }MultiFixBasicConfig;
 
 typedef struct _MultiFixExtraConfig
@@ -51,7 +58,7 @@ int mfconfig_GetDisableInstall();
 int mfconfig_GetCheatInfiniteDP();
 int mfconfig_GetCheatDisableBanlist();
 int mfconfig_GetUTF8Story();
-
+void mfconfig_Update();
 void mfconfig_Init();
 
 #endif

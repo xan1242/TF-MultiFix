@@ -722,6 +722,13 @@ void TFFixesInject()
     YgWindow_Init(base_addr);
     mfconfig_Init();
 
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->basic.bConstantCheats)
+    {
+        bCheatMenuEnabled = 1;
+        mfwindow_SetCheatsEnabled(1);
+    }
+
     // init hook
     //minj_MakeCALL(0x5AD0, (uintptr_t)&YgSys_InitApplication_Hook);
 
