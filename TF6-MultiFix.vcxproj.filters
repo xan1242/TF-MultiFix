@@ -19,16 +19,16 @@
     <Filter Include="source\includes\psp">
       <UniqueIdentifier>{bdbdeac4-7e03-4eee-8811-4d0b72bc91ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data\TF6-MultiFix">
+      <UniqueIdentifier>{fafbdeb9-bc8e-4f33-acee-371dd2fe427c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include=".\data\plugin.ini">
-      <Filter>data</Filter>
-    </None>
-    <None Include="data\TF6-MultiFix.ini">
-      <Filter>data</Filter>
-    </None>
     <None Include=".\source\TF6-MultiFix\makefile">
       <Filter>source\TF6-MultiFix</Filter>
+    </None>
+    <None Include="data\TF6-MultiFix\plugin.ini">
+      <Filter>data\TF6-MultiFix</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

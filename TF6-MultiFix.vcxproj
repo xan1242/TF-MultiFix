@@ -202,11 +202,10 @@ if !errorlevel! neq 0 exit /b !errorlevel!
     <ClCompile Include="source\TF6-MultiFix\YgWindow.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".\data\plugin.ini" />
     <None Include=".\source\TF6-MultiFix\makefile">
       <FileType>Makefile</FileType>
     </None>
-    <None Include="data\TF6-MultiFix.ini" />
+    <None Include="data\TF6-MultiFix\plugin.ini" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\psp\minjector.h" />

@@ -100,17 +100,17 @@ uintptr_t minj_GetGP()
 
 void minj_WriteMemoryRaw(uintptr_t addr, void* value, size_t size)
 {
-    minj_memcpy(minj_adjustAddress(addr), value, size);
+    minj_memcpy((void*)minj_adjustAddress(addr), value, size);
 }
 
 void minj_ReadMemoryRaw(uintptr_t addr, void* ret, size_t size)
 {
-    minj_memcpy(ret, minj_adjustAddress(addr), size);
+    minj_memcpy(ret, (void*)minj_adjustAddress(addr), size);
 }
 
 void minj_MemoryFill(uintptr_t addr, uint8_t value, size_t size)
 {
-    minj_memset(minj_adjustAddress(addr), value, size);
+    minj_memset((void*)minj_adjustAddress(addr), value, size);
 }
 #endif
 void minj_WriteMemory8(uintptr_t addr, uint8_t value)
