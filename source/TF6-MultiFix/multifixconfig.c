@@ -112,7 +112,7 @@ int mfconfig_GetCheatDisableBanlist()
     return mfconfig.bCheatDisableBanlist;
 }
 
-int mfconfig_GetCheatUTF8Story()
+int mfconfig_GetUTF8Story()
 {
     return mfconfig.bUTF8Story;
 }

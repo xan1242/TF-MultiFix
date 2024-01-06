@@ -17,7 +17,7 @@ uintptr_t (*story_uStoryLangText)() = (uintptr_t (*)())(0);
 uintptr_t story_GetLangText_Hook(int index)
 {
     uintptr_t* offsets = story_uStoryLangIndex();
-    if (mfconfig_GetCheatUTF8Story())
+    if (mfconfig_GetUTF8Story())
     {
         return story_uStoryLangText() + (offsets[index] * sizeof(char));
     }
@@ -27,7 +27,7 @@ uintptr_t story_GetLangText_Hook(int index)
 
 wchar_t* story_YgSys_wcscpy_UTF8(wchar_t* dest, const wchar_t* src)
 {
-    if (mfconfig_GetCheatUTF8Story())
+    if (mfconfig_GetUTF8Story())
     {
         sceCccUTF8toUTF16(dest, (YgSys_strlen((char*)src) + 1) * sizeof(wchar_t), (char*)src);
         return dest;
@@ -37,7 +37,7 @@ wchar_t* story_YgSys_wcscpy_UTF8(wchar_t* dest, const wchar_t* src)
 
 wchar_t* story_YgSys_wcsncpy_UTF8(wchar_t* dest, const wchar_t* src, size_t num)
 {
-    if (mfconfig_GetCheatUTF8Story())
+    if (mfconfig_GetUTF8Story())
     {
         return (wchar_t*)YgSys_strncpy((char*)dest, (const char*)src, num);
     }
@@ -47,7 +47,7 @@ wchar_t* story_YgSys_wcsncpy_UTF8(wchar_t* dest, const wchar_t* src, size_t num)
 
 int story_YgSys_wcsfind_UTF8(const wchar_t* str, wchar_t c)
 {
-    if (mfconfig_GetCheatUTF8Story())
+    if (mfconfig_GetUTF8Story())
     {
         return tf_strfind((const char*)str, (char)c);
     }
@@ -56,7 +56,7 @@ int story_YgSys_wcsfind_UTF8(const wchar_t* str, wchar_t c)
 
 int story_YgSys_wcslen_UTF8(const wchar_t* str)
 {
-    if (mfconfig_GetCheatUTF8Story())
+    if (mfconfig_GetUTF8Story())
     {
         return YgSys_strlen((const char*)str);
     }
@@ -76,7 +76,7 @@ asm
     ".global hkStoryItemStrHook\n"
     "hkStoryItemStrHook:\n"
     "move $s6, $s5\n"
-    "jal mfconfig_GetCheatUTF8Story\n"
+    "jal mfconfig_GetUTF8Story\n"
     "lui $v1, %hi(hkStoryItemStrHook_ExitAddr)\n"
     "addiu $v1, $v1, %lo(hkStoryItemStrHook_ExitAddr)\n"
     "bnez $v0, story_ExitUTF8\n"
