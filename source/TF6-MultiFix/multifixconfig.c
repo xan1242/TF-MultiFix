@@ -38,7 +38,7 @@ MultiFixConfig* mfconfig_SetConfig(MultiFixConfig* inConfig)
 
 int mfconfig_GetSwapConfirmButtons()
 {
-    return mfconfig.bSwapConfirmButtons;
+    return mfconfig.basic.bSwapConfirmButtons;
 }
 //
 //int mfconfig_SetSwapConfirmButtons(int val)
@@ -82,7 +82,7 @@ int mfconfig_GetSwapConfirmButtons()
 //
 int mfconfig_GetDisableInstall()
 {
-    return mfconfig.bDisableInstall;
+    return mfconfig.basic.bDisableInstall;
 }
 //
 //int mfconfig_SetDisableInstall(int val)
@@ -104,17 +104,17 @@ int mfconfig_GetDisableInstall()
 
 int mfconfig_GetCheatInfiniteDP()
 {
-    return mfconfig.bCheatInfiniteDP;
+    return mfconfig.extra.bCheatInfiniteDP;
 }
 
 int mfconfig_GetCheatDisableBanlist()
 {
-    return mfconfig.bCheatDisableBanlist;
+    return mfconfig.extra.bCheatDisableBanlist;
 }
 
 int mfconfig_GetUTF8Story()
 {
-    return mfconfig.bUTF8Story;
+    return mfconfig.basic.bUTF8Story;
 }
 
 void mfconfig_Init()

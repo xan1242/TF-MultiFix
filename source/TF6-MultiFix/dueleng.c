@@ -58,7 +58,7 @@ int dueleng_SetPartnerCardVisibility()
 int dueleng_SetPartnerCardVisibility_Hook(int retval)
 {
     MultiFixConfig* config = mfconfig_GetConfig();
-    if (config->bSeePartnerCards)
+    if (config->basic.bSeePartnerCards)
         return 1;
     return retval;
 }
@@ -96,7 +96,7 @@ void dueleng_sub_A28C_Hook(int PlayerNum, int WhoIsInControl)
     dueleng_sub_5228();
 
     MultiFixConfig* config = mfconfig_GetConfig();
-    if (config->bCheatConstantControlPartner)
+    if (config->extra.bCheatConstantControlPartner)
     {
         if (PlayerNum == 0)
             *(uint32_t*)(4 * PlayerNum + (0x38E3DC + _base_addr_dueleng) + 8) = 0;

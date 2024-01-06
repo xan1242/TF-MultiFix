@@ -81,12 +81,12 @@ void mfwindow_Create()
     mfWindow->items = mfWindowSettings;
 
     MultiFixConfig* config = mfconfig_GetConfig();
-    mfWindowSettings[MFWINDOW_ITEM_SWAPBUTTON].val = &config->bSwapConfirmButtons;
-    mfWindowSettings[MFWINDOW_ITEM_MATRIXFONT].val = &config->bMatrixFont;
-    mfWindowSettings[MFWINDOW_ITEM_PARTNERCARD].val = &config->bSeePartnerCards;
-    mfWindowSettings[MFWINDOW_ITEM_DUELHELP].val = &config->bDisableDuelHelpIcon;
-    mfWindowSettings[MFWINDOW_ITEM_INSTALLDISABLE].val = &config->bDisableInstall;
-    mfWindowSettings[MFWINDOW_ITEM_UTF8STORY].val = &config->bUTF8Story;
+    mfWindowSettings[MFWINDOW_ITEM_SWAPBUTTON].val = &config->basic.bSwapConfirmButtons;
+    mfWindowSettings[MFWINDOW_ITEM_MATRIXFONT].val = &config->basic.bMatrixFont;
+    mfWindowSettings[MFWINDOW_ITEM_PARTNERCARD].val = &config->basic.bSeePartnerCards;
+    mfWindowSettings[MFWINDOW_ITEM_DUELHELP].val = &config->basic.bDisableDuelHelpIcon;
+    mfWindowSettings[MFWINDOW_ITEM_INSTALLDISABLE].val = &config->basic.bDisableInstall;
+    mfWindowSettings[MFWINDOW_ITEM_UTF8STORY].val = &config->basic.bUTF8Story;
 
     if (mfwindow_bCheatsEnabled)
     {

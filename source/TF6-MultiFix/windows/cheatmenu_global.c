@@ -134,11 +134,11 @@ void cheatmenu_global_Create()
     chtwndGlobal->items = cheatmenu_global_Items;
 
     MultiFixConfig* config = mfconfig_GetConfig();
-    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_PARTNERCONTROL].val = &config->bCheatConstantControlPartner;
-    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_DISABLEBANLIST].val = &config->bCheatDisableBanlist;
-    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_UNLOCKALLCARDS].val = &config->bCheatUnlockAllCards;
-    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_UNLOCKALLBOXES].val = &config->bCheatUnlockAllBoxes;
-    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_INFINITEDP].val = &config->bCheatInfiniteDP;
+    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_PARTNERCONTROL].val = &config->extra.bCheatConstantControlPartner;
+    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_DISABLEBANLIST].val = &config->extra.bCheatDisableBanlist;
+    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_UNLOCKALLCARDS].val = &config->extra.bCheatUnlockAllCards;
+    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_UNLOCKALLBOXES].val = &config->extra.bCheatUnlockAllBoxes;
+    cheatmenu_global_Items[CHEATMENU_GLOBAL_ITEM_INFINITEDP].val = &config->extra.bCheatInfiniteDP;
 
     MenuWindow_Create(chtwndGlobal);
 

@@ -6,7 +6,7 @@
 #ifndef MULTIFIXCONFIG_H
 #define MULTIFIXCONFIG_H
 
-typedef struct _MultiFixConfig
+typedef struct _MultiFixBasicConfig
 {
 	int bSwapConfirmButtons;
 	int bMatrixFont;
@@ -14,13 +14,24 @@ typedef struct _MultiFixConfig
 	int bDisableInstall;
 	int bDisableDuelHelpIcon;
 	int bUTF8Story;
+}MultiFixBasicConfig;
+
+typedef struct _MultiFixExtraConfig
+{
 	int bCheatConstantControlPartner;
 	int bCheatDisableBanlist;
 	int bCheatUnlockAllCards;
 	int bCheatUnlockAllBoxes;
 	int bCheatInfiniteDP;
+}MultiFixExtraConfig;
 
+typedef struct _MultiFixConfig
+{
+	MultiFixBasicConfig basic;
+	MultiFixExtraConfig extra;
 }MultiFixConfig;
+
+
 
 // accessors
 MultiFixConfig* mfconfig_GetConfig();

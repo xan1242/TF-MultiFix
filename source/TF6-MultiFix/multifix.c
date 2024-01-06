@@ -538,7 +538,7 @@ int YgSys_GetAssignButton_Hook(int isDeclineButton)
 void YgFont_SetMatrixFontFlg_Hook(int val)
 {
     MultiFixConfig* config = mfconfig_GetConfig();
-    if (val && config->bMatrixFont)
+    if (val && config->basic.bMatrixFont)
     {
         *(uint32_t*)(YGFONT_FLAGS_ADDR + base_addr) |= 0x4000;
     }
@@ -650,7 +650,7 @@ int YgSys_GetLimitation_Default_Hook(uint16_t cardID)
 int YgSys_GetTrunk_Hook(uint16_t cardID)
 {
     MultiFixConfig* config = mfconfig_GetConfig();
-    if (config->bCheatUnlockAllCards)
+    if (config->extra.bCheatUnlockAllCards)
     {
         if (YgSys_GetTrunkFromMRK(cardID))
             return 9;
@@ -663,7 +663,7 @@ int YgSys_GetTrunk_Hook(uint16_t cardID)
 int YgSys_GetDuelPoint_Hook()
 {
     MultiFixConfig* config = mfconfig_GetConfig();
-    if (config->bCheatInfiniteDP)
+    if (config->extra.bCheatInfiniteDP)
     {
         return INT32_MAX;
     }
@@ -673,7 +673,7 @@ int YgSys_GetDuelPoint_Hook()
 int YgSys_GetBoxStatus_Hook(int box)
 {
     MultiFixConfig* config = mfconfig_GetConfig();
-    if (config->bCheatUnlockAllBoxes)
+    if (config->extra.bCheatUnlockAllBoxes)
     {
         uintptr_t boxptr = YgSys_GetBoxPtr(box);
         if (boxptr)
