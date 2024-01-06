@@ -20,4 +20,6 @@
 
 - disable partner favorite cards cheat
 
+- fix L / R quick menus text centering
+
 
