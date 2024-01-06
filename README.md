@@ -68,9 +68,9 @@ Once you have the files installed, run the game. You shouldn't notice anything o
 
 To open the MultiFix Configuration window, press R + Triangle while the WLAN switch is ON.
 
-On PPSSPP you can usually find this in the button mapping configuration menu.
+On PPSSPP you can usually find the WLAN switch in the button mapping configuration menu. Simply map "WLAN" to any button (I recommend one of the thumbsticks).
 
-On a real PSP, it's a switch you have to engage physically.
+On a real PSP, it's a toggle switch you have to engage physically, usually located at the top of the unit.
 
 The configuration is saved inside the game save directory as a file `TF-Multifix.cfg`
 
@@ -78,4 +78,4 @@ The configuration is saved inside the game save directory as a file `TF-Multifix
 
 Cheats are disabled by default. 
 
-Now, I won't tell you what how to enable them, but since this is a Konami game, I think it should be pretty obvious ;)
+Now, I won't tell you how to enable them, but since this is a Konami game, I think it should be pretty obvious 😉
