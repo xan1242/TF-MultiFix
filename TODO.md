@@ -17,3 +17,7 @@
 - fix multi-line jank on dialog boxes - newline stuff isn't being properly calculated
 
 - make more tools to help translators - duel cutin subtitle tester from the debug menu would be very useful!
+
+- disable partner favorite cards cheat
+
+
