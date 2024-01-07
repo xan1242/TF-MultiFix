@@ -22,4 +22,4 @@
 
 - fix L / R quick menus text centering
 
-
+- cheat for rental machine limit change
