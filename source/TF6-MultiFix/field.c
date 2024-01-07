@@ -184,6 +184,9 @@ void field_Patch(uintptr_t base_addr, uintptr_t base_size)
     // fix PDA status "name:" by concating it together with the name
     minj_MakeCALL(0x1D3C, (uintptr_t)&field_YgFont_PrintLineFit64_StatusHook_PlayerName);
     minj_MakeJMPwNOP(0x1D44, 0x1D6C);
+    // fix level being hidden by the hack above
+    minj_WriteMemory32(0x1DB8, (0x3406 << 16) | ((480) & 0xFFFF));
+
     // partner name
     minj_MakeNOP(0x2450);
     minj_MakeNOP(0x2460);
