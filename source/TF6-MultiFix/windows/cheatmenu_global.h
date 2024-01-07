@@ -37,7 +37,7 @@ typedef enum _cheatmenu_global_WindowItem
 #define CHEATMENU_GLOBAL_ITEM_NAME_SETLEVEL           "Set Level"
 #define CHEATMENU_GLOBAL_ITEM_NAME_SETXP           "Set Experience"
 #define CHEATMENU_GLOBAL_ITEM_NAME_TRUSTMENU       "Adjust character trust"
-#define CHEATMENU_GLOBAL_ITEM_NAME_RECIPE          "Recieve all recipes"
+#define CHEATMENU_GLOBAL_ITEM_NAME_RECIPE          "Receive all recipes"
 
 #define CHEATMENU_GLOBAL_DESC_NAME_PARTNERCONTROL  "Control the AI partner / CPU on player's side."
 #define CHEATMENU_GLOBAL_DESC_NAME_DISABLEBANLIST  "Disables the forbidden & limited list entirely."
