@@ -267,6 +267,11 @@ int YgSys_uGetExp(int mode)
     return _YgSys_uGetExp(mode);
 }
 
+void YgSys_uSetExp(int exp)
+{
+    *(int*)(YgSys_GetPersonalInfoPtr() + PERSONALINFO_EXP_ADDR) = exp;
+}
+
 uintptr_t YgSys_GetBoxPtr(int box)
 {
     return _YgSys_GetBoxPtr(box);

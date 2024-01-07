@@ -18,6 +18,7 @@ typedef enum _cheatmenu_global_WindowItem
     CHEATMENU_GLOBAL_ITEM_INFINITEDP,
     CHEATMENU_GLOBAL_ITEM_SETDP,
     CHEATMENU_GLOBAL_ITEM_SETLEVEL,
+    CHEATMENU_GLOBAL_ITEM_SETXP,
     CHEATMENU_GLOBAL_ITEM_TRUSTMENU,
     CHEATMENU_GLOBAL_ITEM_RECIPE,
     CHEATMENU_GLOBAL_ITEM_COUNT
@@ -34,6 +35,7 @@ typedef enum _cheatmenu_global_WindowItem
 #define CHEATMENU_GLOBAL_ITEM_NAME_INFINITEDP      "Infinite DP"
 #define CHEATMENU_GLOBAL_ITEM_NAME_SETDP           "Set DP"
 #define CHEATMENU_GLOBAL_ITEM_NAME_SETLEVEL           "Set Level"
+#define CHEATMENU_GLOBAL_ITEM_NAME_SETXP           "Set Experience"
 #define CHEATMENU_GLOBAL_ITEM_NAME_TRUSTMENU       "Adjust character trust"
 #define CHEATMENU_GLOBAL_ITEM_NAME_RECIPE          "Recieve all recipes"
 
@@ -46,6 +48,7 @@ typedef enum _cheatmenu_global_WindowItem
 #define CHEATMENU_GLOBAL_DESC_NAME_INFINITEDP      "Locks Duel Points to maximum. This also prevents the DP in your save file from being affected."
 #define CHEATMENU_GLOBAL_DESC_NAME_SETDP           "Sets Duel Points in your save file to a given value."
 #define CHEATMENU_GLOBAL_DESC_NAME_SETLEVEL           "Sets the player level in your save file to a given value."
+#define CHEATMENU_GLOBAL_DESC_NAME_SETXP           "Sets the player experience in your save file to a given value."
 #define CHEATMENU_GLOBAL_DESC_NAME_TRUSTMENU       "Opens a list of characters where you can set the trust points for each character in the game."
 #define CHEATMENU_GLOBAL_DESC_NAME_RECIPE          "Adds all character recipes to your profile."
 

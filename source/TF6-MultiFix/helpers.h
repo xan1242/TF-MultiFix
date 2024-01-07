@@ -157,6 +157,7 @@ void YgSys_Ms_GetDirName(char* outStr);
 int YgSys_uGetLevel();
 void YgSys_uSetLevel(int level);
 int YgSys_uGetExp(int mode);
+void YgSys_uSetExp(int exp);
 
 // optional functions
 //uintptr_t YgSys_GetUnlockNpcInfo(int charaID);
