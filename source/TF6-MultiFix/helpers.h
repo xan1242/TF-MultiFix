@@ -39,6 +39,8 @@
 #define YG_CHARACTER_SKIP_TOP 2
 #define YG_CHARACTER_SKIP_BOTTOM 57
 
+#define PERSONALINFO_LVL_ADDR 0x24F44
+
 #define YG_CARD_ID_START 3459
 #define YG_CARD_ID_END 9840
 
@@ -147,6 +149,8 @@ void YgFont_SetWordSeparateFlg(int val);
 int YgFont_GetWordSeparateFlg();
 void YgSys_Ms_GetDirPath(char* outStr);
 void YgSys_Ms_GetDirName(char* outStr);
+int YgSys_uGetLevel();
+void YgSys_uSetLevel(int level);
 
 // optional functions
 //uintptr_t YgSys_GetUnlockNpcInfo(int charaID);

@@ -251,6 +251,16 @@ void YgSys_SetDuelPoint(int val)
 //     }
 // }
 
+int YgSys_uGetLevel()
+{
+    return *(int*)(YgSys_GetPersonalInfoPtr() + PERSONALINFO_LVL_ADDR) + 1;
+}
+
+void YgSys_uSetLevel(int level)
+{
+    *(int*)(YgSys_GetPersonalInfoPtr() + PERSONALINFO_LVL_ADDR) = level;
+}
+
 uintptr_t YgSys_GetBoxPtr(int box)
 {
     return _YgSys_GetBoxPtr(box);

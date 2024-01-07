@@ -23,6 +23,7 @@ MultiFixConfig mfconfig =
     0,		  // bCheatUnlockAllCards
     0,		  // bCheatUnlockAllBoxes
     0,		  // bCheatInfiniteDP
+    -1,		  // CheatMaxRents
 };
 
 // accessors

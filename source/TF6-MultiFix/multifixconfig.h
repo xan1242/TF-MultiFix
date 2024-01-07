@@ -30,6 +30,7 @@ typedef struct _MultiFixExtraConfig
 	int bCheatUnlockAllCards;
 	int bCheatUnlockAllBoxes;
 	int bCheatInfiniteDP;
+	int CheatMaxRents;
 }MultiFixExtraConfig;
 
 typedef struct _MultiFixConfig

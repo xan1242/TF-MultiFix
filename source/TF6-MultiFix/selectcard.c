@@ -11,6 +11,26 @@
 uintptr_t _base_addr_selectcard = 0;
 uintptr_t _base_size_selectcard = 0;
 
+int selectcard_MaxRentals()
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->extra.CheatMaxRents >= 0)
+        return config->extra.CheatMaxRents;
+
+    int result = 1;
+    int level = YgSys_uGetLevel();
+
+    if (level > 9)
+        result = 2;
+    if (level > 19)
+        result = 3;
+    if (level > 29)
+        result = 4;
+    if (level > 39)
+        result = 5;
+
+    return result;
+}
 
 void selectcard_Patch(uintptr_t base_addr, uintptr_t base_size)
 {
@@ -26,6 +46,9 @@ void selectcard_Patch(uintptr_t base_addr, uintptr_t base_size)
     // path dependant
     minj_MakeCALL(0x1593C, (uintptr_t)&YgSys_GetLang_Hook2);
     minj_MakeCALL(0x15B30, (uintptr_t)&YgSys_GetLang_Hook2);
+
+    // max rental cheat
+    minj_MakeJMPwNOP(0x124F0, (uintptr_t)&selectcard_MaxRentals);
 
     minj_SetBaseAddress(oldaddr, oldsize);
 }
