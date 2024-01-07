@@ -22,8 +22,8 @@
 
 - ~~fix L / R quick menus text centering~~
 
-- cheat for rental machine limit change
+- ~~cheat for rental machine limit change~~~
 
-- field - fix character status screen - total experience number is off screen
+- ~~field - fix character status screen - total experience number is off screen~~~
 
-- field - character status - add current level of character to the status
+- ~~field - character status - add current level of character to the status~~~
