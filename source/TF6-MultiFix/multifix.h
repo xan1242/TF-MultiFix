@@ -7,7 +7,7 @@
 #define MULTIFIX_H
 
 #define MODULE_VERSION_MAJOR 1
-#define MODULE_VERSION_MINOR 1
+#define MODULE_VERSION_MINOR 2
 
 // formatting the window is a bit janky so we do it here...
 #define MULTIFIX_ABOUT_FORMAT "\
