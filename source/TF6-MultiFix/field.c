@@ -124,6 +124,14 @@ asm
 #endif
 
 
+int field_YgSys_uGetExp_Hook(int mode)
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->basic.bSensibleExpDisplay)
+        return YgSys_uGetExp(GETEXP_MODE_TARGET);
+    return YgSys_uGetExp(mode);
+}
+
 int (*lField_Always_Callback)(uintptr_t ptrFile, uintptr_t filesize) = (int(*)(uintptr_t, uintptr_t))0;
 int lField_Always_Callback_Hook(uintptr_t ptrFolder, size_t filesize)
 {
@@ -160,8 +168,10 @@ void field_Patch(uintptr_t base_addr, uintptr_t base_size)
 
     // fix PDA time Y pos and text formatting
 #define PDA_TIME_Y_POS 16
-#define PDA_TIME_X_POS_SHIFT 2
-#define PDA_TIME_COLON_X_POS_SHIFT 4
+#define PDA_TIME_HOUR_X_POS_SHIFT 5
+#define PDA_TIME_MINUTE_X_POS_SHIFT 2
+#define PDA_TIME_HOUR_COLON_X_POS_SHIFT 7
+#define PDA_TIME_MINUTE_COLON_X_POS_SHIFT 5
 
     minj_WriteMemory16(0x194C, PDA_TIME_Y_POS);
     minj_WriteMemory16(0x19F8, PDA_TIME_Y_POS);
@@ -174,12 +184,16 @@ void field_Patch(uintptr_t base_addr, uintptr_t base_size)
     minj_WriteMemory16(0x1CD4, PDA_TIME_Y_POS);
     minj_WriteMemory16(0x1D04, PDA_TIME_Y_POS);
 
-    minj_WriteMemory16(0x1BB0, (240 + PDA_TIME_COLON_X_POS_SHIFT) << 6);
-    minj_WriteMemory16(0x1C84, (267 + PDA_TIME_COLON_X_POS_SHIFT) << 6);
+    minj_WriteMemory16(0x1BB0, (240 + PDA_TIME_HOUR_COLON_X_POS_SHIFT) << 6);
+    minj_WriteMemory16(0x1C84, (267 + PDA_TIME_MINUTE_COLON_X_POS_SHIFT) << 6);
 
-    minj_WriteMemory16(0x1948, 241 + PDA_TIME_X_POS_SHIFT);
-    minj_WriteMemory16(0x19F4, 232 + PDA_TIME_X_POS_SHIFT);
-    minj_WriteMemory16(0x1AC4, 223 + PDA_TIME_X_POS_SHIFT);
+    minj_WriteMemory16(0x1948, 241 + PDA_TIME_HOUR_X_POS_SHIFT);
+    minj_WriteMemory16(0x19F4, 232 + PDA_TIME_HOUR_X_POS_SHIFT);
+    minj_WriteMemory16(0x1AC4, 223 + PDA_TIME_HOUR_X_POS_SHIFT);
+
+    minj_WriteMemory16(0x1B88, 214 + PDA_TIME_MINUTE_X_POS_SHIFT);
+    minj_WriteMemory16(0x1C2C, 259 + PDA_TIME_MINUTE_X_POS_SHIFT);
+    minj_WriteMemory16(0x1C5C, 268 + PDA_TIME_MINUTE_X_POS_SHIFT);
 
     // fix PDA status "name:" by concating it together with the name
     minj_MakeCALL(0x1D3C, (uintptr_t)&field_YgFont_PrintLineFit64_StatusHook_PlayerName);
@@ -193,6 +207,9 @@ void field_Patch(uintptr_t base_addr, uintptr_t base_size)
     minj_MakeNOP(0x2464);
     minj_MakeCALL(0x245C, (uintptr_t)&field_hkYgFont_PrintLineFit64_PartnerName);
     minj_MakeJMP(0x2470, 0x2494);
+
+    // EXP sensible display
+    minj_MakeCALL(0x1E04, (uintptr_t)&field_YgSys_uGetExp_Hook);
 
     // scrolling bug fix for PDA
  //   minj_WriteMemory32(0x359C, 0x2631FF00); // addiu s1, s1, -0x100

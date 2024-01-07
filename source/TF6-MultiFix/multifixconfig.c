@@ -17,6 +17,7 @@ MultiFixConfig mfconfig =
     1,		  // bDisableInstall
     1,        // bDisableDuelHelpIcon
     0,        // bUTF8Story
+    1,        // bSensibleExpDisplay
     0,        // bConstantCheats
     0,		  // bCheatConstantControlPartner
     0,		  // bCheatDisableBanlist

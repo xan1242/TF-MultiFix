@@ -40,6 +40,11 @@
 #define YG_CHARACTER_SKIP_BOTTOM 57
 
 #define PERSONALINFO_LVL_ADDR 0x24F44
+#define PERSONALINFO_EXP_ADDR 0x24F48
+
+#define GETEXP_MODE_CURRENT 0
+#define GETEXP_MODE_TARGET 1
+#define GETEXP_MODE_REMAINDER 2
 
 #define YG_CARD_ID_START 3459
 #define YG_CARD_ID_END 9840
@@ -151,6 +156,7 @@ void YgSys_Ms_GetDirPath(char* outStr);
 void YgSys_Ms_GetDirName(char* outStr);
 int YgSys_uGetLevel();
 void YgSys_uSetLevel(int level);
+int YgSys_uGetExp(int mode);
 
 // optional functions
 //uintptr_t YgSys_GetUnlockNpcInfo(int charaID);

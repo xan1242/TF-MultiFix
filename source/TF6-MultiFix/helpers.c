@@ -47,6 +47,7 @@ size_t(*_YgSys_strlen)(const char* str) = (size_t(*)(const char*))(0);
 uintptr_t (*_YgSys_GetOption)() = (uintptr_t(*)())(0);
 wchar_t* (*_YgSys_GetUserName)() = (wchar_t* (*)())(0);
 wchar_t* (*_YgSys_uGetPartnerName)(int, int, int) = (wchar_t* (*)(int, int, int))(0);
+int (*_YgSys_uGetExp)(int mode) = (int (*)(int))(0);
 wchar_t* (*_YgSys_GetStrFromResource)(uintptr_t, int) = (wchar_t* (*)(uintptr_t, int))(0);
 uintptr_t (*_EhFolder_SearchFile)(uintptr_t, const char*, uintptr_t) = (uintptr_t (*)(uintptr_t, const char*, uintptr_t))(0);
 void (*_YgSys_InitApplication)() = (void (*)())(0);
@@ -259,6 +260,11 @@ int YgSys_uGetLevel()
 void YgSys_uSetLevel(int level)
 {
     *(int*)(YgSys_GetPersonalInfoPtr() + PERSONALINFO_LVL_ADDR) = level;
+}
+
+int YgSys_uGetExp(int mode)
+{
+    return _YgSys_uGetExp(mode);
 }
 
 uintptr_t YgSys_GetBoxPtr(int box)
@@ -1315,6 +1321,8 @@ void helpers_Init(uintptr_t base_addr)
 
     _YgSys_Ms_GetDirPath = (void (*)(char*))(0x11564 + base_addr);
     //_YgSys_Ms_GetDirName = (void (*)(char*))(0x11528 + base_addr);
+
+    _YgSys_uGetExp = (int (*)(int))(0x25C74 + base_addr);
 
     // optional functions
     //_YgSys_GetUnlockNpcInfo = (uintptr_t(*)(int))(0x2A268 + base_addr);

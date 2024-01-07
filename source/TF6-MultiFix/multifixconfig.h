@@ -20,6 +20,7 @@ typedef struct _MultiFixBasicConfig
 	int bDisableInstall;
 	int bDisableDuelHelpIcon;
 	int bUTF8Story;
+	int bSensibleExpDisplay;
 	int bConstantCheats;
 }MultiFixBasicConfig;
 
