@@ -249,6 +249,10 @@ void field_Patch(uintptr_t base_addr, uintptr_t base_size)
     minj_MakeCALL(0xDE8C, (uintptr_t)&YgSys_GetLang_Hook);
     minj_MakeCALL(0xF29C, (uintptr_t)&YgSys_GetLang_Hook);
 
+    // L/R quick menu
+    minj_MakeCALL(0x325EC, (uintptr_t)&YgSys_GetLang_Hook);
+    minj_MakeCALL(0x3249C, (uintptr_t)&YgSys_GetLang_Hook);
+
     // deck name Y offset
     // minj_MakeCALL(0x19C70, (uintptr_t)&field_hkTxt_40);
     // // status bar numerics

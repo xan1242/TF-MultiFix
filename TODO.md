@@ -20,7 +20,7 @@
 
 - disable partner favorite cards cheat
 
-- fix L / R quick menus text centering
+- ~~fix L / R quick menus text centering~~
 
 - cheat for rental machine limit change
 
