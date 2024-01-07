@@ -208,6 +208,17 @@ int YgSys_GetTrunk(uint16_t cardID)
     return result;
 }
 
+int YgSys_GetMark(uint16_t cardID)
+{
+    int result = 0;
+    uintptr_t trunk = YgSys_GetTrunkFromMRK(cardID);
+    if (trunk)
+    {
+        result = (*(uint16_t*)(trunk) & 6) >> 1;
+    }
+    return result;
+}
+
 int YgSys_GetDuelPoint()
 {
     return *(int*)(YgSys_GetPersonalInfoPtr() + DUELPOINT_OFFSET);

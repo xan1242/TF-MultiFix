@@ -62,6 +62,7 @@ __attribute__((always_inline)) inline void cheatmenu_global_SetAllCardsInTrunk(i
         if (trunkCard)
         {
             *(uint8_t*)(trunkCard + 1) = numToSet;
+            *(uint8_t*)(trunkCard) = *(uint8_t*)(trunkCard) & 0xF9 | 4;
         }
     }
 }

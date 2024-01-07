@@ -660,6 +660,19 @@ int YgSys_GetTrunk_Hook(uint16_t cardID)
     return YgSys_GetTrunk(cardID);
 }
 
+int YgSys_GetMark_Hook(uint16_t cardID)
+{
+    MultiFixConfig* config = mfconfig_GetConfig();
+    if (config->extra.bCheatUnlockAllCards)
+    {
+        if (YgSys_GetTrunkFromMRK(cardID))
+            return 1;
+        return 0;
+    }
+
+    return YgSys_GetMark(cardID);
+}
+
 int YgSys_GetDuelPoint_Hook()
 {
     MultiFixConfig* config = mfconfig_GetConfig();
@@ -833,6 +846,8 @@ void TFFixesInject()
 
     // card unlock
     minj_MakeJMPwNOP(0x2B700, (uintptr_t)&YgSys_GetTrunk_Hook);
+    minj_MakeJMPwNOP(0x2BA2C, (uintptr_t)&YgSys_GetMark_Hook);
+
 
     // infinite DP
     minj_MakeJMPwNOP(0x25D20, (uintptr_t)&YgSys_GetDuelPoint_Hook);

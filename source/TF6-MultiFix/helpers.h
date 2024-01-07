@@ -128,6 +128,7 @@ uintptr_t YgSys_GetTrunkFromMRK(int mrk);
 int YgSys_GetLimitation(uint16_t cardID);
 int YgSys_GetLimitation_Default(uint16_t cardID);
 int YgSys_GetTrunk(uint16_t cardID);
+int YgSys_GetMark(uint16_t cardID);
 int YgSys_GetDuelPoint();
 void YgSys_SetDuelPoint(int val);
 //void YgSys_UpdateDuelPoint(int amount);
