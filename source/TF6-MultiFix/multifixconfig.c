@@ -121,6 +121,11 @@ int mfconfig_GetCheatDisableBanlist()
     return mfconfig.extra.bCheatDisableBanlist;
 }
 
+int mfconfig_GetCheatUnlockAllBoxes()
+{
+    return mfconfig.extra.bCheatUnlockAllBoxes;
+}
+
 int mfconfig_GetUTF8Story()
 {
     return mfconfig.basic.bUTF8Story;

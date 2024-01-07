@@ -677,7 +677,7 @@ int YgSys_GetBoxStatus_Hook(int box)
     {
         uintptr_t boxptr = YgSys_GetBoxPtr(box);
         if (boxptr)
-            return 3;
+            return 4;
         return 0;
     }
     return YgSys_GetBoxStatus(box);
@@ -702,6 +702,31 @@ asm
     "lui $v1, %hi(YgSys_UpdateDuelPoint_Hook_ExitNoInf)\n"
     "addiu $v1, $v1, %lo(YgSys_UpdateDuelPoint_Hook_ExitNoInf)\n"
     "duelpoint_exit:\n"
+    "lw $v1, 0($v1)\n"
+    "jr $v1\n"
+    "nop\n"
+);
+#endif
+
+uintptr_t YgSys_SetBoxStatus_Hook_ExitNoUnl = 0;
+uintptr_t YgSys_SetBoxStatus_Hook_ExitUnl = 0;
+void YgSys_SetBoxStatus_Hook(int box, int newstatus);
+#ifndef __INTELLISENSE__
+asm
+(
+    ".global YgSys_SetBoxStatus_Hook\n"
+    "YgSys_SetBoxStatus_Hook:\n"
+    "jal mfconfig_GetCheatUnlockAllBoxes\n"
+    // nop
+    "lui $v1, %hi(YgSys_SetBoxStatus_Hook_ExitUnl)\n" // this is below the beqz in the delay slot
+    "beqz $v0, setboxstatusNormalExit\n"
+    "addiu $v1, $v1, %lo(YgSys_SetBoxStatus_Hook_ExitUnl)\n"
+    "b boxstatusSetExit\n"
+    "setboxstatusNormalExit:\n"
+    "jal YgSys_GetBoxPtr\n"
+    "lui $v1, %hi(YgSys_SetBoxStatus_Hook_ExitNoUnl)\n"
+    "addiu $v1, $v1, %lo(YgSys_SetBoxStatus_Hook_ExitNoUnl)\n"
+    "boxstatusSetExit:\n"
     "lw $v1, 0($v1)\n"
     "jr $v1\n"
     "nop\n"
@@ -818,6 +843,12 @@ void TFFixesInject()
 
     // unlock boxes
     minj_MakeJMPwNOP(0x29D44, (uintptr_t)&YgSys_GetBoxStatus_Hook);
+
+    minj_MakeJMP(0x29CEC, (uintptr_t)&YgSys_SetBoxStatus_Hook);
+    YgSys_SetBoxStatus_Hook_ExitNoUnl = 0x29CF4 + base_addr;
+    YgSys_SetBoxStatus_Hook_ExitUnl = 0x29D34 + base_addr;
+    
+
 
 #ifdef YG_GETLANG_DEBUG
     minj_MakeJMPwNOP(0x298D8, (uintptr_t)&YgSys_GetLang);

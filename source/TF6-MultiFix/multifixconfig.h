@@ -58,6 +58,7 @@ int mfconfig_GetDisableInstall();
 int mfconfig_GetCheatInfiniteDP();
 int mfconfig_GetCheatDisableBanlist();
 int mfconfig_GetUTF8Story();
+int mfconfig_GetCheatUnlockAllBoxes();
 void mfconfig_Update();
 void mfconfig_Init();
 
