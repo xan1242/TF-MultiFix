@@ -7,7 +7,7 @@
 #define MULTIFIX_H
 
 #define MODULE_VERSION_MAJOR 1
-#define MODULE_VERSION_MINOR 0
+#define MODULE_VERSION_MINOR 1
 
 // formatting the window is a bit janky so we do it here...
 #define MULTIFIX_ABOUT_FORMAT "\
@@ -26,7 +26,7 @@ Created by Xan / Tenjoin\
 #define MULTIFIX_WINDOW_ZORDER 10
 
 // define for debug printing to sceKernelPrintf
-#define TFMULTIFIX_DEBUG_PRINT
+//#define TFMULTIFIX_DEBUG_PRINT
 // define for debug printing of the return address of YgFont_PrintLine64 and YgFont_PrintLineFit64
 //#define YG_PRINTLINE_DEBUG
 // define for debug printing of the return address of YgFont_PrintBox64
