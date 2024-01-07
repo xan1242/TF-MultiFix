@@ -206,6 +206,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
       <FileType>Makefile</FileType>
     </None>
     <None Include="data\TF6-MultiFix\plugin.ini" />
+    <None Include="PackBuild.bat" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\psp\minjector.h" />

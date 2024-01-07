@@ -30,6 +30,7 @@
     <None Include="data\TF6-MultiFix\plugin.ini">
       <Filter>data\TF6-MultiFix</Filter>
     </None>
+    <None Include="PackBuild.bat" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\source\TF6-MultiFix\main.c">
