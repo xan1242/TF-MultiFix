@@ -214,7 +214,7 @@ int YgSys_GetMark(uint16_t cardID)
     uintptr_t trunk = YgSys_GetTrunkFromMRK(cardID);
     if (trunk)
     {
-        result = (*(uint16_t*)(trunk) & 6) >> 1;
+        result = (*(uint8_t*)(trunk) & 6) >> 1;
     }
     return result;
 }
